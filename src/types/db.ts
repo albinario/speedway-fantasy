@@ -59,7 +59,7 @@ export interface RidersResults {
 }
 
 export interface Users {
-  admin: number | null;
+  auth0_id: string;
   date_created: Generated<Timestamp>;
   email: Generated<string>;
   first_name: Generated<string>;

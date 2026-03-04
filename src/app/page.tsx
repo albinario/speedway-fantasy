@@ -7,27 +7,37 @@ import { auth0 } from '@/lib/auth0'
 
 import styles from './page.module.css'
 
+import { getUserByAuth0Id } from '@/app/users/data'
+import { logo } from '@/config/logo'
+
 export default async function Home() {
 	const session = await auth0.getSession()
-	const user = session?.user
+	const authUser = session?.user
+	const dbUser =
+		authUser?.sub != null ? await getUserByAuth0Id(authUser.sub) : undefined
 
 	return (
 		<Fragment>
-			<Image
-				className={styles.logo}
-				src="/next.svg"
-				alt="Next.js logo"
-				width={100}
-				height={20}
-				priority
-			/>
+			<div className={styles.logoContainer}>
+				<Image
+					alt={logo.alt}
+					height={logo.height}
+					width={logo.width}
+					priority
+					src={logo.src}
+				/>
+			</div>
+
 			<h1>Speedway Fantasy</h1>
 			<p>Coming soon...</p>
 
 			<div className={styles.content}>
-				{user ? (
+				{authUser ? (
 					<>
-						<p>Signed in as {user.name ?? user.email}.</p>
+						<p>
+							Signed in as{' '}
+							{dbUser?.first_name ?? authUser.name ?? authUser.email}.
+						</p>
 						<a href="/auth/logout">Log out</a>
 					</>
 				) : (
