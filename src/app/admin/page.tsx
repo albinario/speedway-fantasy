@@ -2,8 +2,8 @@ import { type ComponentType, Fragment } from 'react'
 
 import Link from 'next/link'
 
-import { auth0 } from '@/lib/auth0'
-import { getRoles } from '@/lib/auth0-claims'
+import { auth0 } from '@/lib/auth/auth0'
+import { getRoles } from '@/lib/auth/auth0-claims'
 
 const AdminPage = auth0.withPageAuthRequired(
 	async function AdminPage() {

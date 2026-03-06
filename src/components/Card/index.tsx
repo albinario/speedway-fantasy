@@ -1,12 +1,10 @@
-import styles from './comp.module.css'
+import { card } from './styles.css'
 
-type TCard = {
-	children: React.ReactNode
-} & React.HTMLAttributes<HTMLDivElement>
+type TCard = React.HTMLAttributes<HTMLDivElement>
 
 export function Card({ children, ...props }: TCard) {
 	return (
-		<div className={styles.card} {...props}>
+		<div className={card} {...props}>
 			{children}
 		</div>
 	)

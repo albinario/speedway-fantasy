@@ -12,14 +12,8 @@
 		"^next",
 		"^next/(.*)$",
 		"<THIRD_PARTY_MODULES>",
-		"^@/utils/(.*)$",
-		"^@/lib/(.*)$",
-		"^@/components/(.*)$",
-		"^@/ui/(.*)$",
-		"^@/hooks/(.*)$",
-		"^@/theme/(.*)$",
-		"^[./]",
-		"^@/(.*)$"
+		"^@/(.*)$",
+		"^[./]"
 	],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,
