@@ -8,7 +8,7 @@
 	},
 	"scripts": {
 		"dev": "next dev --webpack",
-		"build": "next build",
+		"build": "next build --webpack",
 		"start": "next start",
 		"lint": "eslint",
 		"db:types": "dotenv -e .env.local -- kysely-codegen --dialect postgres --out-file src/types/db.ts"
