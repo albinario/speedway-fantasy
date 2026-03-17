@@ -8,14 +8,16 @@ export function getGp(id: number) {
 				.selectFrom('gps')
 				.innerJoin('cities', 'gps.city_id', 'cities.id')
 				.innerJoin('countries', 'cities.country_id', 'countries.id')
-				.innerJoin('riders', 'gps.wild_card_id', 'riders.id')
-				.select((eb) => [
+				.leftJoin('riders', 'gps.wild_card_id', 'riders.id')
+				.select([
 					'gps.id',
-					'gp',
-					'city_name',
-					'country_code',
-					'start_date',
-					eb.ref('riders.rider_name').as('wild_card_name'),
+					'gps.number as gp_number',
+					'cities.id as city_id',
+					'cities.name as city_name',
+					'countries.code as country_code',
+					'gps.start_date',
+					'riders.name as wild_card_name',
+					'gps.finished',
 				])
 				.where('gps.id', '=', id)
 				.executeTakeFirst(),

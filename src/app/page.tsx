@@ -5,7 +5,7 @@ import { GpCard } from '@/components/GpCard'
 export default function Home() {
 	return (
 		<Fragment>
-			<GpCard gpId={35} />
+			<GpCard gpId={61} />
 		</Fragment>
 	)
 }

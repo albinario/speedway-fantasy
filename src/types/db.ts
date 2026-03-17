@@ -9,34 +9,37 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Cities {
-  city_name: Generated<string>;
   country_id: number;
   id: Generated<number>;
+  name: string;
+  timezone: Generated<string>;
 }
 
 export interface Comments {
   comment: string;
   created_at: Generated<Timestamp>;
-  gp_id: number | null;
-  id: Generated<number>;
-  reply_to_id: number | null;
-  user_id: number;
+  gp_id: Int8 | null;
+  id: Generated<Int8>;
+  reply_to_id: Int8 | null;
+  user_id: Int8;
 }
 
 export interface Countries {
-  country_code: Generated<string>;
-  country_name: Generated<string>;
+  code: string;
   id: Generated<number>;
+  name: string;
 }
 
 export interface Gps {
   city_id: number;
   finished: number | null;
-  gp: number;
   id: Generated<number>;
+  number: number;
   start_date: Timestamp | null;
   wild_card_id: number | null;
 }
@@ -44,34 +47,71 @@ export interface Gps {
 export interface Riders {
   country_id: number;
   id: Generated<number>;
-  rider_name: Generated<string>;
-  rider_number: number;
+  name: string;
+  number: number;
 }
 
 export interface RidersResults {
-  gp_id: number;
+  gp_id: Int8;
   heats: Generated<number>;
-  id: Generated<number>;
-  podium: number | null;
+  id: Generated<Int8>;
+  medal: number | null;
   points: Generated<number>;
-  rider_id: number;
+  rider_id: Int8;
 }
 
 export interface Users {
-  auth0_id: Generated<string>;
+  auth0_id: string;
   created_at: Generated<Timestamp>;
-  email: Generated<string>;
-  first_name: Generated<string>;
-  id: Generated<number>;
-  last_name: Generated<string>;
+  email: string;
+  first_name: string;
+  id: Generated<Int8>;
+  last_name: string;
   reminder: Generated<number>;
 }
 
-export interface UsersPicksLog {
+export interface UsersPicks {
   created_at: Generated<Timestamp>;
-  gp_id: number | null;
-  id: Generated<number>;
-  user_id: number | null;
+  gp_id: Int8;
+  id: Generated<Int8>;
+  rider_1_id: Int8;
+  rider_2_id: Int8;
+  rider_3_id: Int8;
+  updated_at: Generated<Timestamp>;
+  user_id: Int8;
+}
+
+export interface UsersResults {
+  gp_id: Int8;
+  heats: Generated<number>;
+  id: Generated<Int8>;
+  medal_1: Generated<number>;
+  medal_2: Generated<number>;
+  medal_3: Generated<number>;
+  points: Generated<number>;
+  pos: number | null;
+  user_id: Int8;
+}
+
+export interface UsersStandings {
+  heats: Generated<number>;
+  id: Generated<Int8>;
+  medal_1: Generated<number>;
+  medal_2: Generated<number>;
+  medal_3: Generated<number>;
+  points: Generated<number>;
+  pos: number | null;
+  prev_pos: number | null;
+  user_id: Int8;
+  year: number;
+}
+
+export interface UsersStars {
+  id: Generated<Int8>;
+  points: Generated<number>;
+  type: number;
+  user_id: Int8;
+  year: number;
 }
 
 export interface DB {
@@ -82,5 +122,8 @@ export interface DB {
   riders: Riders;
   riders_results: RidersResults;
   users: Users;
-  users_picks_log: UsersPicksLog;
+  users_picks: UsersPicks;
+  users_results: UsersResults;
+  users_standings: UsersStandings;
+  users_stars: UsersStars;
 }
