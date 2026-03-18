@@ -9,11 +9,11 @@ export function getRidersPoints() {
 				.innerJoin('riders_results', 'riders_results.rider_id', 'riders.id')
 				.select((eb) => [
 					'riders.id',
-					'riders.rider_name',
-					eb.fn.sum<number>('riders_results.points').as('totalPoints'),
+					'riders.name',
+					eb.fn.sum<number>('riders_results.points').as('total_points'),
 				])
-				.groupBy(['riders.id', 'riders.rider_name'])
-				.orderBy('totalPoints', 'desc')
+				.groupBy(['riders.id', 'riders.name'])
+				.orderBy('total_points', 'desc')
 				.execute(),
 		[],
 	)
