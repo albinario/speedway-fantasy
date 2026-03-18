@@ -23,20 +23,21 @@ const getCountdownLabel = (startDate: Date) => {
 }
 
 export function Countdown({ startDate }: TCountdown) {
-	const [label, setLabel] = useState(() => getCountdownLabel(startDate))
+	const [label, setLabel] = useState<string | null>(null)
 
 	useEffect(() => {
-		const interval = setInterval(
-			() => setLabel(getCountdownLabel(startDate)),
-			1000,
-		)
+		setLabel(getCountdownLabel(startDate))
+
+		const interval = setInterval(() => {
+			setLabel(getCountdownLabel(startDate))
+		}, 1000)
 
 		return () => clearInterval(interval)
 	}, [startDate])
 
 	return (
 		<Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-			{label}
+			{label ?? 'Starting soon'}
 		</Badge>
 	)
 }

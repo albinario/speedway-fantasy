@@ -3,9 +3,12 @@
 	"semi": false,
 	"singleQuote": true,
 	"tabWidth": 2,
-	"prettier.trailingComma": "none",
+	"trailingComma": "none",
 	"useTabs": true,
-	"plugins": ["@trivago/prettier-plugin-sort-imports"],
+	"plugins": [
+		"prettier-plugin-tailwindcss",
+		"@trivago/prettier-plugin-sort-imports"
+	],
 	"importOrder": [
 		"^react$",
 		"^react-(.*)$",
@@ -17,5 +20,7 @@
 	],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,
-	"importOrderCaseInsensitive": true
+	"importOrderCaseInsensitive": true,
+	"arrowParens": "always",
+	"printWidth": 80
 }

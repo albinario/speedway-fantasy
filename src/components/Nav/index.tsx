@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { navItems, type TNavItem } from '@/config/nav'
 
 const NavItemList = ({ items }: { items: TNavItem[] }) => (
-	<ul className="flex gap-4 justify-center">
+	<ul className="flex justify-center gap-4">
 		{items.map((item) => (
 			<li key={item.href}>
 				<Link href={item.href}>{item.label}</Link>
@@ -18,7 +18,7 @@ export function Nav() {
 	const topLevelItems = Object.values(navItems)
 
 	return (
-		<nav className="border-t border-t-secondary fixed bottom-0 left-0 right-0 p-2">
+		<nav className="border-t-secondary sticky bottom-0 border-t bg-black/65 p-2 backdrop-blur-sm">
 			<NavItemList items={topLevelItems} />
 		</nav>
 	)

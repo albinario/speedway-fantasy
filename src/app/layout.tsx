@@ -32,9 +32,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
-			<body className={`${geistSans.variable} ${geistMono.variable}`}>
+			<body
+				className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col`}
+			>
 				<Header />
-				<main>{children}</main>
+				<main className="container mx-auto flex-1 w-full">{children}</main>
 				<Nav />
 				<Analytics />
 				<SpeedInsights />

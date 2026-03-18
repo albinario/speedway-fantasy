@@ -25,6 +25,9 @@ export function getGp(id: number) {
 	)
 }
 
+export type TGp =
+	Awaited<ReturnType<typeof getGp>> extends infer R ? NonNullable<R> : never
+
 export function getGps() {
 	return dataFetch(() => db.selectFrom('gps').selectAll().execute(), [])
 }
