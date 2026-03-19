@@ -39,7 +39,7 @@ export interface Gps {
   city_id: number;
   finished: number | null;
   id: Generated<number>;
-  number: number;
+  round: number;
   start_date: Timestamp | null;
   wild_card_id: number | null;
 }

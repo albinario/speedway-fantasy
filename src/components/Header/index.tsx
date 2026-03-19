@@ -8,7 +8,7 @@ export async function Header() {
 	const viewer = await getViewer()
 
 	return (
-		<div className="flex justify-between p-2">
+		<div className="flex justify-between border-b p-4">
 			<div className="w-64">
 				<Image
 					alt={logo.alt}

@@ -14,11 +14,11 @@ const NavItemList = ({ items }: { items: TNavItem[] }) => (
 	</ul>
 )
 
-export function Nav() {
+export function NavFooter() {
 	const topLevelItems = Object.values(navItems)
 
 	return (
-		<nav className="border-t-secondary sticky bottom-0 border-t bg-black/65 p-2 backdrop-blur-sm">
+		<nav className="sticky bottom-0 border-t bg-black/65 p-2 backdrop-blur-sm">
 			<NavItemList items={topLevelItems} />
 		</nav>
 	)

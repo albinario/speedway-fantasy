@@ -6,6 +6,7 @@ export type TNavItem = {
 
 export const navItems: TNavItem[] = [
 	{ label: 'Home', href: '/' },
+	{ label: 'Standings', href: '/standings' },
 	{
 		label: 'Riders',
 		href: '/riders',

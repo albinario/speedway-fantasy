@@ -1,8 +1,8 @@
 export const metaData = {
-	title: 'GP Cards',
-	description: 'Browse and view the GP cards',
+	title: 'Library',
+	description: 'Library of components'
 }
 
-export const fetchFailed = 'Failed to fetch GP cards'
+export const fetchFailed = 'Failed to fetch library'
 
-export const noData = 'No GP cards found'
+export const noData = 'No library found'

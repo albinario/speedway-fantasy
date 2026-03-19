@@ -1,43 +1,36 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter } from 'next/font/google'
 
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import { Header } from '@/components/Header'
-import { Nav } from '@/components/Nav'
+import { NavFooter } from '@/components/Nav'
 import { metaData } from '@/config/brand'
 
 import './globals.css'
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+const inter = Inter({
 	subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
+	display: 'swap'
 })
 
 export const metadata: Metadata = {
 	title: metaData.title,
-	description: metaData.description,
+	description: metaData.description
 }
 
 export default function RootLayout({
-	children,
+	children
 }: Readonly<{
 	children: React.ReactNode
 }>) {
 	return (
 		<html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col`}
-			>
+			<body className={`${inter.className} flex min-h-screen flex-col`}>
 				<Header />
-				<main className="container mx-auto flex-1 w-full">{children}</main>
-				<Nav />
+				<main className="container mx-auto my-4 w-full flex-1">{children}</main>
+				<NavFooter />
 				<Analytics />
 				<SpeedInsights />
 			</body>
