@@ -6,18 +6,24 @@ export type TNavItem = {
 
 export const navItems: TNavItem[] = [
 	{ label: 'Home', href: '/' },
+	{ label: 'Standings', href: '/standings' },
 	{
 		label: 'Riders',
 		href: '/riders',
 		children: [
 			{
 				label: 'Points',
-				href: '/riders/points',
-			},
-		],
+				href: '/riders/points'
+			}
+		]
 	},
 	{ label: 'Input', href: '/test/input' },
 	{ label: 'Users', href: '/users' },
 	{ label: 'Comments', href: '/comments' },
 	{ label: "GP's", href: '/gps' },
+	{
+		label: 'Library',
+		href: '/library',
+		children: [{ label: 'GP Cards', href: '/library/gp-card' }]
+	}
 ]

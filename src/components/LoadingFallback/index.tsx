@@ -1,6 +1,4 @@
-'use client'
-
-import { Fragment } from 'react/jsx-runtime'
+import { Spinner } from '@/components/ui/spinner'
 
 type TLoadingFallback = {
 	title: string
@@ -8,9 +6,9 @@ type TLoadingFallback = {
 
 export function LoadingFallback({ title }: TLoadingFallback) {
 	return (
-		<Fragment>
-			<h1>{title}</h1>
-			<p>Loading…</p>
-		</Fragment>
+		<div className="flex justify-center">
+			<Spinner className="size-8 opacity-50" />
+			{/* <span>{title} loading...</span> */}
+		</div>
 	)
 }
