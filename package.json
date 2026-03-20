@@ -41,7 +41,7 @@
 		"@types/react-dom": "^19",
 		"dotenv-cli": "^11.0.0",
 		"eslint": "^10",
-		"eslint-config-next": "16.1.6",
+		"eslint-config-next": "16.2.0",
 		"kysely-codegen": "^0.20.0",
 		"pg": "^8.19.0",
 		"postcss": "^8.5.8",
