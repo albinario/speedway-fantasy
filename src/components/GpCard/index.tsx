@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { EMacroStage } from '@/enums'
 import { formatDate } from '@/lib/dates'
+import { getTimeZoneDiff } from '@/lib/time-zone'
 
 type TGpCard = {
 	gp: TGp
@@ -25,27 +26,7 @@ export async function GpCard({ gp, isLoggedIn, macroStage }: TGpCard) {
 	const finished = macroStage === EMacroStage.After
 	const ownResults = macroStage === EMacroStage.After && isLoggedIn
 
-	const serverTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-	const eventDate = gp?.start_date ? new Date(gp.start_date) : null
-
-	const getTimeZoneOffsetLabel = (date: Date, timeZone: string) => {
-		return new Intl.DateTimeFormat('en-GB', {
-			timeZone,
-			timeZoneName: 'shortOffset'
-		})
-			.formatToParts(date)
-			.find((part) => part.type === 'timeZoneName')?.value
-	}
-
-	const serverOffset = eventDate
-		? getTimeZoneOffsetLabel(eventDate, serverTimeZone)
-		: null
-	const gpOffset =
-		eventDate && gp?.timezone
-			? getTimeZoneOffsetLabel(eventDate, gp.timezone)
-			: null
-	const timeZoneDiffers =
-		Boolean(serverOffset && gpOffset) && serverOffset !== gpOffset
+	const timeZoneDiffers = getTimeZoneDiff(gp?.start_date, gp?.time_zone)
 
 	return (
 		<Card className="mx-auto w-full pt-0">
@@ -73,10 +54,13 @@ export async function GpCard({ gp, isLoggedIn, macroStage }: TGpCard) {
 
 					<div className="flex flex-wrap items-center gap-2 text-sm">
 						<p>
-							Round {gp?.round} • {formatDate(gp?.start_date, gp?.timezone)}
+							Round {gp?.round} • {formatDate(gp?.start_date, gp?.time_zone)}
 						</p>
 
-						<StartTimeNote date={gp?.start_date} eventTimeZone={gp?.timezone} />
+						<StartTimeNote
+							date={gp?.start_date}
+							eventTimeZone={gp?.time_zone}
+						/>
 					</div>
 				</div>
 			</div>

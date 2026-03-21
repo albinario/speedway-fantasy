@@ -19,7 +19,7 @@ export function getGp(id: number) {
 					'gps.round',
 					'cities.id as city_id',
 					'cities.name as city_name',
-					'cities.timezone',
+					'cities.time_zone',
 					'countries.code as country_code',
 					'gps.start_date',
 					'riders.name as wild_card_name',

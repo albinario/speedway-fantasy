@@ -1,8 +1,8 @@
-const locale = 'en-GB'
+import { defaultTimeZone, locale } from '@/config/time-zone'
 
 export function formatDate(
 	date?: Date | string | number | null,
-	timeZone = 'UTC'
+	timeZone = defaultTimeZone
 ) {
 	if (!date) return null
 

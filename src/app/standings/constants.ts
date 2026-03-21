@@ -5,4 +5,4 @@ export const metaData = {
 
 export const fetchFailed = 'Failed to fetch standings'
 
-export const noData = 'No standings found'
+export const noData = 'No data available'

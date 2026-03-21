@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 
+import { Fragment } from 'react/jsx-runtime'
+
 import { MedalIcon } from '@/components/MedalIcon'
 import {
 	Table,
@@ -10,36 +12,34 @@ import {
 	TableRow
 } from '@/components/ui/table'
 import { YearSelector } from '@/components/YearSelector'
-import { getYears } from '@/components/YearSelector/data'
 import { EMedal } from '@/enums'
-import { getParamValue, paramKeys } from '@/lib/params'
+import type { TParamValues } from '@/lib/params'
+import { getYearValues } from '@/lib/year'
 
 import { metaData, noData } from './constants'
-import { getStandings } from './data'
+import { getUsersStandings } from './data'
 
 type TStandingsPage = {
 	searchParams: Promise<{
-		year?: string
+		year?: string | TParamValues
 	}>
 }
 
 export const metadata: Metadata = metaData
 
 export default async function StandingsPage({ searchParams }: TStandingsPage) {
-	const years = await getYears()
-	const latestYear = years?.[0]?.value
-	const yearParam = await getParamValue(searchParams, paramKeys.year)
-	const year = Number(yearParam) || latestYear || new Date().getFullYear()
+	const yearValues = await getYearValues(searchParams)
 
-	const standings = await getStandings(year)
+	const usersStandings = await getUsersStandings(yearValues.activeYear, 10)
 
 	return (
-		<>
-			<h1>
-				{metaData.title} <YearSelector years={years} selectedYear={year} />
-			</h1>
+		<Fragment>
+			<div className="flex items-center justify-between py-4">
+				<h1 className="font-black uppercase">{metaData.title}</h1>
+				<YearSelector yearValues={yearValues} />
+			</div>
 
-			{standings?.length > 0 ? (
+			{usersStandings?.length > 0 ? (
 				<Table>
 					<TableHeader>
 						<TableRow className="bg-muted/50">
@@ -64,13 +64,15 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 					</TableHeader>
 
 					<TableBody>
-						{standings.map((standing) => (
-							<TableRow key={standing.user_id}>
+						{usersStandings.map((standing, index) => (
+							<TableRow key={index}>
 								<TableCell>
-									{standing.pos}/{standing.prev_pos}
+									{standing.pos
+										? `${standing.pos}/${standing.prev_pos}`
+										: index + 1}
 								</TableCell>
 
-								<TableCell className="font-medium">
+								<TableCell>
 									{standing.first_name} {standing.last_name}
 								</TableCell>
 
@@ -91,17 +93,10 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 							</TableRow>
 						))}
 					</TableBody>
-
-					{/* <TableFooter>
-						<TableRow>
-							<TableCell colSpan={3}>Total</TableCell>
-							<TableCell className="text-right">$2,500.00</TableCell>
-						</TableRow>
-					</TableFooter> */}
 				</Table>
 			) : (
 				<p>{noData}</p>
 			)}
-		</>
+		</Fragment>
 	)
 }

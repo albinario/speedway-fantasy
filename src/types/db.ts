@@ -11,13 +11,15 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
+export type Numeric = ColumnType<string, number | string, number | string>;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Cities {
   country_id: number;
   id: Generated<number>;
   name: string;
-  timezone: Generated<string>;
+  time_zone: Generated<string>;
 }
 
 export interface Comments {
@@ -35,12 +37,17 @@ export interface Countries {
   name: string;
 }
 
+export interface GpRoundsPerYear {
+  rounds: Int8 | null;
+  year: Numeric | null;
+}
+
 export interface Gps {
   city_id: number;
   finished: number | null;
   id: Generated<number>;
   round: number;
-  start_date: Timestamp | null;
+  start_date: Timestamp;
   wild_card_id: number | null;
 }
 
@@ -118,6 +125,7 @@ export interface DB {
   cities: Cities;
   comments: Comments;
   countries: Countries;
+  gp_rounds_per_year: GpRoundsPerYear;
   gps: Gps;
   riders: Riders;
   riders_results: RidersResults;
