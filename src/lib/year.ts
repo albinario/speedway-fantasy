@@ -1,4 +1,4 @@
-import { getYears } from '@/components/YearSelector/data'
+import { getYears } from '@/data/year'
 import { getParamValue, paramKeys, paramValues } from '@/lib/params'
 
 export async function getYearValues(searchParams: Promise<{ year?: string }>) {
