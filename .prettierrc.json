@@ -5,10 +5,7 @@
 	"tabWidth": 2,
 	"trailingComma": "none",
 	"useTabs": true,
-	"plugins": [
-		"@trivago/prettier-plugin-sort-imports",
-		"prettier-plugin-tailwindcss"
-	],
+	"plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
 	"importOrder": [
 		"^react$",
 		"^react-(.*)$",

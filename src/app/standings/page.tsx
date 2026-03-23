@@ -8,7 +8,7 @@ import { YearSelector } from '@/components/YearSelector'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
-import { metaData, noData } from './constants'
+import { metaData } from './constants'
 
 type TStandingsPage = {
 	searchParams: Promise<{
@@ -28,12 +28,10 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 				<YearSelector yearValues={yearValues} />
 			</div>
 
-			<UsersStandings activeYear={yearValues.activeYear} noData={noData} />
-			{/* <RidersStandings
-				activeYear={yearValues.activeYear}
-				limit={10}
-				noData={noData}
-			/> */}
+			<div className="grid gap-4 lg:grid-cols-2">
+				<UsersStandings activeYear={yearValues.activeYear} limit={10} />
+				<RidersStandings activeYear={yearValues.activeYear} limit={10} />
+			</div>
 		</Fragment>
 	)
 }

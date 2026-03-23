@@ -67,6 +67,14 @@ export interface RidersResults {
   rider_id: Int8;
 }
 
+export interface RidersWithCountry {
+  country_code: string | null;
+  country_id: number | null;
+  id: number | null;
+  name: string | null;
+  number: number | null;
+}
+
 export interface Users {
   auth0_id: string;
   created_at: Generated<Timestamp>;
@@ -121,6 +129,17 @@ export interface UsersStars {
   year: number;
 }
 
+export interface UsersWithStars {
+  auth0_id: string | null;
+  created_at: Timestamp | null;
+  email: string | null;
+  first_name: string | null;
+  id: Int8 | null;
+  last_name: string | null;
+  reminder: number | null;
+  stars: number[] | null;
+}
+
 export interface DB {
   cities: Cities;
   comments: Comments;
@@ -129,9 +148,11 @@ export interface DB {
   gps: Gps;
   riders: Riders;
   riders_results: RidersResults;
+  riders_with_country: RidersWithCountry;
   users: Users;
   users_picks: UsersPicks;
   users_results: UsersResults;
   users_standings: UsersStandings;
   users_stars: UsersStars;
+  users_with_stars: UsersWithStars;
 }

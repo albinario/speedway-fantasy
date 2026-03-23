@@ -10,19 +10,15 @@ import {
 import { EMedal } from '@/enums'
 import type { TParamValues } from '@/lib/params'
 
+import { UsersName } from '../UserName'
 import { getUsersStandings } from './data'
 
 type TUsersStandings = {
 	activeYear: number | TParamValues
 	limit?: number
-	noData: string
 }
 
-export async function UsersStandings({
-	activeYear,
-	limit,
-	noData
-}: TUsersStandings) {
+export async function UsersStandings({ activeYear, limit }: TUsersStandings) {
 	const usersStandings = await getUsersStandings(activeYear, limit)
 
 	return usersStandings?.length > 0 ? (
@@ -59,7 +55,11 @@ export async function UsersStandings({
 						</TableCell>
 
 						<TableCell>
-							{standing.first_name} {standing.last_name}
+							<UsersName
+								firstName={standing.first_name}
+								lastName={standing.last_name}
+								stars={standing.stars}
+							/>
 						</TableCell>
 
 						<TableCell className="text-center">{standing.points}</TableCell>
@@ -72,6 +72,6 @@ export async function UsersStandings({
 			</TableBody>
 		</Table>
 	) : (
-		<p>{noData}</p>
+		<p>No users standings found</p>
 	)
 }

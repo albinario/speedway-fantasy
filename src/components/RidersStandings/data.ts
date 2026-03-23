@@ -4,44 +4,80 @@ import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
 
-export function getRidersStandings(
-	year: number | TParamValues,
-	limit?: number
-) {
+export function getRidersStandings(year: number | TParamValues, limit?: number) {
 	return dataFetch(() => {
 		if (year !== paramValues.all) {
+			const timesPickedYearScoped = sql<number>`(
+				SELECT COUNT(*)
+				FROM users_picks up
+				INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
+				WHERE EXTRACT(YEAR FROM pick_gps.start_date) = ${year}
+				  AND (
+				    up.rider_1_id = riders_results.rider_id
+				    OR up.rider_2_id = riders_results.rider_id
+				    OR up.rider_3_id = riders_results.rider_id
+				  )
+			)`
+
 			let query = db
 				.selectFrom('riders_results')
-				.innerJoin('riders', 'riders_results.rider_id', 'riders.id')
+				.innerJoin('riders_with_country', 'riders_results.rider_id', 'riders_with_country.id')
+				.innerJoin('gps', 'riders_results.gp_id', 'gps.id')
 				.select((eb) => [
 					'riders_results.rider_id',
-					'riders.name',
-					eb.fn.sum<number>('riders_results.points').as('total_points')
+					'riders_with_country.name',
+					'riders_with_country.country_code',
+					eb.fn.sum<number>('riders_results.points').as('total_points'),
+					eb.fn.count<number>('riders_results.gp_id').as('gps'),
+					eb.fn.sum<number>('riders_results.heats').as('heats'),
+					sql<number>`COUNT(*) FILTER (WHERE riders_results.medal = 1)`.as('medal_1'),
+					sql<number>`COUNT(*) FILTER (WHERE riders_results.medal = 2)`.as('medal_2'),
+					sql<number>`COUNT(*) FILTER (WHERE riders_results.medal = 3)`.as('medal_3'),
+					timesPickedYearScoped.as('times_picked')
 				])
-				.orderBy('riders_results.points', 'desc')
+				.where(sql<number>`EXTRACT(YEAR FROM gps.start_date)`, '=', year)
 				.groupBy([
 					'riders_results.rider_id',
-					'riders.name',
-					'riders_results.points'
+					'riders_with_country.name',
+					'riders_with_country.country_code'
 				])
+				.orderBy('total_points', 'desc')
 
 			if (limit !== undefined) {
 				query = query.limit(limit)
 			}
-			console.log(query.compile())
 
 			return query.execute()
 		}
 
+		const timesPickedAllYears = sql<number>`(
+			SELECT COUNT(*)
+			FROM users_picks up
+			WHERE up.rider_1_id = riders_results.rider_id
+			   OR up.rider_2_id = riders_results.rider_id
+			   OR up.rider_3_id = riders_results.rider_id
+		)`
+
 		let query = db
 			.selectFrom('riders_results')
-			.innerJoin('riders', 'riders_results.rider_id', 'riders.id')
+			.innerJoin('riders_with_country', 'riders_results.rider_id', 'riders_with_country.id')
 			.select((eb) => [
 				'riders_results.rider_id',
-				'riders.name',
-				eb.fn.sum('riders_results.points').as('total_points')
+				'riders_with_country.name',
+				'riders_with_country.country_code',
+				eb.fn.sum<number>('riders_results.points').as('total_points'),
+				eb.fn.count<number>('riders_results.gp_id').as('gps'),
+				eb.fn.sum<number>('riders_results.heats').as('heats'),
+				sql<number>`COUNT(*) FILTER (WHERE riders_results.medal = 1)`.as('medal_1'),
+				sql<number>`COUNT(*) FILTER (WHERE riders_results.medal = 2)`.as('medal_2'),
+				sql<number>`COUNT(*) FILTER (WHERE riders_results.medal = 3)`.as('medal_3'),
+				timesPickedAllYears.as('times_picked')
 			])
-			.groupBy(['riders_results.rider_id', 'riders.name'])
+			.groupBy([
+				'riders_results.rider_id',
+				'riders_with_country.name',
+				'riders_with_country.country_code'
+			])
 			.orderBy('total_points', 'desc')
 
 		if (limit !== undefined) {
