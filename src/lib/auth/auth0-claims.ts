@@ -1,4 +1,4 @@
-export const ROLE_CLAIM = 'https://betsgp.local/roles'
+export const ROLE_CLAIM = 'https://speedwayfantasy.com/roles'
 
 export const getRoles = (user?: Record<string, unknown>) => {
 	const rawRoles = user?.[ROLE_CLAIM]
