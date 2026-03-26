@@ -13,22 +13,24 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { paramKeys } from '@/lib/params'
-
-import type { TYears } from './data'
+import { paramKeys, paramValues, type TParamValues } from '@/lib/params'
+import type { TYearValues } from '@/lib/year'
 
 type TYearSelectorProps = {
-	years: TYears
-	selectedYear: number
+	yearValues: TYearValues
 }
 
-export function YearSelector({ years, selectedYear }: TYearSelectorProps) {
+export function YearSelector({ yearValues }: TYearSelectorProps) {
 	const router = useRouter()
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
 
+	const { activeYear, years } = yearValues
+
 	const latestYear = years[0]?.value
-	const showClearButton = Boolean(latestYear && selectedYear !== latestYear)
+	const showClearButton = Boolean(
+		activeYear === paramValues.all || (latestYear && activeYear !== latestYear)
+	)
 
 	const clearYear = () => {
 		const params = new URLSearchParams(searchParams.toString())
@@ -37,9 +39,15 @@ export function YearSelector({ years, selectedYear }: TYearSelectorProps) {
 		router.push(queryString ? `${pathname}?${queryString}` : pathname)
 	}
 
-	const updateYear = (year: number) => {
+	const updateYear = (year: number | TParamValues) => {
 		const params = new URLSearchParams(searchParams.toString())
-		params.set(paramKeys.year, String(year))
+
+		if (year === paramValues.all) {
+			params.set(paramKeys.year, paramValues.all)
+		} else {
+			params.set(paramKeys.year, String(year))
+		}
+
 		router.push(`${pathname}?${params.toString()}`)
 	}
 
@@ -48,7 +56,9 @@ export function YearSelector({ years, selectedYear }: TYearSelectorProps) {
 			<div className="flex items-center gap-2">
 				<DropdownMenuTrigger asChild>
 					<Button variant="outline" className="group flex items-center gap-2">
-						<span>{selectedYear}</span>
+						<span>
+							{activeYear === paramValues.all ? 'All time' : activeYear}
+						</span>
 
 						<ChevronDown
 							aria-hidden
@@ -64,7 +74,7 @@ export function YearSelector({ years, selectedYear }: TYearSelectorProps) {
 				)}
 			</div>
 
-			<DropdownMenuContent className="w-10" align="start">
+			<DropdownMenuContent align="end" className="w-fit min-w-0 px-2">
 				<DropdownMenuGroup>
 					<DropdownMenuLabel>Years</DropdownMenuLabel>
 
@@ -81,7 +91,9 @@ export function YearSelector({ years, selectedYear }: TYearSelectorProps) {
 				<DropdownMenuSeparator />
 
 				<DropdownMenuGroup>
-					<DropdownMenuItem>All time</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => updateYear(paramValues.all)}>
+						All time
+					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>

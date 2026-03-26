@@ -1,12 +1,14 @@
 'use client'
 
+import { locale } from '@/config/time-zone'
+
 type TStartTimeNote = {
 	date?: string | number | Date | null
 	eventTimeZone?: string | null
 }
 
 function getTimeZoneOffsetLabel(date: Date, timeZone: string) {
-	return new Intl.DateTimeFormat('en-GB', {
+	return new Intl.DateTimeFormat(locale, {
 		timeZone,
 		timeZoneName: 'shortOffset'
 	})
@@ -27,7 +29,7 @@ export function StartTimeNote({ date, eventTimeZone }: TStartTimeNote) {
 		return null
 	}
 
-	const userTime = eventDate.toLocaleTimeString('en-GB', {
+	const userTime = eventDate.toLocaleTimeString(locale, {
 		hour: '2-digit',
 		minute: '2-digit',
 		hour12: false

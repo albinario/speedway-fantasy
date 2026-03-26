@@ -11,13 +11,15 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
+export type Numeric = ColumnType<string, number | string, number | string>;
+
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Cities {
   country_id: number;
   id: Generated<number>;
   name: string;
-  timezone: Generated<string>;
+  time_zone: Generated<string>;
 }
 
 export interface Comments {
@@ -35,12 +37,17 @@ export interface Countries {
   name: string;
 }
 
+export interface GpRoundsPerYear {
+  rounds: Int8 | null;
+  year: Numeric | null;
+}
+
 export interface Gps {
   city_id: number;
   finished: number | null;
   id: Generated<number>;
   round: number;
-  start_date: Timestamp | null;
+  start_date: Timestamp;
   wild_card_id: number | null;
 }
 
@@ -58,6 +65,14 @@ export interface RidersResults {
   medal: number | null;
   points: Generated<number>;
   rider_id: Int8;
+}
+
+export interface RidersWithCountry {
+  country_code: string | null;
+  country_id: number | null;
+  id: number | null;
+  name: string | null;
+  number: number | null;
 }
 
 export interface Users {
@@ -114,16 +129,30 @@ export interface UsersStars {
   year: number;
 }
 
+export interface UsersWithStars {
+  auth0_id: string | null;
+  created_at: Timestamp | null;
+  email: string | null;
+  first_name: string | null;
+  id: Int8 | null;
+  last_name: string | null;
+  reminder: number | null;
+  stars: number[] | null;
+}
+
 export interface DB {
   cities: Cities;
   comments: Comments;
   countries: Countries;
+  gp_rounds_per_year: GpRoundsPerYear;
   gps: Gps;
   riders: Riders;
   riders_results: RidersResults;
+  riders_with_country: RidersWithCountry;
   users: Users;
   users_picks: UsersPicks;
   users_results: UsersResults;
   users_standings: UsersStandings;
   users_stars: UsersStars;
+  users_with_stars: UsersWithStars;
 }

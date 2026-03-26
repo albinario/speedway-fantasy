@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 
+import { locale } from '@/config/time-zone'
+import type { ColumnMeta } from '@/types/column-meta'
+
 import { metaData, noData } from './constants'
 import { getUsers } from './data'
-
-import type { ColumnMeta } from '@/types/column-meta'
 
 export const metadata: Metadata = metaData
 
@@ -19,11 +20,11 @@ export default async function UsersPage() {
 						format: (val: unknown) =>
 							val
 								? new Date(val as string | number | Date).toLocaleDateString(
-										'sv-SE',
-										{ dateStyle: 'medium' },
+										locale,
+										{ dateStyle: 'medium' }
 									)
-								: '',
-					}),
+								: ''
+					})
 				}))
 			: []
 

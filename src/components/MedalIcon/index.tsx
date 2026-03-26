@@ -1,7 +1,7 @@
 import { MedalIcon as MedalIconComponent } from 'lucide-react'
 
+import { colors } from '@/config/brand'
 import { EMedal } from '@/enums'
-import { cn } from '@/lib/utils'
 
 type TMedalIcon = {
 	medal: EMedal
@@ -10,14 +10,10 @@ type TMedalIcon = {
 export function MedalIcon({ medal }: TMedalIcon) {
 	const medalColor =
 		medal === EMedal.Gold
-			? '#FFD700'
+			? colors.gold
 			: medal === EMedal.Silver
-				? '#C0C0C0'
-				: '#CD7F32'
+				? colors.silver
+				: colors.bronze
 
-	return (
-		<MedalIconComponent
-			className={cn('size-4', `text-[${medalColor}]`, 'mx-auto')}
-		/>
-	)
+	return <MedalIconComponent className="mx-auto size-4" stroke={medalColor} />
 }
