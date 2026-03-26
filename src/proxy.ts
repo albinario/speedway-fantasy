@@ -8,13 +8,11 @@ export async function proxy(request: Request) {
 	const { pathname, search } = new URL(request.url)
 
 	// For redirects from auth0 (login/callback/logout), return as-is
-	if (authResponse.status !== 200) {
-		return authResponse
-	}
+	if (authResponse.status !== 200) return authResponse
 
 	if (pathname.startsWith('/protected') || pathname.startsWith('/admin')) {
 		const session = await auth0.getSession(
-			request as unknown as Parameters<typeof auth0.getSession>[0],
+			request as unknown as Parameters<typeof auth0.getSession>[0]
 		)
 
 		if (!session) {
@@ -25,7 +23,7 @@ export async function proxy(request: Request) {
 
 		if (pathname.startsWith('/admin')) {
 			const roles = getRoles(
-				session.user as Record<string, unknown> | undefined,
+				session.user as Record<string, unknown> | undefined
 			)
 
 			if (!roles.includes('admin')) {
@@ -54,6 +52,6 @@ export async function proxy(request: Request) {
 
 export const config = {
 	matcher: [
-		'/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
-	],
+		'/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'
+	]
 }

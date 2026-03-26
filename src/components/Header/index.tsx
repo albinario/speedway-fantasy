@@ -1,6 +1,8 @@
 import Image from 'next/image'
-import Link from 'next/link'
 
+import { LogIn, LogOut } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import { logo } from '@/config/brand'
 import { getViewer } from '@/lib/auth/get-viewer'
 
@@ -19,18 +21,29 @@ export async function Header() {
 				/>
 			</div>
 
-			<div className="flex flex-col items-end">
+			<div className="flex flex-col items-end gap-2">
 				{viewer.isAuthenticated ? (
-					<div>
-						{viewer.db?.first_name} {viewer.db?.last_name}{' '}
-						<a href="/auth/logout">Log out</a>
+					<div className="flex items-center gap-3">
+						<span className="text-sm">
+							{viewer.db?.first_name} {viewer.db?.last_name}
+						</span>
+
+						<Button asChild variant="outline">
+							<a href="/auth/logout">
+								Log out <LogOut />
+							</a>
+						</Button>
 					</div>
 				) : (
-					<a href="/auth/login">Log in</a>
+					<Button asChild variant="outline">
+						<a href="/auth/login">
+							Sign in <LogIn />
+						</a>
+					</Button>
 				)}
 
-				<Link href="/protected">User protected page</Link>
-				<Link href="/admin">Admin protected page</Link>
+				{/* <Link href="/protected">User protected page</Link> */}
+				{/* <Link href="/admin">Admin protected page</Link> */}
 			</div>
 		</div>
 	)
