@@ -52,6 +52,7 @@ export interface Gps {
 }
 
 export interface Riders {
+  active: number | null;
   country_id: number;
   id: Generated<number>;
   name: string;

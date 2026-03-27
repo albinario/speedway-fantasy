@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 import { Header } from '@/components/Header'
 import { NavFooter } from '@/components/Nav'
@@ -15,7 +15,8 @@ import './globals.css'
 
 const inter = Inter({
 	subsets: ['latin'],
-	display: 'swap'
+	display: 'swap',
+	preload: false
 })
 
 export const metadata: Metadata = {
@@ -45,7 +46,9 @@ export default async function RootLayout({
 		<html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
 			<body className={`${inter.className} flex min-h-screen flex-col`}>
 				<Header />
-				<main className="container mx-auto my-4 w-full flex-1">{children}</main>
+
+				<main className="fluid-container flex-1 p-0 sm:p-4">{children}</main>
+
 				<NavFooter />
 				<Analytics />
 				<SpeedInsights />

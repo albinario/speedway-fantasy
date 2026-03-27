@@ -11,11 +11,12 @@ export async function Header() {
 
 	return (
 		<div className="flex justify-between border-b p-4">
-			<div className="w-64">
+			<div className="w-32 sm:w-48 md:w-64">
 				<Image
 					alt={logo.alt}
 					height={logo.height}
 					width={logo.width}
+					sizes={logo.widthContainer}
 					priority
 					src={logo.src}
 				/>

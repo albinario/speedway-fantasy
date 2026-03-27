@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@auth0/nextjs-auth0": "^4.16.0",
 		"@neondatabase/serverless": "^1.0.2",
+		"@tanstack/react-table": "^8.21.3",
 		"@vercel/analytics": "^2.0.1",
 		"@vercel/speed-insights": "^2.0.0",
 		"class-variance-authority": "^0.7.1",
