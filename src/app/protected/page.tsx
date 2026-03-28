@@ -1,4 +1,4 @@
-import { type ComponentType, Fragment } from 'react'
+import { type ComponentType } from 'react'
 
 import Link from 'next/link'
 
@@ -12,7 +12,7 @@ const ProtectedPage = auth0.withPageAuthRequired(
 		const roles = getRoles(user as Record<string, unknown> | undefined)
 
 		return (
-			<Fragment>
+			<>
 				<h1>Protected page</h1>
 				<p>Signed in as {user?.name ?? user?.email}.</p>
 				<p>Roles: {roles.length ? roles.join(', ') : 'none'}</p>
@@ -26,7 +26,7 @@ const ProtectedPage = auth0.withPageAuthRequired(
 					<Link href="/">Back home</Link>
 					<a href="/auth/logout">Log out</a>
 				</div>
-			</Fragment>
+			</>
 		)
 	},
 	{ returnTo: '/protected' },

@@ -1,11 +1,10 @@
 'use client'
 
 import type { ColumnDef } from '@tanstack/react-table'
-import { Fragment } from 'react/jsx-runtime'
 
 import { Flag } from '@/components/Flag'
-import { Image } from '@/components/Image'
 import { MedalIcon } from '@/components/MedalIcon'
+import { RiderImage } from '@/components/RiderImage'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { getMedalColor } from '@/lib/medals'
@@ -42,13 +41,7 @@ const columns: ColumnDef<TRow>[] = [
 		header: '',
 		enableSorting: false,
 		cell: ({ row }) => (
-			<Image
-				className="size-12 rounded-full object-cover"
-				fallbackSrc="/icon-alt-rider.png"
-				height={400}
-				width={400}
-				src={`/riders/${row.original.rider_id}.png`}
-			/>
+			<RiderImage className="size-12" riderId={row.original.rider_id} />
 		)
 	},
 	{
@@ -59,7 +52,7 @@ const columns: ColumnDef<TRow>[] = [
 			const { name, country_code, medals } = row.original
 
 			return (
-				<Fragment>
+				<>
 					<div className="uppercase">{name}</div>
 
 					<div className="mt-1 flex w-fit items-center gap-1">
@@ -73,7 +66,7 @@ const columns: ColumnDef<TRow>[] = [
 							</div>
 						)}
 					</div>
-				</Fragment>
+				</>
 			)
 		}
 	},

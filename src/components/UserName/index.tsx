@@ -8,7 +8,7 @@ type TUsersName = {
 	firstName: string | null
 	lastName: string | null
 	stars?: number[] | null
-	userId: string
+	userId: number
 }
 
 export function UsersName({ userId, firstName, lastName, stars }: TUsersName) {

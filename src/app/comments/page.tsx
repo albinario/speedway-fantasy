@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 
-import { Fragment } from 'react/jsx-runtime'
 
 import { metaData, noData } from './constants'
 import { getComments } from './data'
@@ -11,7 +10,7 @@ export default async function CommentsPage() {
 	const comments = await getComments()
 
 	return (
-		<Fragment>
+		<>
 			<h1>{metaData.title}</h1>
 
 			{comments.length <= 0 ? (
@@ -21,6 +20,6 @@ export default async function CommentsPage() {
 					<code>{JSON.stringify(comments, null, 2)}</code>
 				</pre>
 			)}
-		</Fragment>
+		</>
 	)
 }

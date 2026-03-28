@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 
-import { Fragment } from 'react/jsx-runtime'
-
 import { YearSelector } from '@/components/YearSelector'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
@@ -27,7 +25,7 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 		ridersStandings.length <= 0 ? await getRidersActive() : []
 
 	return (
-		<Fragment>
+		<>
 			<div className="flex items-center justify-between py-4">
 				<h1 className="font-black uppercase">{metaData.title}</h1>
 
@@ -39,6 +37,6 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 			) : ridersActive.length > 0 ? (
 				<RidersActive riders={ridersActive} />
 			) : null}
-		</Fragment>
+		</>
 	)
 }

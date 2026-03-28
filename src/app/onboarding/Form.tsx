@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
@@ -17,7 +17,7 @@ export function OnboardingForm({ action }: TOnboardingForm) {
 	const disabled = !firstName.trim() || !lastName.trim()
 
 	return (
-		<Fragment>
+		<>
 			<CardContent>
 				<form id="onboarding-form" action={action}>
 					<div className="flex flex-col gap-4">
@@ -61,6 +61,6 @@ export function OnboardingForm({ action }: TOnboardingForm) {
 					Save and continue
 				</Button>
 			</CardFooter>
-		</Fragment>
+		</>
 	)
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 
-import { Fragment } from 'react/jsx-runtime'
 
 import { YearSelector } from '@/components/YearSelector'
 import type { TParamValues } from '@/lib/params'
@@ -23,7 +22,7 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 	const usersStandings = await getUsersStandings(yearValues.activeYear, 10)
 
 	return (
-		<Fragment>
+		<>
 			<div className="flex items-center justify-between py-4">
 				<h1 className="font-black uppercase">{metaData.title}</h1>
 
@@ -33,6 +32,6 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 			{usersStandings.length > 0 && (
 				<UsersStandingsTable data={usersStandings} />
 			)}
-		</Fragment>
+		</>
 	)
 }
