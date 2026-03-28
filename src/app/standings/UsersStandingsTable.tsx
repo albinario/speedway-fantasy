@@ -64,23 +64,6 @@ const columns: ColumnDef<TRow>[] = [
 			)
 		}
 	},
-	// {
-	// 	id: 'avatar',
-	// 	header: '',
-	// 	enableSorting: false,
-	// 	cell: ({ row }) => (
-	// 		<img
-	// 			alt=""
-	// 			className="size-10 object-cover"
-	// 			src={`/users/${row.original.user_id}.jpg`}
-	// 			onError={(e) => {
-	// 				const img = e.currentTarget
-	// 				img.onerror = null
-	// 				img.src = '/icon-alt.png'
-	// 			}}
-	// 		/>
-	// 	)
-	// },
 	{
 		accessorKey: 'first_name',
 		header: 'Name',
@@ -90,6 +73,7 @@ const columns: ColumnDef<TRow>[] = [
 				firstName={row.original.first_name}
 				lastName={row.original.last_name}
 				stars={row.original.stars}
+				userId={row.original.user_id}
 			/>
 		)
 	},

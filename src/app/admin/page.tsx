@@ -1,31 +1,39 @@
-import { type ComponentType, Fragment } from 'react'
-
-import Link from 'next/link'
+import { type ComponentType } from 'react'
 
 import { auth0 } from '@/lib/auth/auth0'
-import { getRoles } from '@/lib/auth/auth0-claims'
+
+import { AddCity } from './AddCity'
+import { AddCountry } from './AddCountry'
+import { AddGP } from './AddGP'
+import { AddRider } from './AddRider'
+import { AssignWildCard } from './AssignWildCard'
+import {
+	getCities,
+	getCountries,
+	getGPsWildCard,
+	getRidersWildCard
+} from './data'
 
 const AdminPage = auth0.withPageAuthRequired(
 	async function AdminPage() {
-		const session = await auth0.getSession()
-		const user = session?.user
-		const roles = getRoles(user as Record<string, unknown> | undefined)
+		const [cities, countries, gpsWildCard, ridersWildCard] = await Promise.all([
+			getCities(),
+			getCountries(),
+			getGPsWildCard(),
+			getRidersWildCard()
+		])
 
 		return (
-			<Fragment>
-				<h1>Admin page</h1>
-				<p>Signed in as {user?.name ?? user?.email}.</p>
-				<p>Roles: {roles.length ? roles.join(', ') : 'none'}</p>
-
-				<div style={{ display: 'flex', gap: '1rem' }}>
-					<Link href="/">Back home</Link>
-					<Link href="/protected">User page</Link>
-					<a href="/auth/logout">Log out</a>
-				</div>
-			</Fragment>
+			<div className="grid items-start gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+				<AddGP cities={cities} />
+				<AssignWildCard gps={gpsWildCard} riders={ridersWildCard} />
+				<AddRider countries={countries} />
+				<AddCity countries={countries} />
+				<AddCountry />
+			</div>
 		)
 	},
-	{ returnTo: '/admin' },
+	{ returnTo: '/admin' }
 ) as ComponentType
 
 export default AdminPage

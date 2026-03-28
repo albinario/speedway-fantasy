@@ -8,6 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 
 import { Header } from '@/components/Header'
 import { NavFooter } from '@/components/Nav'
+import { Toaster } from '@/components/ui/sonner'
 import { metaData } from '@/config/brand'
 import { getViewer } from '@/lib/auth/get-viewer'
 
@@ -43,13 +44,14 @@ export default async function RootLayout({
 	}
 
 	return (
-		<html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
+		<html lang="en" className="dark" style={{ colorScheme: 'dark' }} data-scroll-behavior="smooth">
 			<body className={`${inter.className} flex min-h-screen flex-col`}>
 				<Header />
 
 				<main className="fluid-container flex-1 p-0 sm:p-4">{children}</main>
 
 				<NavFooter />
+				<Toaster />
 				<Analytics />
 				<SpeedInsights />
 			</body>

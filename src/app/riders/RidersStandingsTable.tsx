@@ -4,13 +4,13 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { Fragment } from 'react/jsx-runtime'
 
 import { Flag } from '@/components/Flag'
+import { Image } from '@/components/Image'
 import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { getMedalColor } from '@/lib/medals'
 
 import type { getRidersStandings } from './data'
-import { RiderAvatar } from './RiderAvatar'
 
 type TRow = Awaited<ReturnType<typeof getRidersStandings>>[number]
 
@@ -41,7 +41,15 @@ const columns: ColumnDef<TRow>[] = [
 		id: 'avatar',
 		header: '',
 		enableSorting: false,
-		cell: ({ row }) => <RiderAvatar id={Number(row.original.rider_id)} />
+		cell: ({ row }) => (
+			<Image
+				className="size-12 rounded-full object-cover"
+				fallbackSrc="/icon-alt-rider.png"
+				height={400}
+				width={400}
+				src={`/riders/${row.original.rider_id}.png`}
+			/>
+		)
 	},
 	{
 		accessorKey: 'name',

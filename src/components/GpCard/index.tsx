@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 import { TGp } from '@/app/gps/data'
 import { Countdown } from '@/components/Countdown'
 import { Flag } from '@/components/Flag'
@@ -31,9 +33,11 @@ export async function GpCard({ gp, isLoggedIn, macroStage }: TGpCard) {
 	return (
 		<Card className="mx-auto w-full pt-0">
 			<div className="relative">
-				<img
+				<Image
 					alt=""
 					className="relative z-20 aspect-video w-full object-cover brightness-60"
+					height={300}
+					width={600}
 					src={`/cities/${gp?.city_id}.jpg`}
 				/>
 

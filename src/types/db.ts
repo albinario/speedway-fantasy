@@ -44,7 +44,7 @@ export interface GpRoundsPerYear {
 
 export interface Gps {
   city_id: number;
-  finished: number | null;
+  finished: Generated<boolean | null>;
   id: Generated<number>;
   round: number;
   start_date: Timestamp;
@@ -57,6 +57,7 @@ export interface Riders {
   id: Generated<number>;
   name: string;
   number: number;
+  retired: boolean | null;
 }
 
 export interface RidersResults {
@@ -83,7 +84,7 @@ export interface Users {
   first_name: string;
   id: Generated<Int8>;
   last_name: string;
-  reminder: Generated<number>;
+  reminder: Generated<boolean>;
 }
 
 export interface UsersPicks {
@@ -131,13 +132,9 @@ export interface UsersStars {
 }
 
 export interface UsersWithStars {
-  auth0_id: string | null;
-  created_at: Timestamp | null;
-  email: string | null;
   first_name: string | null;
   id: Int8 | null;
   last_name: string | null;
-  reminder: number | null;
   stars: number[] | null;
 }
 
