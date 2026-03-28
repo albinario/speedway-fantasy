@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from 'react'
 
-import { Badge } from '../ui/badge'
+import { FrostedPill } from '@/components/FrostedPill'
 
 type TCountdown = {
 	startDate: Date
 }
 
-const getCountdownLabel = (startDate: Date) => {
-	const diffMs = startDate.getTime() - Date.now()
+type TCountdownParts = {
+	days: number
+	hours: number
+	minutes: number
+	seconds: number
+}
 
-	if (diffMs <= 0) return 'Live now'
+function getCountdownParts(startDate: Date): TCountdownParts | null {
+	const diffMs = startDate.getTime() - Date.now()
+	if (diffMs <= 0) return null
 
 	const totalSeconds = Math.floor(diffMs / 1000)
 	const days = Math.floor(totalSeconds / 86400)
@@ -19,25 +25,58 @@ const getCountdownLabel = (startDate: Date) => {
 	const minutes = Math.floor((totalSeconds % 3600) / 60)
 	const seconds = totalSeconds % 60
 
-	return `${days}d ${hours}h ${minutes}m ${seconds}s`
+	return { days, hours, minutes, seconds }
+}
+
+function Segment({ value, label }: { value: number; label: string }) {
+	return (
+		<div className="flex flex-col items-center">
+			<span className="text-base leading-none font-black tabular-nums">
+				{String(value).padStart(2, '0')}
+			</span>
+			<span className="text-[10px] font-normal opacity-60">{label}</span>
+		</div>
+	)
+}
+
+function Divider() {
+	return <span className="mb-2 self-end text-sm font-black opacity-40">:</span>
 }
 
 export function Countdown({ startDate }: TCountdown) {
-	const [label, setLabel] = useState<string | null>(null)
+	const [parts, setParts] = useState<TCountdownParts | null>(null)
 
 	useEffect(() => {
-		setLabel(getCountdownLabel(startDate))
+		setParts(getCountdownParts(startDate))
 
 		const interval = setInterval(() => {
-			setLabel(getCountdownLabel(startDate))
+			setParts(getCountdownParts(startDate))
 		}, 1000)
 
 		return () => clearInterval(interval)
 	}, [startDate])
 
+	if (!parts) return null
+
+	const showSeconds = parts.days === 0 && parts.hours === 0
+
 	return (
-		<Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-			{label ?? 'Starting soon'}
-		</Badge>
+		<FrostedPill className="text-green-400">
+			{parts.days > 0 && (
+				<>
+					<Segment value={parts.days} label="days" />
+					<Divider />
+				</>
+			)}
+			<Segment value={parts.hours} label="hrs" />
+			<Divider />
+			<Segment value={parts.minutes} label="min" />
+			{showSeconds && (
+				<>
+					<Divider />
+					<Segment value={parts.seconds} label="sec" />
+				</>
+			)}
+		</FrostedPill>
 	)
 }

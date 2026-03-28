@@ -1,14 +1,13 @@
 import type { Metadata } from 'next'
 
-import { Fragment } from 'react/jsx-runtime'
 
-import { RidersStandings } from '@/components/RidersStandings'
-import { UsersStandings } from '@/components/UsersStandings'
 import { YearSelector } from '@/components/YearSelector'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
 import { metaData } from './constants'
+import { getUsersStandings } from './data'
+import { UsersStandingsTable } from './UsersStandingsTable'
 
 type TStandingsPage = {
 	searchParams: Promise<{
@@ -20,18 +19,19 @@ export const metadata: Metadata = metaData
 
 export default async function StandingsPage({ searchParams }: TStandingsPage) {
 	const yearValues = await getYearValues(searchParams)
+	const usersStandings = await getUsersStandings(yearValues.activeYear, 10)
 
 	return (
-		<Fragment>
+		<>
 			<div className="flex items-center justify-between py-4">
 				<h1 className="font-black uppercase">{metaData.title}</h1>
+
 				<YearSelector yearValues={yearValues} />
 			</div>
 
-			<div className="grid gap-4 lg:grid-cols-2">
-				<UsersStandings activeYear={yearValues.activeYear} limit={10} />
-				<RidersStandings activeYear={yearValues.activeYear} limit={10} />
-			</div>
-		</Fragment>
+			{usersStandings.length > 0 && (
+				<UsersStandingsTable data={usersStandings} />
+			)}
+		</>
 	)
 }

@@ -69,7 +69,8 @@ export function YearSelector({ yearValues }: TYearSelectorProps) {
 
 				{showClearButton && (
 					<Button onClick={clearYear} variant="outline">
-						<X aria-hidden className="size-4 text-white" /> Back to current year
+						<X aria-hidden className="size-4 text-white" /> Reset
+						<span className="hidden sm:inline"> to current year</span>
 					</Button>
 				)}
 			</div>

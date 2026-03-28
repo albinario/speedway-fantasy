@@ -1,74 +1,42 @@
 import type { Metadata } from 'next'
 
-import { Fragment } from 'react/jsx-runtime'
+import { YearSelector } from '@/components/YearSelector'
+import type { TParamValues } from '@/lib/params'
+import { getYearValues } from '@/lib/year'
 
-import { metaData, noData } from './constants'
-import { getRiders } from './data'
+import { metaData } from './constants'
+import { getRidersActive, getRidersStandings } from './data'
+import { RidersActive } from './RidersActive'
+import { RidersStandingsTable } from './RidersStandingsTable'
 
-import type { ColumnMeta } from '@/types/column-meta'
+type TRidersPage = {
+	searchParams: Promise<{
+		year?: string | TParamValues
+	}>
+}
 
 export const metadata: Metadata = metaData
 
-export default async function RidersPage() {
-	const riders = await getRiders()
+export default async function RidersPage({ searchParams }: TRidersPage) {
+	const yearValues = await getYearValues(searchParams)
+	const ridersStandings = await getRidersStandings(yearValues.activeYear)
 
-	const alignRight = new Set(['id'])
-	const italic = new Set(['number'])
-
-	const columns: ColumnMeta<(typeof riders)[number]>[] = Object.keys(
-		riders[0],
-	).map((key) => ({
-		key: key as keyof (typeof riders)[number],
-		label: key,
-		align: alignRight.has(key) ? 'right' : undefined,
-		italic: italic.has(key),
-	}))
+	const ridersActive =
+		ridersStandings.length <= 0 ? await getRidersActive() : []
 
 	return (
-		<Fragment>
-			<h1>{metaData.title}</h1>
+		<>
+			<div className="flex items-center justify-between py-4">
+				<h1 className="font-black uppercase">{metaData.title}</h1>
 
-			{riders.length <= 0 ? (
-				<p>{noData}</p>
-			) : (
-				<table>
-					<thead>
-						<tr>
-							{columns.map((col) => (
-								<th
-									key={String(col.key)}
-									style={{ textAlign: col.align ?? 'left' }}
-								>
-									{col.label}
-								</th>
-							))}
-						</tr>
-					</thead>
+				<YearSelector yearValues={yearValues} />
+			</div>
 
-					<tbody>
-						{riders.map((row) => (
-							<tr key={String(row.id)}>
-								{columns.map((col) => {
-									const raw = row[col.key]
-									const value = col.format ? col.format(raw) : String(raw ?? '')
-
-									return (
-										<td
-											key={String(col.key)}
-											style={{
-												textAlign: col.align ?? 'left',
-												fontStyle: col.italic ? 'italic' : undefined,
-											}}
-										>
-											{value}
-										</td>
-									)
-								})}
-							</tr>
-						))}
-					</tbody>
-				</table>
-			)}
-		</Fragment>
+			{ridersStandings.length > 0 ? (
+				<RidersStandingsTable data={ridersStandings} />
+			) : ridersActive.length > 0 ? (
+				<RidersActive riders={ridersActive} />
+			) : null}
+		</>
 	)
 }

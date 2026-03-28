@@ -25,10 +25,10 @@ export interface Cities {
 export interface Comments {
   comment: string;
   created_at: Generated<Timestamp>;
-  gp_id: Int8 | null;
-  id: Generated<Int8>;
-  reply_to_id: Int8 | null;
-  user_id: Int8;
+  gp_id: number | null;
+  id: Generated<number>;
+  reply_to_id: number | null;
+  user_id: number;
 }
 
 export interface Countries {
@@ -44,27 +44,34 @@ export interface GpRoundsPerYear {
 
 export interface Gps {
   city_id: number;
-  finished: number | null;
+  finished: Generated<boolean | null>;
+  heats_finished: Generated<number | null>;
   id: Generated<number>;
   round: number;
   start_date: Timestamp;
   wild_card_id: number | null;
 }
 
+export interface PicksRecord {
+  record: Int8 | null;
+}
+
 export interface Riders {
+  active: number | null;
   country_id: number;
   id: Generated<number>;
   name: string;
   number: number;
+  retired: boolean | null;
 }
 
 export interface RidersResults {
-  gp_id: Int8;
+  gp_id: number;
   heats: Generated<number>;
-  id: Generated<Int8>;
+  id: Generated<number>;
   medal: number | null;
   points: Generated<number>;
-  rider_id: Int8;
+  rider_id: number;
 }
 
 export interface RidersWithCountry {
@@ -80,63 +87,59 @@ export interface Users {
   created_at: Generated<Timestamp>;
   email: string;
   first_name: string;
-  id: Generated<Int8>;
+  id: Generated<number>;
   last_name: string;
-  reminder: Generated<number>;
+  reminder: Generated<boolean>;
 }
 
 export interface UsersPicks {
   created_at: Generated<Timestamp>;
-  gp_id: Int8;
-  id: Generated<Int8>;
-  rider_1_id: Int8;
-  rider_2_id: Int8;
-  rider_3_id: Int8;
+  gp_id: number;
+  id: Generated<number>;
+  rider_1_id: number;
+  rider_2_id: number;
+  rider_3_id: number;
   updated_at: Generated<Timestamp>;
-  user_id: Int8;
+  user_id: number;
 }
 
 export interface UsersResults {
-  gp_id: Int8;
+  gp_id: number;
   heats: Generated<number>;
-  id: Generated<Int8>;
+  id: Generated<number>;
   medal_1: Generated<number>;
   medal_2: Generated<number>;
   medal_3: Generated<number>;
   points: Generated<number>;
   pos: number | null;
-  user_id: Int8;
+  user_id: number;
 }
 
 export interface UsersStandings {
   heats: Generated<number>;
-  id: Generated<Int8>;
+  id: Generated<number>;
   medal_1: Generated<number>;
   medal_2: Generated<number>;
   medal_3: Generated<number>;
   points: Generated<number>;
   pos: number | null;
   prev_pos: number | null;
-  user_id: Int8;
+  user_id: number;
   year: number;
 }
 
 export interface UsersStars {
-  id: Generated<Int8>;
+  id: Generated<number>;
   points: Generated<number>;
   type: number;
-  user_id: Int8;
+  user_id: number;
   year: number;
 }
 
 export interface UsersWithStars {
-  auth0_id: string | null;
-  created_at: Timestamp | null;
-  email: string | null;
   first_name: string | null;
-  id: Int8 | null;
+  id: number | null;
   last_name: string | null;
-  reminder: number | null;
   stars: number[] | null;
 }
 
@@ -146,6 +149,7 @@ export interface DB {
   countries: Countries;
   gp_rounds_per_year: GpRoundsPerYear;
   gps: Gps;
+  picks_record: PicksRecord;
   riders: Riders;
   riders_results: RidersResults;
   riders_with_country: RidersWithCountry;
