@@ -52,6 +52,7 @@ export function getRidersStandings(
 				.select((eb) => [
 					'riders_results.rider_id',
 					'riders_with_country.name',
+					'riders_with_country.number',
 					'riders_with_country.country_code',
 					eb.fn.sum<number>('riders_results.points').as('total_points'),
 					eb.fn.count<number>('riders_results.gp_id').as('gps'),
@@ -67,6 +68,7 @@ export function getRidersStandings(
 				.groupBy([
 					'riders_results.rider_id',
 					'riders_with_country.name',
+					'riders_with_country.number',
 					'riders_with_country.country_code'
 				])
 				.orderBy('total_points', 'desc')
@@ -96,6 +98,7 @@ export function getRidersStandings(
 			.select((eb) => [
 				'riders_results.rider_id',
 				'riders_with_country.name',
+				'riders_with_country.number',
 				'riders_with_country.country_code',
 				eb.fn.sum<number>('riders_results.points').as('total_points'),
 				eb.fn.count<number>('riders_results.gp_id').as('gps'),

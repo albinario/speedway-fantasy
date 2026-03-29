@@ -1,7 +1,6 @@
 import { getGpTopRider, getGpTopUser } from '@/app/gps/data'
-import { Flag } from '@/components/Flag'
 import { InfoBox } from '@/components/InfoBox'
-import { RiderImage } from '@/components/RiderImage'
+import { RiderInfo } from '@/components/RiderInfo'
 import { UsersName } from '@/components/UserName'
 
 type TTopRanks = {
@@ -19,7 +18,7 @@ export async function TopRanks({ asCard = false, gpId }: TTopRanks) {
 	if (topUser && topUser.points === 0) return null
 
 	return (
-		<InfoBox asCard={asCard}>
+		<InfoBox asCard={asCard} className="flex flex-col gap-4">
 			<div className="flex items-center justify-between text-sm">
 				<span className="text-muted-foreground">Top ranks</span>
 				{topUser?.id && (
@@ -38,10 +37,13 @@ export async function TopRanks({ asCard = false, gpId }: TTopRanks) {
 			</div>
 
 			{topRider && (
-				<div className="flex items-center justify-end gap-2 text-sm">
-					<RiderImage className="size-8" riderId={topRider.id} />
-					<span className="uppercase">{topRider.name}</span>
-					<Flag countryCode={topRider.country_code} />
+				<div className="flex justify-end">
+					<RiderInfo
+						name={topRider.name}
+						countryCode={topRider.country_code}
+						number={topRider.number}
+						riderId={topRider.id}
+					/>
 				</div>
 			)}
 		</InfoBox>

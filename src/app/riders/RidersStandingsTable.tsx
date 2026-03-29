@@ -49,17 +49,18 @@ const columns: ColumnDef<TRow>[] = [
 		header: 'Name',
 		enableSorting: false,
 		cell: ({ row }) => {
-			const { name, country_code, medals } = row.original
+			const { name, country_code, number, medals } = row.original
 
 			return (
 				<>
-					<div className="uppercase">{name}</div>
+					<div className="text-xs font-black uppercase">{name}</div>
 
 					<div className="mt-1 flex w-fit items-center gap-1">
-						<Flag countryCode={country_code} />
+						<Flag countryCode={country_code} className="w-3.5" />
+						<span className="text-muted-foreground text-xs">{number}</span>
 
 						{medals?.length > 0 && (
-							<div className="flex items-center gap-1 pl-3">
+							<div className="flex items-center gap-1 pl-2">
 								{medals.map((medal, i) => (
 									<MedalIcon key={i} type={medal} />
 								))}

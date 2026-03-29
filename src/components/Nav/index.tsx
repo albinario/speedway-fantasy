@@ -40,7 +40,7 @@ export function NavFooter() {
 	const topLevelItems = Object.values(navItems)
 
 	return (
-		<nav className="sticky bottom-0 border-t bg-black/65 p-2 p-4 backdrop-blur-sm">
+		<nav className="sticky bottom-0 z-50 border-t bg-black/65 p-2 p-4 backdrop-blur-sm">
 			<NavItemList items={topLevelItems} />
 		</nav>
 	)

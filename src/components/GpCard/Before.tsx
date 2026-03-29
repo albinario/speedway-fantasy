@@ -1,15 +1,36 @@
+import { PickRidersTrigger, type TPickRider } from '@/components/PickRiders'
+
 type TGpCardBefore = {
-	isLoggedIn?: boolean
-	isUpNext?: boolean
+	gpId: number
+	gpName: string
+	gpRound: number
+	viewerId?: number
+	riders: TPickRider[]
+	existingPicks: {
+		rider_1_id: number
+		rider_2_id: number
+		rider_3_id: number
+	} | null
 }
 
 export function Before({
-	isLoggedIn = false,
-	isUpNext = false
+	gpId,
+	gpName,
+	gpRound,
+	viewerId,
+	riders,
+	existingPicks
 }: TGpCardBefore) {
+	if (viewerId == null) return null
+
 	return (
-		<div className="flex flex-col gap-2">
-			{isUpNext && isLoggedIn && <p className="text-sm">[pick riders]</p>}
-		</div>
+		<PickRidersTrigger
+			gpId={gpId}
+			gpName={gpName}
+			gpRound={gpRound}
+			viewerId={viewerId}
+			riders={riders}
+			existingPicks={existingPicks}
+		/>
 	)
 }

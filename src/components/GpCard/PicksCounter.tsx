@@ -1,36 +1,34 @@
 import { InfoBox } from '@/components/InfoBox'
 import { cn } from '@/lib/utils'
 
+import { getPicksCount, getPicksRecord } from './data'
+
 type TPicksCounter = {
 	asCard?: boolean
-	isOpen: boolean
-	picksCount: number
-	picksRecord: number
+	gpId: number
 }
 
-export function PicksCounter({
-	asCard = false,
-	isOpen,
-	picksCount,
-	picksRecord
-}: TPicksCounter) {
+export async function PicksCounter({ asCard = false, gpId }: TPicksCounter) {
+	const [{ count: picksCount }, { record: picksRecord }] = await Promise.all([
+		getPicksCount(gpId),
+		getPicksRecord()
+	])
+
 	const progress =
 		picksRecord > 0 ? Math.min((picksCount / picksRecord) * 100, 100) : 0
-	const color = isOpen ? 'text-green-400' : 'text-red-400'
-	const barColor = isOpen ? 'bg-green-400' : 'bg-red-400'
+	const color =
+		progress <= 30 ? 'text-red-400' : progress <= 89 ? 'text-yellow-400' : 'text-green-400'
+	const barColor =
+		progress <= 30 ? 'bg-red-400' : progress <= 89 ? 'bg-yellow-400' : 'bg-green-400'
 
 	return (
 		<InfoBox asCard={asCard}>
 			<div className="flex items-center justify-between">
 				<span className="text-muted-foreground">Registered picks</span>
 				<div className="flex items-baseline gap-1.5">
-					<span className={cn('text-lg leading-none', color)}>
-						{picksCount}
-					</span>
+					<span className={cn('text-lg leading-none', color)}>{picksCount}</span>
 					{picksRecord > 0 && (
-						<span className="text-muted-foreground text-xs">
-							• {picksRecord} record
-						</span>
+						<span className="text-muted-foreground text-xs">/ {picksRecord} record</span>
 					)}
 				</div>
 			</div>

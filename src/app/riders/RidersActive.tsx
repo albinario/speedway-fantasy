@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { Flag } from '@/components/Flag'
-import { Image } from '@/components/Image'
+import { RiderImage } from '@/components/RiderImage'
 import { Card } from '@/components/ui/card'
 
 import type { getRidersActive } from './data'
@@ -17,21 +17,13 @@ export function RidersActive({ riders }: TRidersActive) {
 				<Link key={rider.id} href={`/riders/${rider.id}`}>
 					<Card className="bg-transparent p-4 text-center font-black">
 						<div className="flex flex-col items-center gap-2">
-							{rider.id && (
-								<Image
-									className="size-20 rounded-full object-cover"
-									fallbackSrc="/icon-alt-rider.png"
-									height={400}
-									width={400}
-									src={`/riders/${rider.id}.png`}
-								/>
-							)}
-
-							<div className="uppercase">{rider.name}</div>
-
-							<div className="flex items-center justify-center gap-1">
-								<Flag countryCode={rider.country_code} />
-								<span>{rider.number}</span>
+							{rider.id && <RiderImage className="size-20" riderId={rider.id} />}
+							<div className="flex flex-col items-center gap-0.5">
+								<span className="text-xs font-black uppercase">{rider.name}</span>
+								<div className="flex items-center gap-1">
+									<Flag countryCode={rider.country_code} className="w-3.5" />
+									<span className="text-muted-foreground">{rider.number}</span>
+								</div>
 							</div>
 						</div>
 					</Card>

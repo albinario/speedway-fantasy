@@ -4,13 +4,13 @@ import * as Flags from 'country-flag-icons/react/3x2'
 type TFlag = {
 	countryCode?: string | null
 	title?: string
-	width?: number
+	className?: string
 }
 
-export function Flag({ countryCode, title, width = 24 }: TFlag) {
+export function Flag({ countryCode, title, className = 'w-6 h-auto' }: TFlag) {
 	if (!countryCode || !hasFlag(countryCode)) return null
 
 	const Flag = Flags[countryCode as keyof typeof Flags]
 
-	return <Flag style={{ width }} title={title ?? countryCode} />
+	return <Flag className={className} title={title ?? countryCode} />
 }

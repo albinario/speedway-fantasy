@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { GpCard } from '@/components/GpCard'
+import { PageTitle } from '@/components/PageTitle'
 import { ScrollToId } from '@/components/ScrollToId'
 import { YearSelector } from '@/components/YearSelector'
 import { EMacroStage } from '@/enums'
@@ -40,7 +41,7 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 			<ScrollToId id="up-next" />
 
 			<div className="flex items-center justify-between py-4">
-				<h1 className="font-black uppercase">{metaData.title}</h1>
+				<PageTitle title={metaData.title} />
 
 				<YearSelector yearValues={yearValues} />
 			</div>
@@ -57,7 +58,6 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 							<GpCard
 								key={gp.id}
 								gp={gp}
-								isLoggedIn={!!viewer?.db}
 								macroStage={stages[i]}
 								isUpNext={i === isUpNext}
 								viewerId={viewer?.db?.id}
