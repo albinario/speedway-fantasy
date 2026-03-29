@@ -16,22 +16,22 @@ export default async function GpCardPage() {
 	return (
 		<div className="grid grid-cols-[auto_1fr_1fr_1fr] items-center gap-4">
 			{/* Header row */}
-			<div className="text-2xl font-bold">GP Cards</div>
+			<div className="text-2xl font-bold"></div>
 			<div className="text-center">Before</div>
 			<div className="text-center">During</div>
 			<div className="text-center">After</div>
 
 			{/* Logged out row */}
-			<div className="text-end">Logged out</div>
+			<div className="text-end">Out</div>
 			<GpCard gp={gp} macroStage={EMacroStage.Before} />
 			<GpCard gp={gp} macroStage={EMacroStage.During} />
 			<GpCard gp={gp} macroStage={EMacroStage.After} />
 
 			{/* Logged in row */}
-			<div className="text-end">Logged in</div>
-			<GpCard gp={gp} macroStage={EMacroStage.Before} isLoggedIn />
-			<GpCard gp={gp} macroStage={EMacroStage.During} isLoggedIn />
-			<GpCard gp={gp} macroStage={EMacroStage.After} isLoggedIn />
+			<div className="text-end">In</div>
+			<GpCard gp={gp} macroStage={EMacroStage.Before} viewerId={1} />
+			<GpCard gp={gp} macroStage={EMacroStage.During} viewerId={1} />
+			<GpCard gp={gp} macroStage={EMacroStage.After} viewerId={1} />
 		</div>
 	)
 }

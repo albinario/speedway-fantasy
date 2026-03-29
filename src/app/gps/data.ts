@@ -81,7 +81,7 @@ export function getGpTopRider(gpId: number) {
 				.selectFrom('riders_results')
 				.innerJoin('riders', 'riders.id', 'riders_results.rider_id')
 				.innerJoin('countries', 'countries.id', 'riders.country_id')
-				.select(['riders.id', 'riders.name', 'countries.code as country_code'])
+				.select(['riders.id', 'riders.name', 'riders.number', 'countries.code as country_code'])
 				.where('riders_results.gp_id', '=', gpId)
 				.where('riders_results.medal', '=', 1)
 				.executeTakeFirst(),

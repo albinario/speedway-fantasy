@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { PageTitle } from '@/components/PageTitle'
 import { YearSelector } from '@/components/YearSelector'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
@@ -27,8 +28,7 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 	return (
 		<>
 			<div className="flex items-center justify-between py-4">
-				<h1 className="font-black uppercase">{metaData.title}</h1>
-
+				<PageTitle title={metaData.title} />
 				<YearSelector yearValues={yearValues} />
 			</div>
 

@@ -23,7 +23,7 @@ export function HeatsFinished({ heatsFinished }: THeatsFinished) {
 
 			<div className="bg-background h-1.5 w-full overflow-hidden rounded-full">
 				<div
-					className="h-full rounded-full bg-yellow-400 transition-all"
+					className="h-full rounded-full bg-green-400 transition-all"
 					style={{ width: `${progress}%` }}
 				/>
 			</div>
