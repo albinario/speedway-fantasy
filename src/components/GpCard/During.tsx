@@ -1,9 +1,9 @@
+import { HeatsFinished } from '@/components/HeatsFinished'
 import { InfoBox } from '@/components/InfoBox'
 import { PickedRiders } from '@/components/PickRiders/PickedRiders'
-import type { TPickRider } from '@/components/PickRiders/PickRidersSheet'
+import type { TPickRider } from '@/components/PickRiders/Sheet'
 import { ViewerGpResult } from '@/components/ViewerGpResult'
 
-import { HeatsFinished } from './HeatsFinished'
 import { TopRanks } from './TopRanks'
 
 type TExistingPicks = {

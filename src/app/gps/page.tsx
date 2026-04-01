@@ -6,10 +6,11 @@ import { ScrollToId } from '@/components/ScrollToId'
 import { YearSelector } from '@/components/YearSelector'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
+import { getMacroStage } from '@/lib/dates'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
-import { metaData } from './constants'
+import { metaData } from './[id]/constants'
 import { getGps } from './data'
 
 type TGpsPage = {
@@ -19,15 +20,6 @@ type TGpsPage = {
 }
 
 export const metadata: Metadata = metaData
-
-function getMacroStage(
-	startDate: Date | string | null | undefined,
-	finished: boolean | null | undefined
-): EMacroStage {
-	if (finished) return EMacroStage.After
-	if (startDate && new Date(startDate) <= new Date()) return EMacroStage.During
-	return EMacroStage.Before
-}
 
 export default async function GpsPage({ searchParams }: TGpsPage) {
 	const yearValues = await getYearValues(searchParams)

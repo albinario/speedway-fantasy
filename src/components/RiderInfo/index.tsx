@@ -13,7 +13,9 @@ export function RiderInfo({ name, countryCode, number, riderId }: TRiderInfo) {
 	return (
 		<div className="flex items-center gap-2">
 			<div className="flex flex-col items-end gap-0.5">
-				<span className="truncate text-xs font-black uppercase">{name ?? 'TBD'}</span>
+				<span className="truncate text-xs uppercase">
+					{name ?? 'TBD'}
+				</span>
 				<div className="flex items-center gap-1">
 					{countryCode && <Flag countryCode={countryCode} className="w-3.5" />}
 					{number && <span className="text-muted-foreground">{number}</span>}

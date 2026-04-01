@@ -7,8 +7,8 @@ import { ListCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import { PickedRiders } from './PickedRiders'
-import { PickRidersSheet, type TPickRider } from './PickRidersSheet'
 import { RiderPlaceholder } from './RiderPlaceholder'
+import { PickRidersSheet, type TPickRider } from './Sheet'
 
 type TPickRidersTrigger = {
 	gpId: number
@@ -49,7 +49,7 @@ export function PickRidersTrigger({
 
 	return (
 		<>
-			<div className="bg-muted/50 flex flex-col items-center gap-3 rounded-md px-3 py-3">
+			<div className="bg-muted/50 flex flex-col items-center gap-3 rounded-md p-3">
 				<span
 					className={`self-start text-xs ${savedPicks ? 'text-green-400/70' : 'text-yellow-400/70'}`}
 				>
@@ -68,8 +68,8 @@ export function PickRidersTrigger({
 				</div>
 
 				<Button
-					variant="outline"
-					className={`w-full ${savedPicks ? 'border-green-400/60! text-green-400/60 hover:bg-green-400/10 hover:text-green-400/80' : 'border-yellow-400/60! text-yellow-400/60 hover:bg-yellow-400/10 hover:text-yellow-400/80'}`}
+					variant={savedPicks ? 'success' : 'outline'}
+					className={`w-full ${!savedPicks && 'border-yellow-400/60! text-yellow-400/60 hover:bg-yellow-400/10 hover:text-yellow-400/80'}`}
 					onClick={() => setOpen(true)}
 				>
 					{savedPicks ? 'Edit your picks' : 'Pick your riders'}

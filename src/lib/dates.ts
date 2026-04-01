@@ -1,4 +1,5 @@
 import { defaultTimeZone, locale } from '@/config/time-zone'
+import { EMacroStage } from '@/enums'
 
 export function formatDate(
 	date?: Date | string | number | null,
@@ -21,4 +22,13 @@ export function formatDate(
 	})
 
 	return `${datePart} ${timePart}`
+}
+
+export function getMacroStage(
+	startDate: Date | string | null | undefined,
+	finished: boolean | null | undefined
+): EMacroStage {
+	if (finished) return EMacroStage.After
+	if (startDate && new Date(startDate) <= new Date()) return EMacroStage.During
+	return EMacroStage.Before
 }

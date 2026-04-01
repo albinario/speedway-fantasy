@@ -115,7 +115,7 @@ type TUsersStandingsTable = {
 
 export function UsersStandingsTable({ data }: TUsersStandingsTable) {
 	return (
-		<Card className="bg-black p-0 font-black">
+		<Card className="bg-black p-0">
 			<DataTable columns={columns} data={data} />
 		</Card>
 	)

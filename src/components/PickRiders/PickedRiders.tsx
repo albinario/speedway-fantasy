@@ -18,7 +18,7 @@ export function PickedRiders({ riders }: TPickedRiders) {
 			{riders.map((rider) => (
 				<div key={rider.id} className="flex flex-col items-center gap-0.5">
 					<RiderImage className="size-8" riderId={rider.id} />
-					<span className="text-xs font-black uppercase">
+					<span className="text-xs uppercase">
 						{rider.name.split(' ').pop()}
 					</span>
 					<div className="flex items-center gap-1">

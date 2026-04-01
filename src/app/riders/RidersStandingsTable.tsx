@@ -53,7 +53,7 @@ const columns: ColumnDef<TRow>[] = [
 
 			return (
 				<>
-					<div className="text-xs font-black uppercase">{name}</div>
+					<div className="text-xs uppercase">{name}</div>
 
 					<div className="mt-1 flex w-fit items-center gap-1">
 						<Flag countryCode={country_code} className="w-3.5" />
@@ -103,7 +103,7 @@ type TRidersStandingsTable = {
 
 export function RidersStandingsTable({ data }: TRidersStandingsTable) {
 	return (
-		<Card className="bg-black p-0 font-black">
+		<Card className="bg-black p-0">
 			<DataTable columns={columns} data={data} />
 		</Card>
 	)

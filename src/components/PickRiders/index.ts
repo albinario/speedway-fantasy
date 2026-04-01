@@ -1,3 +1,3 @@
-export { PickRidersTrigger } from './PickRidersTrigger'
+export { PickRidersTrigger } from './Trigger'
 export { RiderPlaceholder } from './RiderPlaceholder'
-export type { TPickRider } from './PickRidersSheet'
+export type { TPickRider } from './Sheet'

@@ -1,6 +1,6 @@
 import { InfoBox } from '@/components/InfoBox'
 import { PickedRiders } from '@/components/PickRiders/PickedRiders'
-import type { TPickRider } from '@/components/PickRiders/PickRidersSheet'
+import type { TPickRider } from '@/components/PickRiders/Sheet'
 import { ViewerGpResult } from '@/components/ViewerGpResult'
 
 import { TopRanks } from './TopRanks'
