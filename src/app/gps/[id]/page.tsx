@@ -33,7 +33,7 @@ export default async function GpPage({ params }: TGpPage) {
 		: [[], null]
 
 	return (
-		<div className="columns-1 gap-4 space-y-4 sm:columns-2 [&>*]:break-inside-avoid">
+		<div className="columns-1 gap-4 space-y-4 md:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
 			<section
 				aria-label={`${gp.city_name} Grand Prix`}
 				className="relative overflow-hidden rounded-xl"

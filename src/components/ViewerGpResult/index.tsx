@@ -3,14 +3,12 @@ import { InfoBox } from '@/components/InfoBox'
 import { getViewerGpResult } from './data'
 
 type TGpViewerResult = {
-	asCard?: boolean
 	gpId: number
 	label?: string
 	viewerId: number
 }
 
 export async function ViewerGpResult({
-	asCard = false,
 	gpId,
 	label = 'My result',
 	viewerId

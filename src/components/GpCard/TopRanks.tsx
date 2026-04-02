@@ -4,11 +4,10 @@ import { RiderInfo } from '@/components/RiderInfo'
 import { UsersName } from '@/components/UserName'
 
 type TTopRanks = {
-	asCard?: boolean
 	gpId: number
 }
 
-export async function TopRanks({ asCard = false, gpId }: TTopRanks) {
+export async function TopRanks({ gpId }: TTopRanks) {
 	const [topRider, topUser] = await Promise.all([
 		getGpTopRider(gpId),
 		getGpTopUser(gpId)
@@ -18,7 +17,7 @@ export async function TopRanks({ asCard = false, gpId }: TTopRanks) {
 	if (topUser && topUser.points === 0) return null
 
 	return (
-		<InfoBox asCard={asCard} className="flex flex-col gap-4">
+		<InfoBox className="flex flex-col gap-4">
 			<div className="flex items-center justify-between text-sm">
 				<span className="text-muted-foreground">Top ranks</span>
 				{topUser?.id && (
