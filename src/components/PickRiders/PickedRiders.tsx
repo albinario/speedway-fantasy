@@ -1,5 +1,7 @@
-import { Flag } from '@/components/Flag'
+import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
+
+import { RiderName } from '../RiderName'
 
 export type TPickedRider = {
 	id: number
@@ -14,17 +16,17 @@ type TPickedRiders = {
 
 export function PickedRiders({ riders }: TPickedRiders) {
 	return (
-		<div className="flex items-center justify-center gap-6">
+		<div className="flex items-center justify-center gap-8">
 			{riders.map((rider) => (
 				<div key={rider.id} className="flex flex-col items-center gap-0.5">
 					<RiderImage className="size-8" riderId={rider.id} />
-					<span className="text-xs uppercase">
-						{rider.name.split(' ').pop()}
-					</span>
-					<div className="flex items-center gap-1">
-						<Flag countryCode={rider.country_code} className="w-3.5" />
-						<span className="text-muted-foreground">{rider.number}</span>
-					</div>
+
+					<RiderName
+						name={rider.name.split(' ').pop() ?? ''}
+						riderId={rider.id}
+					/>
+
+					<FlagNumber countryCode={rider.country_code} number={rider.number} />
 				</div>
 			))}
 		</div>

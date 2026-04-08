@@ -27,7 +27,7 @@ export default async function GpPage({ params }: TGpPage) {
 
 	const [riders, existingPicks] = viewerId
 		? await Promise.all([
-				getGpRiders(gp.wild_card_id),
+				getGpRiders(gp.id, gp.wild_card_id),
 				getViewerPicks(gp.id, viewerId)
 			])
 		: [[], null]
@@ -67,7 +67,7 @@ export default async function GpPage({ params }: TGpPage) {
 
 			{macroStage === EMacroStage.After && <After />}
 
-			<PicksCounter gpId={gp.id} />
+			<PicksCounter gpId={gp.id} macroStage={macroStage} />
 
 			{gp.wild_card_id && (
 				<WildCardInfoBox

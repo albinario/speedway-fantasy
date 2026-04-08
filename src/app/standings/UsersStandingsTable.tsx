@@ -6,7 +6,7 @@ import { ArrowDown, ArrowUp } from 'lucide-react'
 import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
-import { UsersName } from '@/components/UserName'
+import { UserName } from '@/components/UserName'
 import { getMedalColor } from '@/lib/medals'
 
 import type { getUsersStandings } from './data'
@@ -69,7 +69,7 @@ const columns: ColumnDef<TRow>[] = [
 		header: 'Name',
 		enableSorting: false,
 		cell: ({ row }) => (
-			<UsersName
+			<UserName
 				firstName={row.original.first_name}
 				lastName={row.original.last_name}
 				stars={row.original.stars}

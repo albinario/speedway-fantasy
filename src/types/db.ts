@@ -15,11 +15,28 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export interface ActivityLog {
+  action: number;
+  created_at: Generated<Timestamp>;
+  gp_id: number;
+  id: Generated<number>;
+  user_id: number;
+}
+
 export interface Cities {
   country_id: number;
   id: Generated<number>;
   name: string;
   time_zone: Generated<string>;
+}
+
+export interface CitiesWithCountry {
+  country_code: string | null;
+  country_id: number | null;
+  country_name: string | null;
+  id: number | null;
+  name: string | null;
+  time_zone: string | null;
 }
 
 export interface Comments {
@@ -144,7 +161,9 @@ export interface UsersWithStars {
 }
 
 export interface DB {
+  activity_log: ActivityLog;
   cities: Cities;
+  cities_with_country: CitiesWithCountry;
   comments: Comments;
   countries: Countries;
   gp_rounds_per_year: GpRoundsPerYear;

@@ -1,4 +1,5 @@
 import { InfoBox } from '@/components/InfoBox'
+import { InfoBoxTitle } from '@/components/InfoBox/Title'
 import { RiderInfo } from '@/components/RiderInfo'
 
 type TWildCard = {
@@ -9,14 +10,18 @@ type TWildCard = {
 
 export function WildCardInfoBox({ countryCode, name, riderId }: TWildCard) {
 	return (
-		<InfoBox className="flex justify-between">
-			<span className="text-muted-foreground text-xs">Wild card</span>
-			<RiderInfo
-				name={name}
-				countryCode={countryCode}
-				number={16}
-				riderId={riderId}
-			/>
+		<InfoBox>
+			<div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+				<InfoBoxTitle>Wild card</InfoBoxTitle>
+				<div className="ml-auto">
+					<RiderInfo
+						countryCode={countryCode}
+						name={name}
+						number={16}
+						riderId={riderId}
+					/>
+				</div>
+			</div>
 		</InfoBox>
 	)
 }

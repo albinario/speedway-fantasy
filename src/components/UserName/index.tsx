@@ -3,18 +3,29 @@ import Link from 'next/link'
 import { StarIcon } from 'lucide-react'
 
 import { getMedalColor } from '@/lib/medals'
+import { cn } from '@/lib/utils'
 
-type TUsersName = {
+type TUserName = {
+	className?: string
 	firstName: string | null
 	lastName: string | null
 	stars?: number[] | null
 	userId: number
 }
 
-export function UsersName({ userId, firstName, lastName, stars }: TUsersName) {
+export function UserName({
+	className,
+	userId,
+	firstName,
+	lastName,
+	stars
+}: TUserName) {
 	return (
 		<Link
-			className="inline-flex items-baseline gap-1 text-xs uppercase sm:text-sm"
+			className={cn(
+				'inline-flex items-baseline gap-1 truncate uppercase',
+				className
+			)}
 			href={`/users/${userId}`}
 		>
 			{firstName} {lastName}

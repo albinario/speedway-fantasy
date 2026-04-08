@@ -1,6 +1,6 @@
 'use client'
 
-import { Flag } from '@/components/Flag'
+import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
 import { cn } from '@/lib/utils'
 
@@ -46,10 +46,7 @@ export function RiderTile({ rider, slotIndex, isDimmed, onClick }: TRiderTile) {
 				<span className="w-full truncate text-center text-xs leading-tight uppercase">
 					{rider.name.split(' ').pop()}
 				</span>
-				<div className="flex items-center gap-1">
-					<span className="text-muted-foreground text-xs">{rider.number}</span>
-					<Flag countryCode={rider.country_code} className="h-auto w-3.5" />
-				</div>
+				<FlagNumber countryCode={rider.country_code} number={rider.number} reverse />
 			</div>
 		</button>
 	)

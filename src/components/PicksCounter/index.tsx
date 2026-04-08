@@ -1,57 +1,56 @@
+import { ActivityFeed } from '@/components/ActivityFeed'
 import { InfoBox } from '@/components/InfoBox'
+import { InfoBoxTitle } from '@/components/InfoBox/Title'
+import { EMacroStage } from '@/enums'
+import { getProgressColor } from '@/lib/progress'
 import { cn } from '@/lib/utils'
 
 import { getPicksCount, getPicksRecord } from './data'
 
 type TPicksCounter = {
 	gpId: number
+	macroStage?: EMacroStage
 }
 
-export async function PicksCounter({ gpId }: TPicksCounter) {
-	const [{ count: picksCount }, { record: picksRecord }] = await Promise.all([
+export async function PicksCounter({ gpId, macroStage }: TPicksCounter) {
+	const [{ count }, { record }] = await Promise.all([
 		getPicksCount(gpId),
 		getPicksRecord()
 	])
 
-	const progress =
-		picksRecord > 0 ? Math.min((picksCount / picksRecord) * 100, 100) : 0
-	const color =
-		progress <= 30
-			? 'text-red-400'
-			: progress <= 89
-				? 'text-yellow-400'
-				: 'text-green-400'
-	const barColor =
-		progress <= 30
-			? 'bg-red-400'
-			: progress <= 89
-				? 'bg-yellow-400'
-				: 'bg-green-400'
+	const progress = record > 0 ? Math.min((count / record) * 100, 100) : 0
+	const { textColor, bgColor } = getProgressColor(progress)
 
 	return (
 		<InfoBox>
-			<div className="flex items-center justify-between">
-				<span className="text-muted-foreground text-xs">Registered picks</span>
-				<div className="flex items-baseline gap-1.5">
-					<span className={cn('text-lg leading-none', color)}>
-						{picksCount}
-					</span>
-					{picksRecord > 0 && (
-						<span className="text-muted-foreground text-xs">
-							/ {picksRecord} record
+			<div>
+				<div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+					<InfoBoxTitle>Registered picks</InfoBoxTitle>
+
+					<div className="ml-auto flex items-baseline gap-1.5">
+						<span className={cn('text-lg leading-none', textColor)}>
+							{count}
 						</span>
-					)}
+
+						{record > 0 && (
+							<span className="text-muted-foreground text-xs">
+								/ {record} record
+							</span>
+						)}
+					</div>
 				</div>
+
+				{record > 0 && (
+					<div className="bg-background mt-2 h-1.5 w-full overflow-hidden rounded-full">
+						<div
+							className={cn('h-full rounded-full transition-all', bgColor)}
+							style={{ width: `${progress}%` }}
+						/>
+					</div>
+				)}
 			</div>
 
-			{picksRecord > 0 && (
-				<div className="bg-background mt-2 h-1.5 w-full overflow-hidden rounded-full">
-					<div
-						className={cn('h-full rounded-full transition-all', barColor)}
-						style={{ width: `${progress}%` }}
-					/>
-				</div>
-			)}
+			{macroStage === EMacroStage.Before && <ActivityFeed gpId={gpId} />}
 		</InfoBox>
 	)
 }

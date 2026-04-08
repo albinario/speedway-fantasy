@@ -32,7 +32,7 @@ export async function GpCard({
 
 	const [riders, existingPicks] = viewerId
 		? await Promise.all([
-				getGpRiders(gp.wild_card_id),
+				getGpRiders(gp.id, gp.wild_card_id),
 				getViewerPicks(gp.id, viewerId)
 			])
 		: [[], null]
