@@ -97,7 +97,10 @@ export function PickRidersSheet({
 
 	return (
 		<Sheet open={open} onOpenChange={handleOpenChange}>
-			<SheetContent side="bottom" className="flex max-h-[90dvh] flex-col gap-0">
+			<SheetContent
+				side="bottom"
+				className="flex max-h-[90dvh] flex-col gap-0"
+			>
 				<SheetHeader className="border-b pb-3">
 					<SheetTitle>Pick your 3 riders</SheetTitle>
 					<SheetDescription>
@@ -105,7 +108,6 @@ export function PickRidersSheet({
 					</SheetDescription>
 				</SheetHeader>
 
-				{/* Scrollable rider grid */}
 				<div className="flex-1 overflow-y-auto p-4">
 					<div className="grid grid-cols-4 gap-2">
 						{riders.map((rider) => (
@@ -134,12 +136,11 @@ export function PickRidersSheet({
 					</div>
 				</div>
 
-				{/* Sticky confirm bar */}
 				<SheetFooter className="border-t pt-3">
 					<Button
-						variant="outline"
+						variant="success"
 						size="lg"
-						className="disabled:border-muted disabled:text-muted-foreground w-full border-green-400 text-green-400 hover:bg-green-400/10 hover:text-green-400"
+						className="w-full"
 						disabled={!isComplete || isPending}
 						onClick={handleSave}
 					>

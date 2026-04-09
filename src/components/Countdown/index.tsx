@@ -31,7 +31,7 @@ function getCountdownParts(startDate: Date): TCountdownParts | null {
 function Segment({ value, label }: { value: number; label: string }) {
 	return (
 		<div className="flex flex-col items-center">
-			<span className="text-base leading-none font-black tabular-nums">
+			<span className="text-base leading-none tabular-nums">
 				{String(value).padStart(2, '0')}
 			</span>
 			<span className="text-[10px] font-normal opacity-60">{label}</span>
@@ -40,7 +40,7 @@ function Segment({ value, label }: { value: number; label: string }) {
 }
 
 function Divider() {
-	return <span className="mb-2 self-end text-sm font-black opacity-40">:</span>
+	return <span className="mb-2 self-end text-sm opacity-40">:</span>
 }
 
 export function Countdown({ startDate }: TCountdown) {

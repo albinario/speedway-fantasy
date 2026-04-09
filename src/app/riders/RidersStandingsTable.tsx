@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table'
 
-import { Flag } from '@/components/Flag'
+import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
 import { RiderImage } from '@/components/RiderImage'
 import { Card } from '@/components/ui/card'
@@ -53,11 +53,10 @@ const columns: ColumnDef<TRow>[] = [
 
 			return (
 				<>
-					<div className="text-xs font-black uppercase">{name}</div>
+					<div className="text-xs uppercase">{name}</div>
 
 					<div className="mt-1 flex w-fit items-center gap-1">
-						<Flag countryCode={country_code} className="w-3.5" />
-						<span className="text-muted-foreground text-xs">{number}</span>
+						<FlagNumber countryCode={country_code} number={number} />
 
 						{medals?.length > 0 && (
 							<div className="flex items-center gap-1 pl-2">
@@ -103,7 +102,7 @@ type TRidersStandingsTable = {
 
 export function RidersStandingsTable({ data }: TRidersStandingsTable) {
 	return (
-		<Card className="bg-black p-0 font-black">
+		<Card className="bg-black p-0">
 			<DataTable columns={columns} data={data} />
 		</Card>
 	)

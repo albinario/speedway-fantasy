@@ -5,14 +5,43 @@ import { db } from '@/lib/db'
 export type { TPickRider as TGpRider }
 
 /**
- * Returns the 16 riders for a GP: 15 active seeded riders (ordered by
- * `active`) plus the designated wild card rider appended at the end.
+ * Returns the riders for a GP.
+ * If riders_results exist for the GP, returns those riders (covers historical/finished GPs).
+ * Otherwise falls back to the 15 active seeded riders + wild card.
  */
 export async function getGpRiders(
+	gpId: number,
 	wildCardId: number | null | undefined
 ): Promise<TPickRider[]> {
-	// Fetch active (seeded) riders — riders_with_country is a view so columns
-	// are nullable; filter out any rows with incomplete data.
+	// Check if riders_results exist for this GP
+	const fromResults = await dataFetch(
+		() =>
+			db
+				.selectFrom('riders_results')
+				.innerJoin('riders_with_country', 'riders_with_country.id', 'riders_results.rider_id')
+				.select([
+					'riders_with_country.id',
+					'riders_with_country.name',
+					'riders_with_country.number',
+					'riders_with_country.country_code'
+				])
+				.where('riders_results.gp_id', '=', gpId)
+				.execute(),
+		[] as {
+			id: number | null
+			name: string | null
+			number: number | null
+			country_code: string | null
+		}[]
+	)
+
+	if (fromResults.length > 0) {
+		return fromResults.filter(
+			(r): r is TPickRider => r.id != null && r.name != null && r.number != null
+		)
+	}
+
+	// Fall back to active seeded riders + wild card
 	const activeRaw = await dataFetch(
 		() =>
 			db
@@ -35,27 +64,12 @@ export async function getGpRiders(
 		}[]
 	)
 
-	const active: TPickRider[] = activeRaw
-		.filter(
-			(
-				r
-			): r is {
-				id: number
-				name: string
-				number: number
-				country_code: string | null
-			} => r.id != null && r.name != null && r.number != null
-		)
-		.map((r) => ({
-			id: r.id,
-			name: r.name,
-			number: r.number,
-			country_code: r.country_code
-		}))
+	const active: TPickRider[] = activeRaw.filter(
+		(r): r is TPickRider => r.id != null && r.name != null && r.number != null
+	)
 
 	if (!wildCardId) return active
 
-	// Fetch the wild card rider separately and append
 	const wildCardRaw = await dataFetch(
 		() =>
 			db
@@ -71,23 +85,11 @@ export async function getGpRiders(
 		null
 	)
 
-	if (
-		!wildCardRaw ||
-		wildCardRaw.id == null ||
-		wildCardRaw.name == null ||
-		wildCardRaw.number == null
-	) {
+	if (!wildCardRaw || wildCardRaw.id == null || wildCardRaw.name == null || wildCardRaw.number == null) {
 		return active
 	}
 
-	const wildCard: TPickRider = {
-		id: wildCardRaw.id,
-		name: wildCardRaw.name,
-		number: wildCardRaw.number,
-		country_code: wildCardRaw.country_code
-	}
-
-	return [...active, wildCard]
+	return [...active, { id: wildCardRaw.id, name: wildCardRaw.name, number: wildCardRaw.number, country_code: wildCardRaw.country_code }]
 }
 
 /** Returns the existing picks row for a viewer/GP pair, or null if none. */
@@ -104,22 +106,3 @@ export function getViewerPicks(gpId: number, userId: number) {
 	)
 }
 
-export function getPicksCount(gpId: number) {
-	return dataFetch(
-		() =>
-			db
-				.selectFrom('users_picks')
-				.select(db.fn.countAll<number>().as('count'))
-				.where('gp_id', '=', gpId)
-				.executeTakeFirstOrThrow(),
-		{ count: 0 }
-	)
-}
-
-export async function getPicksRecord() {
-	const { record } = await dataFetch(
-		() => db.selectFrom('picks_record').selectAll().executeTakeFirstOrThrow(),
-		{ record: 0 }
-	)
-	return { record: Number(record ?? 0) }
-}

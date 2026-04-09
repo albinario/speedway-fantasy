@@ -12,7 +12,7 @@ export function HeatsFinished({ heatsFinished }: THeatsFinished) {
 	return (
 		<InfoBox>
 			<div className="flex items-center justify-between">
-				<span className="text-muted-foreground text-sm">Heats</span>
+				<span className="text-muted-foreground">Heats</span>
 				<div className="flex items-baseline gap-1.5">
 					<span className="text-lg leading-none text-green-400">
 						{heatsFinished}
@@ -21,7 +21,7 @@ export function HeatsFinished({ heatsFinished }: THeatsFinished) {
 				</div>
 			</div>
 
-			<div className="bg-background h-1.5 w-full overflow-hidden rounded-full">
+			<div className="bg-background mt-2 h-1.5 w-full overflow-hidden rounded-full">
 				<div
 					className="h-full rounded-full bg-green-400 transition-all"
 					style={{ width: `${progress}%` }}

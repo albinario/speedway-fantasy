@@ -35,5 +35,5 @@ export function StartTimeNote({ date, eventTimeZone }: TStartTimeNote) {
 		hour12: false
 	})
 
-	return <span> • Your local: {userTime}</span>
+	return <span> • Where you are {userTime}</span>
 }

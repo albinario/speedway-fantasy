@@ -3,14 +3,12 @@ import { InfoBox } from '@/components/InfoBox'
 import { getViewerGpResult } from './data'
 
 type TGpViewerResult = {
-	asCard?: boolean
 	gpId: number
 	label?: string
 	viewerId: number
 }
 
 export async function ViewerGpResult({
-	asCard = false,
 	gpId,
 	label = 'My result',
 	viewerId
@@ -20,14 +18,12 @@ export async function ViewerGpResult({
 	if (!result) return null
 
 	return (
-		<InfoBox asCard={asCard}>
+		<InfoBox>
 			<div className="flex items-center justify-between">
 				<span className="text-muted-foreground text-sm">{label}</span>
 				<div className="flex items-baseline gap-2">
 					{result.pos && (
-						<span className="text-2xl leading-none font-black">
-							#{result.pos}
-						</span>
+						<span className="text-2xl leading-none">#{result.pos}</span>
 					)}
 					<span className="text-muted-foreground text-sm">
 						{result.points} pts

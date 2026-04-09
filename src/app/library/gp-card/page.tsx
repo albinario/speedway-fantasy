@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { getGp } from '@/app/gps/data'
+import { getGp } from '@/app/gps/[id]/data'
 import { GpCard } from '@/components/GpCard'
 import { EMacroStage } from '@/enums'
 

@@ -1,10 +1,10 @@
 'use client'
 
-import { Flag } from '@/components/Flag'
+import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
 import { cn } from '@/lib/utils'
 
-import type { TPickRider } from './PickRidersSheet'
+import type { TPickRider } from './Sheet'
 
 type TRiderTile = {
 	rider: TPickRider
@@ -21,7 +21,7 @@ export function RiderTile({ rider, slotIndex, isDimmed, onClick }: TRiderTile) {
 			type="button"
 			onClick={onClick}
 			className={cn(
-				'relative flex flex-col items-center gap-1 rounded-lg p-2 transition-all cursor-pointer',
+				'relative flex cursor-pointer flex-col items-center gap-1 rounded-lg p-2 transition-all',
 				isDimmed && 'opacity-40',
 				isSelected && 'bg-muted/50'
 			)}
@@ -30,25 +30,23 @@ export function RiderTile({ rider, slotIndex, isDimmed, onClick }: TRiderTile) {
 				<RiderImage
 					className={cn(
 						'size-14',
-						isSelected && 'ring-2 ring-green-400 ring-offset-2 ring-offset-card rounded-full'
+						isSelected &&
+							'ring-offset-card rounded-full ring-2 ring-green-400 ring-offset-2'
 					)}
 					riderId={rider.id}
 				/>
 				{isSelected && (
-					<span className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-primary text-xs font-black text-primary-foreground">
+					<span className="bg-primary text-primary-foreground absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full text-xs">
 						{slotIndex + 1}
 					</span>
 				)}
 			</div>
 
-			<div className="flex flex-col items-center gap-0.5 w-full">
-				<span className="text-xs font-black leading-tight text-center truncate w-full uppercase">
+			<div className="flex w-full flex-col items-center gap-0.5">
+				<span className="w-full truncate text-center text-xs leading-tight uppercase">
 					{rider.name.split(' ').pop()}
 				</span>
-				<div className="flex items-center gap-1">
-					<span className="text-muted-foreground text-xs">{rider.number}</span>
-					<Flag countryCode={rider.country_code} className="w-3.5 h-auto" />
-				</div>
+				<FlagNumber countryCode={rider.country_code} number={rider.number} reverse />
 			</div>
 		</button>
 	)

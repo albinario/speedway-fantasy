@@ -4,11 +4,11 @@ import { useState } from 'react'
 
 import { ListCheck } from 'lucide-react'
 
+import { RiderPlaceholder } from '@/components/RiderPlaceholder'
 import { Button } from '@/components/ui/button'
 
 import { PickedRiders } from './PickedRiders'
-import { PickRidersSheet, type TPickRider } from './PickRidersSheet'
-import { RiderPlaceholder } from './RiderPlaceholder'
+import { PickRidersSheet, type TPickRider } from './Sheet'
 
 type TPickRidersTrigger = {
 	gpId: number
@@ -49,27 +49,24 @@ export function PickRidersTrigger({
 
 	return (
 		<>
-			<div className="bg-muted/50 flex flex-col items-center gap-3 rounded-md px-3 py-3">
+			<div className="bg-muted/50 flex flex-col gap-3 rounded-md p-3">
 				<span
-					className={`self-start text-xs ${savedPicks ? 'text-green-400/70' : 'text-yellow-400/70'}`}
+					className={`text-sm ${savedPicks ? 'text-green-400/70' : 'text-yellow-400/70'}`}
 				>
-					{savedPicks ? 'Registration confirmed' : 'Picks pending'}
+					{savedPicks ? 'Confirmed' : 'Pending'}
 				</span>
-				<div className="flex items-center gap-6">
+
+				<div className="flex justify-center gap-6">
 					{pickedRiders ? (
 						<PickedRiders riders={pickedRiders} />
 					) : (
-						[0, 1, 2].map((i) => (
-							<div key={i} className="flex flex-col items-center gap-0.5">
-								<RiderPlaceholder className="size-8" />
-							</div>
-						))
+						[0, 1, 2].map((i) => <RiderPlaceholder key={i} />)
 					)}
 				</div>
 
 				<Button
-					variant="outline"
-					className={`w-full ${savedPicks ? 'border-green-400/60! text-green-400/60 hover:bg-green-400/10 hover:text-green-400/80' : 'border-yellow-400/60! text-yellow-400/60 hover:bg-yellow-400/10 hover:text-yellow-400/80'}`}
+					variant={savedPicks ? 'success' : 'outline'}
+					className={`w-full ${!savedPicks && 'border-yellow-400/60! text-yellow-400/60 hover:bg-yellow-400/10 hover:text-yellow-400/80'}`}
 					onClick={() => setOpen(true)}
 				>
 					{savedPicks ? 'Edit your picks' : 'Pick your riders'}

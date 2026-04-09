@@ -1,6 +1,7 @@
 import { InfoBox } from '@/components/InfoBox'
+import { InfoBoxTitle } from '@/components/InfoBox/Title'
 import { PickedRiders } from '@/components/PickRiders/PickedRiders'
-import type { TPickRider } from '@/components/PickRiders/PickRidersSheet'
+import type { TPickRider } from '@/components/PickRiders/Sheet'
 import { ViewerGpResult } from '@/components/ViewerGpResult'
 
 import { TopRanks } from './TopRanks'
@@ -32,8 +33,10 @@ export function After({ gpId, viewerId, riders, existingPicks }: TAfter) {
 	return (
 		<div className="flex flex-col gap-2">
 			{viewerId && <ViewerGpResult gpId={gpId} viewerId={viewerId} />}
+
 			{pickedRiders && (
-				<InfoBox>
+				<InfoBox className="flex flex-col gap-3">
+					<InfoBoxTitle>My picks</InfoBoxTitle>
 					<PickedRiders riders={pickedRiders} />
 				</InfoBox>
 			)}
