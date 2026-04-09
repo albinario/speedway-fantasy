@@ -7,10 +7,5 @@ type TMedalIcon = {
 }
 
 export function MedalIcon({ type }: TMedalIcon) {
-	return (
-		<MedalIconComponent
-			className="mx-auto size-4"
-			stroke={getMedalColor(type)}
-		/>
-	)
+	return <MedalIconComponent className="size-4" stroke={getMedalColor(type)} />
 }

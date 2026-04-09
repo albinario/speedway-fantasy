@@ -14,7 +14,7 @@ export function FlagNumber({
 }: TFlagNumber) {
 	return (
 		<div className="flex items-center gap-1">
-			{countryCode && <Flag countryCode={countryCode} className="w-3.5" />}
+			{countryCode && <Flag className="h-auto w-5" countryCode={countryCode} />}
 
 			{number && (
 				<span className={cn('text-muted-foreground', reverse && 'order-first')}>

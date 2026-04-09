@@ -2,8 +2,6 @@ import type { TPickRider } from '@/components/PickRiders'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
-export type { TPickRider as TGpRider }
-
 /**
  * Returns the riders for a GP.
  * If riders_results exist for the GP, returns those riders (covers historical/finished GPs).
@@ -18,7 +16,11 @@ export async function getGpRiders(
 		() =>
 			db
 				.selectFrom('riders_results')
-				.innerJoin('riders_with_country', 'riders_with_country.id', 'riders_results.rider_id')
+				.innerJoin(
+					'riders_with_country',
+					'riders_with_country.id',
+					'riders_results.rider_id'
+				)
 				.select([
 					'riders_with_country.id',
 					'riders_with_country.name',
@@ -85,11 +87,24 @@ export async function getGpRiders(
 		null
 	)
 
-	if (!wildCardRaw || wildCardRaw.id == null || wildCardRaw.name == null || wildCardRaw.number == null) {
+	if (
+		!wildCardRaw ||
+		wildCardRaw.id == null ||
+		wildCardRaw.name == null ||
+		wildCardRaw.number == null
+	) {
 		return active
 	}
 
-	return [...active, { id: wildCardRaw.id, name: wildCardRaw.name, number: wildCardRaw.number, country_code: wildCardRaw.country_code }]
+	return [
+		...active,
+		{
+			id: wildCardRaw.id,
+			name: wildCardRaw.name,
+			number: wildCardRaw.number,
+			country_code: wildCardRaw.country_code
+		}
+	]
 }
 
 /** Returns the existing picks row for a viewer/GP pair, or null if none. */
@@ -105,4 +120,3 @@ export function getViewerPicks(gpId: number, userId: number) {
 		null
 	)
 }
-

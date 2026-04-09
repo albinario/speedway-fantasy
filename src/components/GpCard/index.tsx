@@ -1,10 +1,7 @@
-import Link from 'next/link'
-
-import { ArrowRight, LogIn } from 'lucide-react'
+import { LogIn } from 'lucide-react'
 
 import type { getGps } from '@/app/gps/data'
-import { GpHeader } from '@/components/GpHeader'
-import { PicksCounter } from '@/components/PicksCounter'
+import { RegisteredPicks } from '@/components/RegisteredPicks'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { WildCardInfoBox } from '@/components/WildCardInfoBox'
@@ -14,10 +11,12 @@ import { After } from './After'
 import { Before } from './Before'
 import { getGpRiders, getViewerPicks } from './data'
 import { During } from './During'
+import { GpCardHeader } from './Header'
 
 type TGpCard = {
 	gp: Awaited<ReturnType<typeof getGps>>[number]
 	isUpNext?: boolean
+	linked?: boolean
 	macroStage: EMacroStage
 	viewerId?: number
 }
@@ -25,10 +24,11 @@ type TGpCard = {
 export async function GpCard({
 	gp,
 	isUpNext = false,
+	linked = false,
 	macroStage,
 	viewerId
 }: TGpCard) {
-	const href = `/gps/${gp.id}`
+	const href = linked ? `/gps/${gp.id}` : undefined
 
 	const [riders, existingPicks] = viewerId
 		? await Promise.all([
@@ -38,31 +38,18 @@ export async function GpCard({
 		: [[], null]
 
 	return (
-		<Card
-			id={isUpNext ? 'up-next' : undefined}
-			className="mx-auto w-full pt-0"
-		>
-			<Link className="group relative block" href={href}>
-				<GpHeader
-					cityId={gp.city_id}
-					cityName={gp.city_name}
-					countryCode={gp.country_code}
-					round={gp.round}
-					startDate={gp.start_date}
-					timeZone={gp.time_zone}
-					macroStage={macroStage}
-					showCountdown={isUpNext}
-				/>
-				<div className="absolute top-3 right-3 z-40 flex items-center gap-0 overflow-hidden rounded-full bg-black/40 p-1.5 backdrop-blur-sm transition-all duration-300 group-hover:gap-1.5 group-hover:pl-3">
-					<span className="max-w-0 overflow-hidden text-xs font-semibold whitespace-nowrap text-orange-400 transition-all duration-300 group-hover:max-w-20">
-						View GP
-					</span>
-					<ArrowRight
-						className="size-4 shrink-0 text-orange-400"
-						strokeWidth={2.5}
-					/>
-				</div>
-			</Link>
+		<Card id={isUpNext ? 'up-next' : undefined} className="mx-auto w-full pt-0">
+			<GpCardHeader
+				href={href}
+				cityId={gp.city_id}
+				cityName={gp.city_name}
+				countryCode={gp.country_code}
+				round={gp.round}
+				startDate={gp.start_date}
+				timeZone={gp.time_zone}
+				macroStage={macroStage}
+				showCountdown={isUpNext}
+			/>
 
 			<CardContent className="flex flex-col gap-3">
 				{macroStage === EMacroStage.During && (
@@ -84,13 +71,13 @@ export async function GpCard({
 					/>
 				)}
 
-				<PicksCounter gpId={gp.id} />
-
 				<WildCardInfoBox
 					countryCode={gp.wild_card_country_code}
 					name={gp.wild_card_name}
 					riderId={gp.wild_card_id}
 				/>
+
+				<RegisteredPicks gpId={gp.id} />
 
 				{macroStage === EMacroStage.Before && (
 					<Before

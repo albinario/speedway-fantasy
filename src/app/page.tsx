@@ -9,7 +9,7 @@ export default async function Home() {
 	if (!viewer.isAdmin) return null
 
 	return (
-		<div className="columns-1 gap-4 p-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
+		<div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
 			<InfoBox>
 				<InfoBoxTitle>Latest activity</InfoBoxTitle>
 				<ActivityFeed limit={10} />

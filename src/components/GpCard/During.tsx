@@ -45,7 +45,11 @@ export function During({
 			)}
 			{pickedRiders && (
 				<InfoBox>
-					<PickedRiders riders={pickedRiders} />
+					<div className="flex">
+						<div className="ml-auto">
+							<PickedRiders riders={pickedRiders} />
+						</div>
+					</div>
 				</InfoBox>
 			)}
 			<TopRanks gpId={gpId} />

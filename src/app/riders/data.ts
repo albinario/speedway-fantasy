@@ -113,6 +113,7 @@ export function getRidersStandings(
 			.groupBy([
 				'riders_results.rider_id',
 				'riders_with_country.name',
+				'riders_with_country.number',
 				'riders_with_country.country_code'
 			])
 			.orderBy('total_points', 'desc')

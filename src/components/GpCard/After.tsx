@@ -35,9 +35,14 @@ export function After({ gpId, viewerId, riders, existingPicks }: TAfter) {
 			{viewerId && <ViewerGpResult gpId={gpId} viewerId={viewerId} />}
 
 			{pickedRiders && (
-				<InfoBox className="flex flex-col gap-3">
-					<InfoBoxTitle>My picks</InfoBoxTitle>
-					<PickedRiders riders={pickedRiders} />
+				<InfoBox>
+					<div className="flex flex-wrap">
+						<InfoBoxTitle>My picks</InfoBoxTitle>
+
+						<div className="ml-auto">
+							<PickedRiders riders={pickedRiders} />
+						</div>
+					</div>
 				</InfoBox>
 			)}
 			<TopRanks gpId={gpId} />
