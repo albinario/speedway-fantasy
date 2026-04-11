@@ -11,7 +11,6 @@ type TGpRidersResultsTable = {
 export function GpRidersResultsTable({ data }: TGpRidersResultsTable) {
 	return (
 		<RidersTable
-			showTimesPicked
 			data={data.map((r) => ({
 				riderId: r.rider_id,
 				name: r.name,
