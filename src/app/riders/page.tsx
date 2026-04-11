@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 
 import { PageTitle } from '@/components/PageTitle'
+import { RidersTable } from '@/components/RidersTable'
 import { YearSelector } from '@/components/YearSelector'
-import type { TParamValues } from '@/lib/params'
+import { paramValues, type TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
 import { metaData } from './constants'
 import { getRidersActive, getRidersStandings } from './data'
 import { RidersActive } from './RidersActive'
-import { RidersStandingsTable } from './RidersStandingsTable'
 
 type TRidersPage = {
 	searchParams: Promise<{
@@ -21,9 +21,7 @@ export const metadata: Metadata = metaData
 export default async function RidersPage({ searchParams }: TRidersPage) {
 	const yearValues = await getYearValues(searchParams)
 	const ridersStandings = await getRidersStandings(yearValues.activeYear)
-
-	const ridersActive =
-		ridersStandings.length <= 0 ? await getRidersActive() : []
+	const ridersActive = ridersStandings.length <= 0 ? await getRidersActive() : []
 
 	return (
 		<>
@@ -33,7 +31,20 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 			</div>
 
 			{ridersStandings.length > 0 ? (
-				<RidersStandingsTable data={ridersStandings} />
+				<RidersTable
+					condensedMedals={yearValues.activeYear === paramValues.all}
+					data={ridersStandings.map((r) => ({
+						riderId: r.rider_id,
+						name: r.name,
+						countryCode: r.country_code,
+						number: r.number,
+						medals: r.medals,
+						points: r.total_points,
+						heats: r.heats,
+						gps: r.gps,
+						timesPicked: r.times_picked
+					}))}
+				/>
 			) : ridersActive.length > 0 ? (
 				<RidersActive riders={ridersActive} />
 			) : null}

@@ -1,7 +1,6 @@
 import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
-import { RiderPlaceholder } from '@/components/RiderPlaceholder'
 import { cn } from '@/lib/utils'
 
 type TRiderInfo = {

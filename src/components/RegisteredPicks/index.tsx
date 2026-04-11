@@ -1,18 +1,16 @@
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { InfoBox } from '@/components/InfoBox'
 import { InfoBoxTitle } from '@/components/InfoBox/Title'
-import { EMacroStage } from '@/enums'
 import { getProgressColor } from '@/lib/progress'
 import { cn } from '@/lib/utils'
 
 import { getPicksCount, getPicksRecord } from './data'
 
-type TPicksCounter = {
+type TRegisteredPicks = {
 	gpId: number
-	macroStage?: EMacroStage
 }
 
-export async function PicksCounter({ gpId, macroStage }: TPicksCounter) {
+export async function RegisteredPicks({ gpId }: TRegisteredPicks) {
 	const [{ count }, { record }] = await Promise.all([
 		getPicksCount(gpId),
 		getPicksRecord()
@@ -50,7 +48,7 @@ export async function PicksCounter({ gpId, macroStage }: TPicksCounter) {
 				)}
 			</div>
 
-			{macroStage === EMacroStage.Before && <ActivityFeed gpId={gpId} />}
+			<ActivityFeed gpId={gpId} />
 		</InfoBox>
 	)
 }

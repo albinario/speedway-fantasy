@@ -1,15 +1,11 @@
-import { getGpRiders, getViewerPicks } from '@/components/GpCard/data'
-import { GpHeader } from '@/components/GpHeader'
-import { PicksCounter } from '@/components/PicksCounter'
-import { WildCardInfoBox } from '@/components/WildCardInfoBox'
+import { GpCard } from '@/components/GpCard'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
 
-import { After } from './After'
-import { Before } from './Before'
-import { getGp } from './data'
-import { During } from './During'
+import { getGp, getGpRidersResults, getGpUsersResults } from './data'
+import { GpRidersResultsTable } from './RidersResultsTable'
+import { GpUsersResultsTable } from './UsersResultsTable'
 
 type TGpPage = {
 	params: Promise<{ id: string }>
@@ -25,56 +21,25 @@ export default async function GpPage({ params }: TGpPage) {
 	const viewer = await getViewer()
 	const viewerId = viewer?.db?.id
 
-	const [riders, existingPicks] = viewerId
-		? await Promise.all([
-				getGpRiders(gp.id, gp.wild_card_id),
-				getViewerPicks(gp.id, viewerId)
-			])
-		: [[], null]
+	const [ridersResults, usersResults] = await Promise.all([
+		macroStage !== EMacroStage.Before
+			? getGpRidersResults(gp.id)
+			: Promise.resolve([]),
+		macroStage !== EMacroStage.Before
+			? getGpUsersResults(gp.id)
+			: Promise.resolve([])
+	])
 
 	return (
-		<div className="columns-1 gap-4 space-y-4 md:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
-			<section
-				aria-label={`${gp.city_name} Grand Prix`}
-				className="relative overflow-hidden rounded-xl"
-			>
-				<GpHeader
-					cityId={gp.city_id}
-					cityName={gp.city_name}
-					countryCode={gp.country_code}
-					round={gp.round}
-					startDate={gp.start_date}
-					timeZone={gp.time_zone}
-					macroStage={macroStage}
-					showCountdown={macroStage === EMacroStage.Before}
-				/>
-			</section>
+		<div className="columns-1 gap-4 space-y-4 lg:columns-2 xl:columns-3 [&>*]:break-inside-avoid">
+			<GpCard gp={gp} macroStage={macroStage} viewerId={viewerId} />
 
-			{macroStage === EMacroStage.Before && (
-				<Before
-					gpId={gp.id}
-					gpName={gp.city_name}
-					gpRound={gp.round}
-					viewerId={viewerId}
-					riders={riders}
-					existingPicks={existingPicks ?? null}
-				/>
+			{usersResults.length > 0 && (
+				<GpUsersResultsTable data={usersResults} viewerId={viewerId} />
 			)}
 
-			{macroStage === EMacroStage.During && (
-				<During heatsFinished={gp.heats_finished ?? 0} />
-			)}
-
-			{macroStage === EMacroStage.After && <After />}
-
-			<PicksCounter gpId={gp.id} macroStage={macroStage} />
-
-			{gp.wild_card_id && (
-				<WildCardInfoBox
-					countryCode={gp.wild_card_country_code}
-					name={gp.wild_card_name}
-					riderId={gp.wild_card_id}
-				/>
+			{ridersResults.length > 0 && (
+				<GpRidersResultsTable data={ridersResults} />
 			)}
 		</div>
 	)

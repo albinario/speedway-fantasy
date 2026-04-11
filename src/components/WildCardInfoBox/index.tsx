@@ -13,13 +13,18 @@ export function WildCardInfoBox({ countryCode, name, riderId }: TWildCard) {
 		<InfoBox>
 			<div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
 				<InfoBoxTitle>Wild card</InfoBoxTitle>
+
 				<div className="ml-auto">
-					<RiderInfo
-						countryCode={countryCode}
-						name={name}
-						number={16}
-						riderId={riderId}
-					/>
+					{riderId ? (
+						<RiderInfo
+							countryCode={countryCode}
+							name={name}
+							number={16}
+							riderId={riderId}
+						/>
+					) : (
+						<span className="text-muted-foreground text-xs">TBD</span>
+					)}
 				</div>
 			</div>
 		</InfoBox>

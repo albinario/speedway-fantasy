@@ -7,7 +7,7 @@ import { ListCheck } from 'lucide-react'
 import { RiderPlaceholder } from '@/components/RiderPlaceholder'
 import { Button } from '@/components/ui/button'
 
-import { PickedRiders } from './PickedRiders'
+import { RiderInfo } from '../RiderInfo'
 import { PickRidersSheet, type TPickRider } from './Sheet'
 
 type TPickRidersTrigger = {
@@ -50,23 +50,33 @@ export function PickRidersTrigger({
 	return (
 		<>
 			<div className="bg-muted/50 flex flex-col gap-3 rounded-md p-3">
-				<span
-					className={`text-sm ${savedPicks ? 'text-green-400/70' : 'text-yellow-400/70'}`}
-				>
-					{savedPicks ? 'Confirmed' : 'Pending'}
-				</span>
+				<div className="flex flex-wrap gap-x-2 gap-y-1">
+					<span
+						className={`text-sm ${savedPicks ? 'text-green-400/70' : 'text-yellow-400/70'}`}
+					>
+						{savedPicks ? 'Confirmed' : 'Pending'}
+					</span>
 
-				<div className="flex justify-center gap-6">
-					{pickedRiders ? (
-						<PickedRiders riders={pickedRiders} />
-					) : (
-						[0, 1, 2].map((i) => <RiderPlaceholder key={i} />)
-					)}
+					<div className="ml-auto flex gap-6">
+						{pickedRiders && pickedRiders.length > 0
+							? pickedRiders.map((rider) => (
+									<RiderInfo
+										key={rider.id}
+										countryCode={rider.country_code}
+										imageSize={14}
+										name={rider.name.split(' ').pop() ?? ''}
+										number={rider.number}
+										riderId={rider.id}
+										stack
+									/>
+								))
+							: [0, 1, 2].map((i) => <RiderPlaceholder key={i} />)}
+					</div>
 				</div>
 
 				<Button
-					variant={savedPicks ? 'success' : 'outline'}
-					className={`w-full ${!savedPicks && 'border-yellow-400/60! text-yellow-400/60 hover:bg-yellow-400/10 hover:text-yellow-400/80'}`}
+					variant={savedPicks ? 'success' : 'warning'}
+					className="w-full"
 					onClick={() => setOpen(true)}
 				>
 					{savedPicks ? 'Edit your picks' : 'Pick your riders'}

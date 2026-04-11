@@ -49,7 +49,8 @@ export function getGpTopRider(gpId: number) {
 				.innerJoin('countries', 'countries.id', 'riders.country_id')
 				.select(['riders.id', 'riders.name', 'riders.number', 'countries.code as country_code'])
 				.where('riders_results.gp_id', '=', gpId)
-				.where('riders_results.medal', '=', 1)
+				.orderBy('riders_results.points', 'desc')
+				.limit(1)
 				.executeTakeFirst(),
 		null
 	)
@@ -61,9 +62,16 @@ export function getGpTopUser(gpId: number) {
 			db
 				.selectFrom('users_results')
 				.innerJoin('users_with_stars', 'users_with_stars.id', 'users_results.user_id')
+				.innerJoin('gps', 'gps.id', 'users_results.gp_id')
+				.leftJoin('users_standings', (join) =>
+					join
+						.onRef('users_standings.user_id', '=', 'users_results.user_id')
+						.on(sql`users_standings.year = EXTRACT(YEAR FROM gps.start_date)`)
+				)
 				.select(['users_with_stars.id', 'users_with_stars.first_name', 'users_with_stars.last_name', 'users_with_stars.stars', 'users_results.points'])
 				.where('users_results.gp_id', '=', gpId)
 				.orderBy('users_results.points', 'desc')
+				.orderBy(sql`users_standings.pos asc nulls last`)
 				.limit(1)
 				.executeTakeFirst(),
 		null

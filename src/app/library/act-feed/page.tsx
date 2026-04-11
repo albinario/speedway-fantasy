@@ -1,8 +1,7 @@
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { InfoBox } from '@/components/InfoBox'
 import { InfoBoxTitle } from '@/components/InfoBox/Title'
-import { PicksCounter } from '@/components/PicksCounter'
-import { EMacroStage } from '@/enums'
+import { RegisteredPicks } from '@/components/RegisteredPicks'
 
 export default async function ActivityFeedPage() {
 	return (
@@ -12,7 +11,7 @@ export default async function ActivityFeedPage() {
 				<ActivityFeed limit={10} />
 			</InfoBox>
 
-			<PicksCounter gpId={60} macroStage={EMacroStage.Before} />
+			<RegisteredPicks gpId={60} />
 		</div>
 	)
 }

@@ -50,8 +50,9 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 							<GpCard
 								key={gp.id}
 								gp={gp}
-								macroStage={stages[i]}
 								isUpNext={i === isUpNext}
+								linked
+								macroStage={stages[i]}
 								viewerId={viewer?.db?.id}
 							/>
 						))}
