@@ -3,16 +3,19 @@ import { InfoBox } from '@/components/InfoBox'
 import { InfoBoxTitle } from '@/components/InfoBox/Title'
 import { RiderInfo } from '@/components/RiderInfo'
 import { UserName } from '@/components/UserName'
+import { getViewer } from '@/lib/auth/get-viewer'
 
 type TTopRanks = {
 	gpId: number
 }
 
 export async function TopRanks({ gpId }: TTopRanks) {
-	const [topRider, topUser] = await Promise.all([
+	const [topRider, topUser, viewer] = await Promise.all([
 		getGpTopRider(gpId),
-		getGpTopUser(gpId)
+		getGpTopUser(gpId),
+		getViewer()
 	])
+	const viewerId = viewer?.db?.id
 
 	if (!topRider && !topUser) return null
 	if (topUser && topUser.points === 0) return null
@@ -29,6 +32,7 @@ export async function TopRanks({ gpId }: TTopRanks) {
 							lastName={topUser.last_name}
 							stars={topUser.stars}
 							userId={topUser.id}
+							isViewer={topUser.id === viewerId}
 						/>
 						<span className="text-muted-foreground text-xs">
 							{topUser.points} pts

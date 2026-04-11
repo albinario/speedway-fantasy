@@ -1,3 +1,5 @@
+import { sql } from 'kysely'
+
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
@@ -95,6 +97,12 @@ export function getGpUsersResults(gpId: number) {
 					'users_with_stars.id',
 					'users_results.user_id'
 				)
+				.innerJoin('gps', 'gps.id', 'users_results.gp_id')
+				.leftJoin('users_standings', (join) =>
+					join
+						.onRef('users_standings.user_id', '=', 'users_results.user_id')
+						.on(sql`users_standings.year = EXTRACT(YEAR FROM gps.start_date)`)
+				)
 				.leftJoin('users_picks', (join) =>
 					join
 						.onRef('users_picks.user_id', '=', 'users_results.user_id')
@@ -117,6 +125,7 @@ export function getGpUsersResults(gpId: number) {
 				)
 				.select([
 					'users_results.user_id',
+					'users_results.pos',
 					'users_with_stars.first_name',
 					'users_with_stars.last_name',
 					'users_with_stars.stars',
@@ -130,11 +139,12 @@ export function getGpUsersResults(gpId: number) {
 					'r2.country_code as pick_2_country',
 					'r2.number as pick_2_number',
 					'r3.country_code as pick_3_country',
-					'r3.number as pick_3_number'
+					'r3.number as pick_3_number',
+					'users_standings.points as season_points'
 				])
 				.where('users_results.gp_id', '=', gpId)
-				.orderBy('users_results.points', 'desc')
-				.limit(10)
+				.orderBy('users_results.pos', 'asc')
+				.orderBy(sql`users_standings.pos asc nulls last`)
 				.execute(),
 		[]
 	)

@@ -1,5 +1,6 @@
 import { Flag } from '@/components/Flag'
 import { UserName } from '@/components/UserName'
+import { getViewer } from '@/lib/auth/get-viewer'
 
 import { getActivityFeed } from './data'
 
@@ -19,9 +20,14 @@ type TActivityFeed = {
 }
 
 export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
-	const entries = await getActivityFeed(gpId, limit)
+	const [entries, viewer] = await Promise.all([
+		getActivityFeed(gpId, limit),
+		getViewer()
+	])
+	const viewerId = viewer?.db?.id
 
 	if (!entries.length) return null
+
 
 	return (
 		<div className="mt-4 overflow-hidden">
@@ -36,6 +42,7 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 							firstName={entry.first_name}
 							lastName={entry.last_name}
 							userId={entry.user_id}
+							isViewer={entry.user_id === viewerId}
 						/>
 						<div className="text-muted-foreground mt-0.5 flex items-center gap-1.5">
 							<Flag

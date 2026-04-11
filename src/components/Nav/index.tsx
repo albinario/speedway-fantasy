@@ -20,7 +20,7 @@ const NavItemList = ({ items }: { items: TNavItem[] }) => {
 					<li key={item.href}>
 						<Link
 							href={item.href}
-							className={`flex flex-col items-center gap-1 text-sm leading-tight transition-colors hover:text-foreground ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
+							className={`flex flex-col items-center gap-1 text-sm leading-tight transition-colors hover:text-foreground ${isActive ? 'text-shale' : 'text-muted-foreground'}`}
 						>
 							{item.icon && <item.icon size={18} />}
 							{item.label}

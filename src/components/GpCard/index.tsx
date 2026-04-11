@@ -57,18 +57,11 @@ export async function GpCard({
 						gpId={gp.id}
 						heatsFinished={gp.heats_finished ?? 0}
 						viewerId={viewerId}
-						riders={riders}
-						existingPicks={existingPicks ?? null}
 					/>
 				)}
 
 				{macroStage === EMacroStage.After && (
-					<After
-						gpId={gp.id}
-						viewerId={viewerId}
-						riders={riders}
-						existingPicks={existingPicks ?? null}
-					/>
+					<After gpId={gp.id} viewerId={viewerId} />
 				)}
 
 				<WildCardInfoBox

@@ -21,9 +21,7 @@ export const metadata: Metadata = metaData
 export default async function RidersPage({ searchParams }: TRidersPage) {
 	const yearValues = await getYearValues(searchParams)
 	const ridersStandings = await getRidersStandings(yearValues.activeYear)
-
-	const ridersActive =
-		ridersStandings.length <= 0 ? await getRidersActive() : []
+	const ridersActive = ridersStandings.length <= 0 ? await getRidersActive() : []
 
 	return (
 		<>
@@ -34,8 +32,6 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 
 			{ridersStandings.length > 0 ? (
 				<RidersTable
-					showGps
-					showTimesPicked
 					condensedMedals={yearValues.activeYear === paramValues.all}
 					data={ridersStandings.map((r) => ({
 						riderId: r.rider_id,

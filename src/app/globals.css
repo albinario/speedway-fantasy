@@ -32,6 +32,7 @@
 	--chart-3: oklch(0.546 0.245 262.881);
 	--chart-4: oklch(0.488 0.243 264.376);
 	--chart-5: oklch(0.424 0.199 265.638);
+	--color-shale: #B87040;
 	--radius: 0.625rem;
 	--sidebar: oklch(0.985 0 0);
 	--sidebar-foreground: oklch(0.145 0 0);
@@ -130,6 +131,7 @@ a:hover {
 	--color-card: var(--card);
 	--color-foreground: var(--foreground);
 	--color-brand: var(--color-primary);
+	--color-shale: var(--color-shale);
 	--color-background: var(--background);
 	--radius-sm: calc(var(--radius) * 0.6);
 	--radius-md: calc(var(--radius) * 0.8);

@@ -24,14 +24,10 @@ export type TRiderRow = {
 type TRidersTable = {
 	data: TRiderRow[]
 	condensedMedals?: boolean
-	showGps?: boolean
-	showTimesPicked?: boolean
 }
 
 function buildColumns({
-	condensedMedals,
-	showGps,
-	showTimesPicked
+	condensedMedals
 }: Omit<TRidersTable, 'data'>): ColumnDef<TRiderRow>[] {
 	return [
 		{
@@ -51,7 +47,7 @@ function buildColumns({
 			header: '',
 			enableSorting: false,
 			cell: ({ row }) => (
-				<RiderImage className="size-12" riderId={row.original.riderId} />
+				<RiderImage className="size-10" riderId={row.original.riderId} />
 			)
 		},
 		{
@@ -107,43 +103,28 @@ function buildColumns({
 			id: 'heats',
 			header: () => 'Heats',
 			accessorKey: 'heats',
-			cell: ({ getValue }) => getValue<number>(),
+			cell: ({ getValue }: { getValue: () => unknown }) => getValue() as number,
 			meta: { className: 'hidden text-center sm:table-cell' }
 		},
-		...(showGps
-			? [
-					{
-						id: 'gps',
-						header: () => "GP's",
-						accessorKey: 'gps',
-						cell: ({ getValue }: { getValue: () => unknown }) =>
-							getValue() as number,
-						meta: { className: 'hidden text-center sm:table-cell' }
-					} satisfies ColumnDef<TRiderRow>
-				]
-			: []),
-		...(showTimesPicked
-			? [
-					{
-						id: 'timesPicked',
-						header: () => 'Picked',
-						accessorKey: 'timesPicked',
-						cell: ({ getValue }: { getValue: () => unknown }) =>
-							getValue() as number,
-						meta: { className: 'hidden text-center sm:table-cell' }
-					} satisfies ColumnDef<TRiderRow>
-				]
-			: [])
+		{
+			id: 'gps',
+			header: () => "GP's",
+			accessorKey: 'gps',
+			cell: ({ getValue }: { getValue: () => unknown }) => getValue() as number,
+			meta: { className: 'hidden text-center sm:table-cell' }
+		},
+		{
+			id: 'timesPicked',
+			header: () => 'Picked',
+			accessorKey: 'timesPicked',
+			cell: ({ getValue }: { getValue: () => unknown }) => getValue() as number,
+			meta: { className: 'hidden text-center sm:table-cell' }
+		}
 	]
 }
 
-export function RidersTable({
-	data,
-	condensedMedals,
-	showGps,
-	showTimesPicked
-}: TRidersTable) {
-	const columns = buildColumns({ condensedMedals, showGps, showTimesPicked })
+export function RidersTable({ data, condensedMedals }: TRidersTable) {
+	const columns = buildColumns({ condensedMedals })
 
 	return (
 		<Card className="bg-black p-0">

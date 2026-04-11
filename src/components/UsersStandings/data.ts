@@ -36,10 +36,10 @@ export function getUsersStandings(year: number | TParamValues, limit?: number) {
 				])
 				.where('users_standings.year', '=', year)
 				.orderBy('users_standings.points', 'desc')
-			.orderBy('users_standings.medal_1', 'desc')
-			.orderBy('users_standings.medal_2', 'desc')
-			.orderBy('users_standings.medal_3', 'desc')
-			.orderBy('users_standings.heats', 'desc')
+				.orderBy('users_standings.medal_1', 'desc')
+				.orderBy('users_standings.medal_2', 'desc')
+				.orderBy('users_standings.medal_3', 'desc')
+				.orderBy('users_standings.heats', 'desc')
 
 			if (limit !== undefined) {
 				query = query.limit(limit)

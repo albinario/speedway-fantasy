@@ -34,7 +34,9 @@ export default async function GpPage({ params }: TGpPage) {
 		<div className="columns-1 gap-4 space-y-4 lg:columns-2 xl:columns-3 [&>*]:break-inside-avoid">
 			<GpCard gp={gp} macroStage={macroStage} viewerId={viewerId} />
 
-			{usersResults.length > 0 && <GpUsersResultsTable data={usersResults} />}
+			{usersResults.length > 0 && (
+				<GpUsersResultsTable data={usersResults} viewerId={viewerId} />
+			)}
 
 			{ridersResults.length > 0 && (
 				<GpRidersResultsTable data={ridersResults} />

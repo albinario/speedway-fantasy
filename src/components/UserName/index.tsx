@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 type TUserName = {
 	className?: string
 	firstName: string | null
+	isViewer?: boolean
 	lastName: string | null
 	stars?: number[] | null
 	userId: number
@@ -15,6 +16,7 @@ type TUserName = {
 
 export function UserName({
 	className,
+	isViewer,
 	userId,
 	firstName,
 	lastName,
@@ -24,6 +26,7 @@ export function UserName({
 		<Link
 			className={cn(
 				'inline-flex items-baseline gap-1 truncate uppercase',
+				isViewer && 'text-brand',
 				className
 			)}
 			href={`/users/${userId}`}

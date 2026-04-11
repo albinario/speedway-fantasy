@@ -31,9 +31,10 @@ declare module '@tanstack/react-table' {
 type TDataTable<TData> = {
 	columns: ColumnDef<TData>[]
 	data: TData[]
+	hideHeader?: boolean
 }
 
-export function DataTable<TData>({ columns, data }: TDataTable<TData>) {
+export function DataTable<TData>({ columns, data, hideHeader }: TDataTable<TData>) {
 	const [sorting, setSorting] = useState<SortingState>([])
 
 	const table = useReactTable({
@@ -48,36 +49,38 @@ export function DataTable<TData>({ columns, data }: TDataTable<TData>) {
 
 	return (
 		<Table>
-			<TableHeader>
-				{table.getHeaderGroups().map((headerGroup) => (
-					<TableRow key={headerGroup.id} className="bg-muted/50">
-						{headerGroup.headers.map((header) => {
-							const canSort = header.column.getCanSort()
-							const sorted = header.column.getIsSorted()
-							const meta = header.column.columnDef.meta
+			{!hideHeader && (
+				<TableHeader className="sticky top-0 z-10">
+					{table.getHeaderGroups().map((headerGroup) => (
+						<TableRow key={headerGroup.id} className="bg-muted/50">
+							{headerGroup.headers.map((header) => {
+								const canSort = header.column.getCanSort()
+								const sorted = header.column.getIsSorted()
+								const meta = header.column.columnDef.meta
 
-							return (
-								<TableHead
-									key={header.id}
-									className={cn(meta?.className, canSort && 'cursor-pointer select-none')}
-									onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
-								>
-									{header.isPlaceholder ? null : (
-										<span className="inline-flex items-center gap-1">
-											{flexRender(header.column.columnDef.header, header.getContext())}
-											{canSort && (
-												<span className="text-muted-foreground text-xs">
-													{sorted === 'asc' ? '↑' : sorted === 'desc' ? '↓' : '↕'}
-												</span>
-											)}
-										</span>
-									)}
-								</TableHead>
-							)
-						})}
-					</TableRow>
-				))}
-			</TableHeader>
+								return (
+									<TableHead
+										key={header.id}
+										className={cn(meta?.className, canSort && 'cursor-pointer select-none')}
+										onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+									>
+										{header.isPlaceholder ? null : (
+											<span className="inline-flex items-center gap-1">
+												{flexRender(header.column.columnDef.header, header.getContext())}
+												{canSort && (
+													<span className="text-muted-foreground text-xs">
+														{sorted === 'asc' ? '↑' : sorted === 'desc' ? '↓' : '↕'}
+													</span>
+												)}
+											</span>
+										)}
+									</TableHead>
+								)
+							})}
+						</TableRow>
+					))}
+				</TableHeader>
+			)}
 
 			<TableBody>
 				{table.getRowModel().rows.length ? (
