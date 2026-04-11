@@ -1,9 +1,7 @@
-import { FlagNumber } from '@/components/FlagNumber'
 import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'
 import { UserName } from '@/components/UserName'
-import { getMedalColor } from '@/lib/medals'
-import { sortedPicks } from '@/lib/picks'
+import { getMedalColorStr } from '@/lib/medals'
 
 import { getViewerGpRow } from './data'
 
@@ -20,8 +18,6 @@ export async function ViewerResultRow({ gpId, viewerId }: TViewerResultRow) {
 	const pos = row.pos ?? null
 	const isMedal = pos != null && pos <= 3
 
-	const picks = sortedPicks(row)
-
 	const medals = [
 		...(row.medal_1 ? Array<number>(row.medal_1).fill(1) : []),
 		...(row.medal_2 ? Array<number>(row.medal_2).fill(2) : []),
@@ -31,12 +27,7 @@ export async function ViewerResultRow({ gpId, viewerId }: TViewerResultRow) {
 	return (
 		<InfoBox className="flex items-center gap-3">
 			<span
-				className="inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-gray-800"
-				style={
-					isMedal && pos != null
-						? { backgroundColor: getMedalColor(pos), color: 'black' }
-						: undefined
-				}
+				className={`inline-flex size-7 shrink-0 items-center justify-center rounded-md ${isMedal && pos != null ? `${getMedalColorStr(pos, 'bg')} text-black` : 'bg-gray-800'}`}
 			>
 				{pos ?? '—'}
 			</span>
@@ -49,15 +40,6 @@ export async function ViewerResultRow({ gpId, viewerId }: TViewerResultRow) {
 					stars={row.stars}
 					isViewer
 				/>
-				<div className="mt-1 flex items-center gap-2">
-					{picks.map((pick, i) => (
-						<FlagNumber
-							key={i}
-							countryCode={pick.countryCode}
-							number={pick.number}
-						/>
-					))}
-				</div>
 			</div>
 
 			{medals.length > 0 && (

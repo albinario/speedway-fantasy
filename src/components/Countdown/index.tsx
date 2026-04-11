@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { FrostedPill } from '@/components/FrostedPill'
+import { Badge } from '@/components/ui/badge'
 
 type TCountdown = {
 	startDate: Date
@@ -61,7 +61,7 @@ export function Countdown({ startDate }: TCountdown) {
 	const showSeconds = parts.days === 0 && parts.hours === 0
 
 	return (
-		<FrostedPill className="text-green-400">
+		<Badge variant="frosted" className="text-green-400">
 			{parts.days > 0 && (
 				<>
 					<Segment value={parts.days} label="days" />
@@ -77,6 +77,6 @@ export function Countdown({ startDate }: TCountdown) {
 					<Segment value={parts.seconds} label="sec" />
 				</>
 			)}
-		</FrostedPill>
+		</Badge>
 	)
 }

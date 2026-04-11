@@ -7,7 +7,7 @@ import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
-import { getMedalColor } from '@/lib/medals'
+import { getMedalColorStr } from '@/lib/medals'
 import { sortedPicks } from '@/lib/picks'
 
 import type { getGpUsersResults } from './data'
@@ -31,12 +31,7 @@ function makeColumns(
 
 				return (
 					<span
-						className="inline-flex size-7 items-center justify-center rounded-md bg-gray-800"
-						style={
-							isMedal
-								? { backgroundColor: getMedalColor(pos!), color: 'black' }
-								: undefined
-						}
+						className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos!, 'bg')} text-black` : 'bg-gray-800'}`}
 					>
 						{pos}
 					</span>

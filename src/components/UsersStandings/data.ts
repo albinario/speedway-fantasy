@@ -4,6 +4,79 @@ import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
 
+export function getUserStandingRow(year: number | TParamValues, userId: number) {
+	return dataFetch(async () => {
+		if (year !== paramValues.all) {
+			return db
+				.selectFrom('users_standings')
+				.innerJoin(
+					'users_with_stars',
+					'users_with_stars.id',
+					'users_standings.user_id'
+				)
+				.select((eb) => [
+					'users_standings.user_id',
+					'users_with_stars.first_name',
+					'users_with_stars.last_name',
+					'users_standings.points',
+					'users_standings.medal_1',
+					'users_standings.medal_2',
+					'users_standings.medal_3',
+					'users_standings.heats',
+					'users_standings.pos',
+					'users_standings.prev_pos',
+					'users_standings.year',
+					'users_with_stars.stars',
+					eb.selectFrom('users_results')
+						.innerJoin('gps', 'gps.id', 'users_results.gp_id')
+						.select(sql<number>`count(*)`.as('c'))
+						.whereRef('users_results.user_id', '=', 'users_standings.user_id')
+						.where(sql`EXTRACT(YEAR FROM gps.start_date)`, '=', year)
+						.as('gps')
+				])
+				.where('users_standings.year', '=', year)
+				.where('users_standings.user_id', '=', userId)
+				.executeTakeFirst() ?? null
+		}
+
+		return (
+			db
+				.selectFrom('users_standings')
+				.innerJoin(
+					'users_with_stars',
+					'users_with_stars.id',
+					'users_standings.user_id'
+				)
+				.select((eb) => [
+					'users_standings.user_id',
+					'users_with_stars.first_name',
+					'users_with_stars.last_name',
+					eb.fn.sum('users_standings.points').as('points'),
+					eb.fn.sum('users_standings.medal_1').as('medal_1'),
+					eb.fn.sum('users_standings.medal_2').as('medal_2'),
+					eb.fn.sum('users_standings.medal_3').as('medal_3'),
+					eb.fn.sum('users_standings.heats').as('heats'),
+					eb.selectFrom('users_results')
+						.select(sql<number>`count(*)`.as('c'))
+						.whereRef('users_results.user_id', '=', 'users_standings.user_id')
+						.as('gps'),
+					sql<number | null>`null`.as('pos'),
+					sql<number | null>`null`.as('prev_pos'),
+					sql<number | null>`null`.as('year'),
+					'users_with_stars.stars'
+				])
+				.where('users_standings.user_id', '=', userId)
+				.groupBy([
+					'users_standings.user_id',
+					'users_with_stars.first_name',
+					'users_with_stars.last_name',
+					'users_with_stars.stars'
+				])
+				.executeTakeFirst() ?? null
+		)
+	}, null)
+}
+
 export function getUsersStandings(year: number | TParamValues, limit?: number) {
 	return dataFetch(() => {
 		if (year !== paramValues.all) {

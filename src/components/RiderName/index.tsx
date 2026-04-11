@@ -7,7 +7,7 @@ type TRiderName = {
 
 export function RiderName({ name, riderId }: TRiderName) {
 	return (
-		<Link className="truncate uppercase" href={`/riders/${riderId}`}>
+		<Link className="truncate" href={`/riders/${riderId}`}>
 			{name}
 		</Link>
 	)

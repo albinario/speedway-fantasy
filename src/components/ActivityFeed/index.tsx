@@ -28,44 +28,67 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 
 	if (!entries.length) return null
 
-
 	return (
-		<div className="mt-4 overflow-hidden">
-			{entries.map((entry) => (
-				<div
-					key={entry.id}
-					className="border-border grid grid-cols-[1fr_auto] items-end gap-x-4 border-t py-2"
-				>
-					<div className="min-w-0">
-						<UserName
-							className="opacity-90"
-							firstName={entry.first_name}
-							lastName={entry.last_name}
-							userId={entry.user_id}
-							isViewer={entry.user_id === viewerId}
-						/>
-						<div className="text-muted-foreground mt-0.5 flex items-center gap-1.5">
-							<Flag
-								className="h-auto w-3.5 shrink-0"
-								countryCode={entry.country_code}
-							/>
-							<span className="truncate text-xs">
-								{ActivityActionLabel[entry.action]} · {entry.round}{' '}
-								{entry.city_name}
-							</span>
-						</div>
-					</div>
+		<div className="overflow-hidden">
+			{entries.map((entry, i) => {
+				const isLast = i === entries.length - 1
+				const isViewer = entry.user_id === viewerId
+				const isCreated = entry.action === ActivityAction.PickCreated
 
-					<time className="text-muted-foreground shrink-0 text-xs tabular-nums">
-						{new Date(entry.created_at).toLocaleString('sv-SE', {
-							month: 'short',
-							day: 'numeric',
-							hour: '2-digit',
-							minute: '2-digit'
-						})}
-					</time>
-				</div>
-			))}
+				return (
+					<div
+						key={entry.id}
+						className="grid grid-cols-[auto_1fr_auto] gap-x-3 py-2"
+					>
+						{/* Timeline */}
+						<div className="flex flex-col items-center">
+							<div
+								className={`bg-border w-px flex-1 ${i === 0 ? 'opacity-0' : ''}`}
+							/>
+							<div
+								className={`z-10 size-2 shrink-0 rounded-full ${isCreated ? 'bg-green-400' : 'bg-muted-foreground/50'}`}
+							/>
+							<div
+								className={`bg-border w-px flex-1 ${isLast ? 'opacity-0' : ''}`}
+							/>
+						</div>
+
+						{/* Content */}
+						<div className="min-w-0">
+							<UserName
+								className="opacity-90"
+								firstName={entry.first_name}
+								lastName={entry.last_name}
+								userId={entry.user_id}
+								isViewer={isViewer}
+							/>
+							<div className="text-muted-foreground mt-0.5 flex items-center gap-1.5">
+								{!gpId && (
+									<Flag
+										className="h-auto w-3.5 shrink-0"
+										countryCode={entry.country_code}
+									/>
+								)}
+								<span className="truncate text-xs">
+									{entry.city_name} ·{' '}
+									<span className={isCreated ? 'text-green-400' : ''}>
+										{ActivityActionLabel[entry.action]}
+									</span>
+								</span>
+							</div>
+						</div>
+
+						<time className="text-muted-foreground shrink-0 self-end text-xs tabular-nums">
+							{new Date(entry.created_at).toLocaleString('sv-SE', {
+								month: 'short',
+								day: 'numeric',
+								hour: '2-digit',
+								minute: '2-digit'
+							})}
+						</time>
+					</div>
+				)
+			})}
 		</div>
 	)
 }

@@ -1,17 +1,23 @@
+import { getNextGp } from '@/app/gps/data'
 import { ActivityFeed } from '@/components/ActivityFeed'
+import { GpCard } from '@/components/GpCard'
 import { InfoBox } from '@/components/InfoBox'
-import { InfoBoxTitle } from '@/components/InfoBox/Title'
-import { RegisteredPicks } from '@/components/RegisteredPicks'
+import { SectionTitle } from '@/components/SectionTitle'
+import { EMacroStage } from '@/enums'
 
 export default async function ActivityFeedPage() {
+	const latestGp = await getNextGp()
+
 	return (
 		<div className="columns-1 gap-4 p-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
-			<InfoBox>
-				<InfoBoxTitle>Latest activity</InfoBoxTitle>
-				<ActivityFeed limit={10} />
-			</InfoBox>
+			<div>
+				<SectionTitle href="/activity">Latest activity</SectionTitle>
+				<InfoBox>
+					<ActivityFeed limit={10} />
+				</InfoBox>
+			</div>
 
-			<RegisteredPicks gpId={60} />
+			{latestGp && <GpCard gp={latestGp} macroStage={EMacroStage.Before} />}
 		</div>
 	)
 }

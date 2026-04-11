@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { WildCardInfoBox } from '@/components/WildCardInfoBox'
 import { EMacroStage } from '@/enums'
+import { getMacroStage } from '@/lib/dates'
 
 import { After } from './After'
 import { Before } from './Before'
@@ -17,7 +18,7 @@ type TGpCard = {
 	gp: Awaited<ReturnType<typeof getGps>>[number]
 	isUpNext?: boolean
 	linked?: boolean
-	macroStage: EMacroStage
+	macroStage?: EMacroStage
 	viewerId?: number
 }
 
@@ -25,9 +26,10 @@ export async function GpCard({
 	gp,
 	isUpNext = false,
 	linked = false,
-	macroStage,
+	macroStage: macroStageProp,
 	viewerId
 }: TGpCard) {
+	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
 	const href = linked ? `/gps/${gp.id}` : undefined
 
 	const [riders, existingPicks] = viewerId
@@ -70,7 +72,7 @@ export async function GpCard({
 					riderId={gp.wild_card_id}
 				/>
 
-				<RegisteredPicks gpId={gp.id} />
+				<RegisteredPicks gpId={gp.id} macroStage={macroStage} />
 
 				{macroStage === EMacroStage.Before && (
 					<Before

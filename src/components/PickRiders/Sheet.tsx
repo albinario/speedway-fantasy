@@ -126,7 +126,7 @@ export function PickRidersSheet({
 									<span className="text-muted-foreground text-lg">?</span>
 								</div>
 								<div className="flex w-full flex-col items-center gap-0.5">
-									<span className="text-center text-xs leading-tight font-semibold uppercase">
+									<span className="text-center text-xs leading-tight font-black uppercase">
 										Wild Card
 									</span>
 									<span className="text-muted-foreground text-xs">TBD</span>

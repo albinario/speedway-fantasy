@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { StarIcon } from 'lucide-react'
 
-import { getMedalColor } from '@/lib/medals'
+import { getMedalColorHex } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
 type TUserName = {
@@ -25,8 +25,8 @@ export function UserName({
 	return (
 		<Link
 			className={cn(
-				'inline-flex items-baseline gap-1 truncate uppercase',
-				isViewer && 'text-brand',
+				'inline-flex items-baseline gap-1 truncate',
+				isViewer && 'text-orange-400',
 				className
 			)}
 			href={`/users/${userId}`}
@@ -35,7 +35,7 @@ export function UserName({
 			{stars && stars.length > 0 && (
 				<span className="inline-flex -translate-y-1 gap-0.5 [&_svg]:size-2.5">
 					{stars.filter(Boolean).map((type, i) => {
-						const medalColor = getMedalColor(type)
+						const medalColor = getMedalColorHex(type)
 						return <StarIcon key={i} fill={medalColor} stroke={medalColor} />
 					})}
 				</span>

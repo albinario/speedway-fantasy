@@ -1,54 +1,45 @@
+import { Users } from 'lucide-react'
+
 import { ActivityFeed } from '@/components/ActivityFeed'
+import { Badge } from '@/components/ui/badge'
 import { InfoBox } from '@/components/InfoBox'
-import { InfoBoxTitle } from '@/components/InfoBox/Title'
-import { getProgressColor } from '@/lib/progress'
-import { cn } from '@/lib/utils'
+import { EMacroStage } from '@/enums'
 
 import { getPicksCount, getPicksRecord } from './data'
 
 type TRegisteredPicks = {
 	gpId: number
+	macroStage?: EMacroStage
 }
 
-export async function RegisteredPicks({ gpId }: TRegisteredPicks) {
+export async function RegisteredPicks({ gpId, macroStage }: TRegisteredPicks) {
 	const [{ count }, { record }] = await Promise.all([
 		getPicksCount(gpId),
 		getPicksRecord()
 	])
 
-	const progress = record > 0 ? Math.min((count / record) * 100, 100) : 0
-	const { textColor, bgColor } = getProgressColor(progress)
-
 	return (
-		<InfoBox>
-			<div>
-				<div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-					<InfoBoxTitle>Registered picks</InfoBoxTitle>
+		<InfoBox className="flex flex-col gap-3">
+			<div className="flex items-center justify-between font-black uppercase">
+				<span>Registered players</span>
 
-					<div className="ml-auto flex items-baseline gap-1.5">
-						<span className={cn('text-lg leading-none', textColor)}>
-							{count}
+				<div className="flex items-center gap-2">
+					<Badge variant="success">
+						<Users />
+						{count}
+					</Badge>
+
+					{record > 0 && (
+						<span className="text-muted-foreground text-xs normal-case">
+							record {record}
 						</span>
-
-						{record > 0 && (
-							<span className="text-muted-foreground text-xs">
-								/ {record} record
-							</span>
-						)}
-					</div>
+					)}
 				</div>
-
-				{record > 0 && (
-					<div className="bg-background mt-2 h-1.5 w-full overflow-hidden rounded-full">
-						<div
-							className={cn('h-full rounded-full transition-all', bgColor)}
-							style={{ width: `${progress}%` }}
-						/>
-					</div>
-				)}
 			</div>
 
-			<ActivityFeed gpId={gpId} />
+			{macroStage === EMacroStage.Before && (
+				<ActivityFeed gpId={gpId} />
+			)}
 		</InfoBox>
 	)
 }
