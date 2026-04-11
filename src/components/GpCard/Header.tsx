@@ -47,10 +47,10 @@ export function GpCardHeader({
 		<Link className="group relative block" href={href}>
 			{header}
 			<div className="absolute top-3 right-3 z-40 flex items-center gap-0 overflow-hidden rounded-full bg-black/40 p-1.5 backdrop-blur-sm transition-all duration-300 group-hover:gap-1.5 group-hover:pl-3">
-				<span className="max-w-0 overflow-hidden text-xs font-semibold whitespace-nowrap text-brand transition-all duration-300 group-hover:max-w-20">
+				<span className="max-w-0 overflow-hidden text-xs font-semibold whitespace-nowrap text-brand-red transition-all duration-300 group-hover:max-w-20">
 					View GP
 				</span>
-				<ArrowRight className="size-4 shrink-0 text-brand" strokeWidth={2.5} />
+				<ArrowRight className="size-4 shrink-0 text-brand-red" strokeWidth={2.5} />
 			</div>
 		</Link>
 	)

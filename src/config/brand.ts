@@ -12,8 +12,8 @@ export const metaData = {
 }
 
 export const colors = {
-	gold: '#FFD700',
-	silver: '#C0C0C0',
-	bronze: '#CD7F32',
-	shale: '#B87040'
+	gold: '#ffd700',
+	silver: '#c0c0c0',
+	bronze: '#cd7f32',
+	brandRed: '#ff3b1f'
 }

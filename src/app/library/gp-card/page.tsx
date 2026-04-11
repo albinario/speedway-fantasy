@@ -9,7 +9,7 @@ import { metaData } from './constants'
 export const metadata: Metadata = metaData
 
 export default async function GpCardPage() {
-	const gp = await getGp(41)
+	const gp = await getGp(52)
 
 	if (!gp) return null
 

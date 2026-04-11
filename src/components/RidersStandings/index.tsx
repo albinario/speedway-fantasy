@@ -15,7 +15,7 @@ export async function RidersStandings({ year, limit }: TRidersStandings) {
 	if (!standings.length) return null
 
 	if (limit !== undefined) {
-		return <RidersLimitedTable data={standings} />
+		return <RidersLimitedTable data={standings} limit={limit} />
 	}
 
 	const data = standings.map((r) => ({

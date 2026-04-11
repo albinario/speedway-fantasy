@@ -1,4 +1,6 @@
-import { TopRanks } from './TopRanks'
+import { MyPicks } from './MyPicks'
+import { TopPlayers } from './TopPlayers'
+import { TopRiders } from './TopRiders'
 import { ViewerResultRow } from './ViewerResultRow'
 
 type TAfter = {
@@ -8,9 +10,11 @@ type TAfter = {
 
 export function After({ gpId, viewerId }: TAfter) {
 	return (
-		<div className="flex flex-col gap-2">
+		<>
 			{viewerId && <ViewerResultRow gpId={gpId} viewerId={viewerId} />}
-			<TopRanks gpId={gpId} />
-		</div>
+			{viewerId && <MyPicks gpId={gpId} viewerId={viewerId} />}
+			<TopPlayers gpId={gpId} />
+			<TopRiders gpId={gpId} />
+		</>
 	)
 }

@@ -43,7 +43,7 @@ export function RiderTile({ rider, slotIndex, isDimmed, onClick }: TRiderTile) {
 			</div>
 
 			<div className="flex w-full flex-col items-center gap-0.5">
-				<span className="w-full truncate text-center text-xs leading-tight uppercase">
+				<span className="w-full truncate text-center text-xs leading-tight font-black uppercase">
 					{rider.name.split(' ').pop()}
 				</span>
 				<FlagNumber countryCode={rider.country_code} number={rider.number} reverse />

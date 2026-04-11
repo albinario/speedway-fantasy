@@ -52,9 +52,9 @@ export function GpHeader({
 
 			<div className="absolute inset-0 z-40 flex flex-col justify-end gap-1 p-4">
 				<Flag countryCode={countryCode} />
-				<h2 className="text-2xl uppercase">{cityName}</h2>
-				<p className="text-xs uppercase opacity-80">
-					<span className="text-brand">Round {round}</span>
+				<h2 className="text-2xl font-black uppercase">{cityName}</h2>
+				<p className="text-xs font-black uppercase opacity-80">
+					<span className="text-brand-red">Round {round}</span>
 					{' • '}
 					{formatDate(startDate, timeZone)}
 					<StartTimeNote date={startDate} eventTimeZone={timeZone} />

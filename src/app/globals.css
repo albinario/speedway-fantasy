@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+@source inline(
+	'bg-gold bg-silver bg-bronze text-gold text-silver text-bronze bg-brand-red text-brand-red border-brand-red hover:bg-brand-red/10 dark:hover:bg-brand-red/15 bg-brand-red/15 bg-brand-red/5 '
+);
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
@@ -8,7 +11,6 @@
 	--color-background: #0a0a0a;
 	--color-text: #fff;
 	--color-text-secondary: #999;
-	--color-primary: #e05a15;
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.145 0 0);
 	--card: oklch(1 0 0);
@@ -32,7 +34,11 @@
 	--chart-3: oklch(0.546 0.245 262.881);
 	--chart-4: oklch(0.488 0.243 264.376);
 	--chart-5: oklch(0.424 0.199 265.638);
-	--color-shale: #B87040;
+	--gold: #ffd700;
+	--silver: #c0c0c0;
+	--bronze: #cd7f32;
+	--brand-red: #ff3b1f;
+
 	--radius: 0.625rem;
 	--sidebar: oklch(0.985 0 0);
 	--sidebar-foreground: oklch(0.145 0 0);
@@ -65,11 +71,13 @@ a:hover {
 } */
 
 .dark {
-	--background: oklch(0.145 0 0);
+	--background: #0d0d0f;
 	--foreground: oklch(0.985 0 0);
-	--card: oklch(0.205 0 0);
+	--card: #161619;
+	--infobox: #232328;
+	--infobox-border: #242428;
 	--card-foreground: oklch(0.985 0 0);
-	--popover: oklch(0.205 0 0);
+	--popover: #161619;
 	--popover-foreground: oklch(0.985 0 0);
 	--primary: oklch(0.922 0 0);
 	--primary-foreground: oklch(0.205 0 0);
@@ -130,8 +138,13 @@ a:hover {
 	--color-card-foreground: var(--card-foreground);
 	--color-card: var(--card);
 	--color-foreground: var(--foreground);
-	--color-brand: var(--color-primary);
-	--color-shale: var(--color-shale);
+	--color-infobox: var(--infobox);
+	--color-infobox-border: var(--infobox-border);
+	--color-brand-red: var(--brand-red);
+	--color-gold: var(--gold);
+	--color-silver: var(--silver);
+	--color-bronze: var(--bronze);
+
 	--color-background: var(--background);
 	--radius-sm: calc(var(--radius) * 0.6);
 	--radius-md: calc(var(--radius) * 0.8);
@@ -147,7 +160,7 @@ a:hover {
 		@apply border-border outline-ring/50;
 	}
 	body {
-		@apply bg-background text-foreground font-black;
+		@apply bg-background text-foreground font-bold;
 	}
 	html {
 		@apply font-sans;

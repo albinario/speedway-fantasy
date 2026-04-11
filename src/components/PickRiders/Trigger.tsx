@@ -43,6 +43,7 @@ export function PickRidersTrigger({
 			: null
 	)
 
+	console.log(savedPicks)
 	const pickedRiders = savedPicks
 		?.map((id) => riders.find((r) => r.id === id))
 		.filter(Boolean) as TPickRider[] | undefined
