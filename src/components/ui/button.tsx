@@ -24,7 +24,6 @@ const buttonVariants = cva(
 					'border-green-400/60 bg-background text-green-400/60 hover:bg-green-400/10 hover:text-green-400/80 disabled:border-muted disabled:text-muted-foreground dark:bg-input/30 dark:hover:bg-green-400/10',
 				warning:
 					'border-yellow-400/60 bg-background text-yellow-400/60 hover:bg-yellow-400/10 hover:text-yellow-400/80 disabled:border-muted disabled:text-muted-foreground dark:bg-input/30 dark:hover:bg-yellow-400/10',
-				shale: 'border-shale bg-background text-shale hover:bg-shale/10 dark:bg-input/30 dark:hover:bg-shale/15'
 			},
 			size: {
 				default:

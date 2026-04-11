@@ -7,7 +7,7 @@ import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
-import { getMedalColor } from '@/lib/medals'
+import { getMedalColorStr } from '@/lib/medals'
 
 import type { getUsersStandings } from './data'
 
@@ -19,44 +19,24 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 			id: 'pos',
 			header: '',
 			enableSorting: false,
-			cell: ({ row, table }) => {
-				const rows = table.getRowModel().rows
-				let posToRender = 1
-				for (let i = 1; i <= row.index; i++) {
-					const a = rows[i - 1].original
-					const b = rows[i].original
-					const tied =
-						a.pos === b.pos &&
-						a.points === b.points &&
-						a.medal_1 === b.medal_1 &&
-						a.medal_2 === b.medal_2 &&
-						a.medal_3 === b.medal_3 &&
-						a.heats === b.heats
-					if (!tied) posToRender = i + 1
-				}
-
-				const isMedal = posToRender <= 3
+			cell: ({ row }) => {
 				const { pos, prev_pos } = row.original
+
+				if (pos !== row.index + 1) return null
+
+				const isMedal = pos != null && pos <= 3
 				const moved = pos != null && prev_pos != null ? pos - prev_pos : null
 
 				return (
 					<div className="flex items-center gap-1">
 						<span
-							className="inline-flex size-7 items-center justify-center rounded-md bg-gray-800"
-							style={
-								isMedal
-									? {
-											backgroundColor: getMedalColor(posToRender),
-											color: 'black'
-										}
-									: undefined
-							}
+							className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos, 'bg')} text-black` : 'bg-gray-800'}`}
 						>
-							{posToRender}
+							{pos}
 						</span>
 
 						{moved !== null && moved < 0 && (
-							<ArrowUp className="size-4 text-green-500" />
+							<ArrowUp className="size-4 text-green-400" />
 						)}
 						{moved !== null && moved > 0 && (
 							<ArrowDown className="size-4 text-red-500" />
@@ -82,7 +62,9 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 		{
 			accessorKey: 'points',
 			header: 'Points',
-			cell: ({ getValue }) => <span className="text-lg">{getValue<number>()}</span>,
+			cell: ({ getValue }) => (
+				<span className="text-lg">{getValue<number>()}</span>
+			),
 			meta: { className: 'text-center' }
 		},
 		{

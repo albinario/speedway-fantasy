@@ -18,9 +18,9 @@ export async function UsersStandings({ year, limit }: TUsersStandings) {
 
 	if (!standings.length) return null
 
-	return limit ? (
-		<UsersLimitedTable data={standings} viewerId={viewer?.db?.id} />
-	) : (
-		<UsersStandingsTable data={standings} viewerId={viewer?.db?.id} />
-	)
+	if (limit) {
+		return <UsersLimitedTable data={standings} limit={limit} />
+	}
+
+	return <UsersStandingsTable data={standings} viewerId={viewer?.db?.id} />
 }

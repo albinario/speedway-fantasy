@@ -4,6 +4,6 @@ type TPageTitle = {
 
 export function PageTitle({ title }: TPageTitle) {
 	return (
-		<h1 className="text-muted-foreground text-xl uppercase">{title}</h1>
+		<h1 className="text-muted-foreground text-xl font-black uppercase">{title}</h1>
 	)
 }
