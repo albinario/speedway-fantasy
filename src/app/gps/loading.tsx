@@ -1,7 +1,1 @@
-import { LoadingFallback } from '@/components/LoadingFallback'
-
-import { metaData } from './[id]/constants'
-
-export default function Loading() {
-	return <LoadingFallback title={metaData.title} />
-}
+export { LoadingFallback as default } from '@/components/LoadingFallback'
