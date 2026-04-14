@@ -37,7 +37,7 @@ export function getGp(id: number) {
 	)
 }
 
-export function getGpRidersResults(gpId: number) {
+export function getGpRidersResults(gpId: number, viewerId?: number) {
 	return dataFetch(
 		() =>
 			db
@@ -78,7 +78,34 @@ export function getGpRidersResults(gpId: number) {
 								)
 							])
 						)
-						.as('times_picked')
+						.as('times_picked'),
+					viewerId != null
+						? eb
+								.selectFrom('users_picks')
+								.select(eb.fn.countAll<number>().as('c'))
+								.where('users_picks.gp_id', '=', gpId)
+								.where('users_picks.user_id', '=', viewerId)
+								.where((eb) =>
+									eb.or([
+										eb(
+											'users_picks.rider_1_id',
+											'=',
+											eb.ref('riders_results.rider_id')
+										),
+										eb(
+											'users_picks.rider_2_id',
+											'=',
+											eb.ref('riders_results.rider_id')
+										),
+										eb(
+											'users_picks.rider_3_id',
+											'=',
+											eb.ref('riders_results.rider_id')
+										)
+									])
+								)
+								.as('viewer_picked')
+						: eb.lit<number>(0).as('viewer_picked')
 				])
 				.where('riders_results.gp_id', '=', gpId)
 				.orderBy('riders_results.points', 'desc')

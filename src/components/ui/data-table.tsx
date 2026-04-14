@@ -50,7 +50,7 @@ export function DataTable<TData>({ columns, data, hideHeader }: TDataTable<TData
 	return (
 		<Table>
 			{!hideHeader && (
-				<TableHeader className="sticky top-0 z-10">
+				<TableHeader className="sticky top-0 z-10 bg-black/65 backdrop-blur-sm">
 					{table.getHeaderGroups().map((headerGroup) => (
 						<TableRow key={headerGroup.id} className="bg-muted/50">
 							{headerGroup.headers.map((header) => {

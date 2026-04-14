@@ -1,4 +1,4 @@
-import { MedalIcon } from '@/components/MedalIcon'
+import { MedalCounts } from '@/components/MedalCounts'
 import { SectionTitle } from '@/components/SectionTitle'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { UserName } from '@/components/UserName'
@@ -7,6 +7,7 @@ import { getMedalColorStr } from '@/lib/medals'
 
 import { Card } from '../ui/card'
 import { type getUsersStandings, getUserStandingRow } from './data'
+import { PosBadge } from './PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
@@ -31,20 +32,15 @@ export async function UsersLimitedTable({
 				Top <span className="text-xl text-green-400">{limit}</span> players
 			</SectionTitle>
 
-			<Card className="p-0">
+			<Card className="bg-surface">
 				<Table>
 					<TableBody>
 						{data.map((row) => {
-							const { pos } = row
-							const isMedal = pos != null && pos <= 3
+							const { pos, prev_pos } = row
 							return (
 								<TableRow key={row.user_id}>
-									<TableCell className="pr-0 pl-6">
-										<span
-											className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos!, 'bg')} text-black` : 'bg-gray-800'}`}
-										>
-											{pos}
-										</span>
+									<TableCell className="pr-0">
+										<PosBadge pos={pos} prevPos={prev_pos} />
 									</TableCell>
 
 									<TableCell>
@@ -55,26 +51,18 @@ export async function UsersLimitedTable({
 											userId={row.user_id}
 											isViewer={row.user_id === viewerId}
 										/>
-										<div className="mt-1 flex w-fit items-center gap-2">
-											{([1, 2, 3] as const).map((type) => {
-												const count = row[`medal_${type}`]
-												if (!count) return null
-												return (
-													<span
-														key={type}
-														className={`inline-flex items-center gap-1 ${getMedalColorStr(type, 'text')}`}
-													>
-														{count}
-														<MedalIcon type={type} />
-													</span>
-												)
-											})}
+										<div className="mt-1">
+											<MedalCounts
+												medal_1={Number(row.medal_1)}
+												medal_2={Number(row.medal_2)}
+												medal_3={Number(row.medal_3)}
+											/>
 										</div>
 									</TableCell>
 
-									<TableCell className="text-center">
+									<TableCell className="text-end">
 										<span
-											className={`text-lg ${isMedal ? getMedalColorStr(pos!, 'text') : ''}`}
+											className={`text-lg ${pos != null && pos <= 3 ? getMedalColorStr(pos, 'text') : ''}`}
 										>
 											{row.points}
 										</span>
@@ -84,10 +72,8 @@ export async function UsersLimitedTable({
 						})}
 						{viewerRow && (
 							<TableRow key={viewerRow.user_id} className="bg-orange-400/5">
-								<TableCell className="pr-0 pl-6">
-									<span className="inline-flex size-7 items-center justify-center rounded-md bg-gray-800">
-										{viewerRow.pos}
-									</span>
+								<TableCell className="pr-0">
+									<PosBadge pos={viewerRow.pos} prevPos={viewerRow.prev_pos} />
 								</TableCell>
 								<TableCell>
 									<UserName
@@ -97,23 +83,15 @@ export async function UsersLimitedTable({
 										userId={viewerRow.user_id}
 										isViewer
 									/>
-									<div className="mt-1 flex w-fit items-center gap-2">
-										{([1, 2, 3] as const).map((type) => {
-											const count = viewerRow[`medal_${type}`]
-											if (!count) return null
-											return (
-												<span
-													key={type}
-													className={`inline-flex items-center gap-1 ${getMedalColorStr(type, 'text')}`}
-												>
-													{count}
-													<MedalIcon type={type} />
-												</span>
-											)
-										})}
+									<div className="mt-1">
+										<MedalCounts
+											medal_1={Number(viewerRow.medal_1)}
+											medal_2={Number(viewerRow.medal_2)}
+											medal_3={Number(viewerRow.medal_3)}
+										/>
 									</div>
 								</TableCell>
-								<TableCell className="text-center">
+								<TableCell className="text-end">
 									<span className="text-lg">{viewerRow.points}</span>
 								</TableCell>
 							</TableRow>

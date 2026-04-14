@@ -46,13 +46,16 @@ export async function savePicksAction(
 		)
 		.execute()
 
+	const action = existing ? ActivityAction.PickUpdated : ActivityAction.PickCreated
+
 	await db
 		.insertInto('activity_log')
-		.values({
-			user_id: userId,
-			gp_id: gpId,
-			action: existing ? ActivityAction.PickUpdated : ActivityAction.PickCreated
-		})
+		.values({ user_id: userId, gp_id: gpId, action })
+		.onConflict((oc) =>
+			action === ActivityAction.PickUpdated
+				? oc.columns(['user_id', 'gp_id', 'action']).doUpdateSet({ created_at: new Date() })
+				: oc.doNothing()
+		)
 		.execute()
 
 	return {}

@@ -7,7 +7,7 @@ import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
-import { getMedalColorStr } from '@/lib/medals'
+import { buildMedals, getMedalColorStr } from '@/lib/medals'
 import { sortedPicks } from '@/lib/picks'
 
 import type { getGpUsersResults } from './data'
@@ -15,13 +15,14 @@ import type { getGpUsersResults } from './data'
 type TRow = Awaited<ReturnType<typeof getGpUsersResults>>[number]
 
 function makeColumns(
-	viewerId?: number,
+	userId?: number,
 	firstOccurrenceByRider = new Map<number, number>()
 ): ColumnDef<TRow>[] {
 	return [
 		{
 			id: 'pos',
 			header: '',
+			meta: { className: 'pr-0' },
 			cell: ({ row }) => {
 				const { pos } = row.original
 
@@ -31,7 +32,7 @@ function makeColumns(
 
 				return (
 					<span
-						className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos!, 'bg')} text-black` : 'bg-gray-800'}`}
+						className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos!, 'bg')} text-black` : 'bg-white/10'}`}
 					>
 						{pos}
 					</span>
@@ -53,7 +54,7 @@ function makeColumns(
 							firstName={first_name}
 							lastName={last_name}
 							stars={stars}
-							isViewer={user_id === viewerId}
+							isViewer={user_id === userId}
 						/>
 						<div className="mt-1 flex items-center gap-2">
 							{picks.map((pick, i) => (
@@ -100,17 +101,17 @@ function makeColumns(
 			cell: ({ getValue }) => (
 				<span className="text-lg">{getValue<number>()}</span>
 			),
-			meta: { className: 'text-center' }
+			meta: { className: 'px-1 text-center' }
 		},
 		{
 			accessorKey: 'heats',
 			header: 'Heats',
-			meta: { className: 'hidden text-center sm:table-cell' }
+			meta: { className: 'hidden px-1 text-center sm:table-cell' }
 		},
 		{
 			accessorKey: 'season_points',
 			header: 'Total',
-			meta: { className: 'hidden text-center sm:table-cell' }
+			meta: { className: 'hidden px-1 text-center sm:table-cell' }
 		}
 	]
 }

@@ -11,7 +11,7 @@ export async function Header() {
 	const viewer = await getViewer()
 
 	return (
-		<div className="flex justify-between border-b p-4">
+		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-4 backdrop-blur-sm">
 			<Link href="/" className="w-32 sm:w-48 md:w-64">
 				<Image
 					alt={logo.alt}

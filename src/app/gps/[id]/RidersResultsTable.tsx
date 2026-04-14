@@ -19,7 +19,8 @@ export function GpRidersResultsTable({ data }: TGpRidersResultsTable) {
 				medals: r.medal != null ? [r.medal] : undefined,
 				points: r.points,
 				heats: r.heats,
-				timesPicked: r.times_picked ?? 0
+				timesPicked: r.times_picked ?? 0,
+				pickedByViewer: (r.viewer_picked ?? 0) > 0
 			}))}
 		/>
 	)

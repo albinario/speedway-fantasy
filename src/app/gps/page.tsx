@@ -5,7 +5,6 @@ import { PageTitle } from '@/components/PageTitle'
 import { ScrollToId } from '@/components/ScrollToId'
 import { YearSelector } from '@/components/YearSelector'
 import { EMacroStage } from '@/enums'
-import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
@@ -23,10 +22,7 @@ export const metadata: Metadata = metaData
 
 export default async function GpsPage({ searchParams }: TGpsPage) {
 	const yearValues = await getYearValues(searchParams)
-	const [viewer, gps] = await Promise.all([
-		getViewer(),
-		getGps(yearValues.activeYear)
-	])
+	const [gps] = await Promise.all([getGps(yearValues.activeYear)])
 
 	return (
 		<>
@@ -53,7 +49,6 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 								isUpNext={i === isUpNext}
 								linked
 								macroStage={stages[i]}
-								viewerId={viewer?.db?.id}
 							/>
 						))}
 					</div>

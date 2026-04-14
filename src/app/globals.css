@@ -55,27 +55,12 @@ html {
 	scrollbar-width: none;
 }
 
-/* a {
-	color: var(--color-text-secondary);
-	text-decoration: none;
-	transition: color 0.2s;
-}
-
-a:hover {
-	color: var(--color-primary);
-} */
-
-/* img {
-	width: 100%;
-	height: auto;
-} */
-
 .dark {
 	--background: #0d0d0f;
 	--foreground: oklch(0.985 0 0);
 	--card: #161619;
-	--infobox: #232328;
-	--infobox-border: #242428;
+	--surface: #232328;
+	--surface-border: #242428;
 	--card-foreground: oklch(0.985 0 0);
 	--popover: #161619;
 	--popover-foreground: oklch(0.985 0 0);
@@ -138,8 +123,8 @@ a:hover {
 	--color-card-foreground: var(--card-foreground);
 	--color-card: var(--card);
 	--color-foreground: var(--foreground);
-	--color-infobox: var(--infobox);
-	--color-infobox-border: var(--infobox-border);
+	--color-surface: var(--surface);
+	--color-surface-border: var(--surface-border);
 	--color-brand-red: var(--brand-red);
 	--color-gold: var(--gold);
 	--color-silver: var(--silver);

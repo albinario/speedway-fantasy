@@ -9,7 +9,7 @@ import { metaData } from './constants'
 export const metadata: Metadata = metaData
 
 export default async function GpCardPage() {
-	const gp = await getGp(52)
+	const gp = await getGp(5)
 
 	if (!gp) return null
 
@@ -29,9 +29,9 @@ export default async function GpCardPage() {
 
 			{/* Logged in row */}
 			<div className="text-end">In</div>
-			<GpCard gp={gp} macroStage={EMacroStage.Before} viewerId={1} />
-			<GpCard gp={gp} macroStage={EMacroStage.During} viewerId={1} />
-			<GpCard gp={gp} macroStage={EMacroStage.After} viewerId={1} />
+			<GpCard gp={gp} macroStage={EMacroStage.Before} userId={1} isUpNext />
+			<GpCard gp={gp} macroStage={EMacroStage.During} userId={1} />
+			<GpCard gp={gp} macroStage={EMacroStage.After} userId={1} />
 		</div>
 	)
 }
