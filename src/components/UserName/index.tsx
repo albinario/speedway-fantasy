@@ -10,16 +10,16 @@ type TUserName = {
 	firstName: string | null
 	isViewer?: boolean
 	lastName: string | null
-	stars?: number[] | null
 	userId: number
+	stars?: number[] | null
 }
 
 export function UserName({
 	className,
 	isViewer,
-	userId,
 	firstName,
 	lastName,
+	userId,
 	stars
 }: TUserName) {
 	return (

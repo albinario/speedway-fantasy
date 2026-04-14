@@ -93,14 +93,36 @@ export function getLatestGp() {
 	)
 }
 
-export function getGpTopRiders(gpId: number, limit = 3) {
+export function getGpTopRiders(gpId: number, limit = 3, viewerId?: number) {
 	return dataFetch(
 		() =>
 			db
 				.selectFrom('riders_results')
 				.innerJoin('riders', 'riders.id', 'riders_results.rider_id')
 				.innerJoin('countries', 'countries.id', 'riders.country_id')
-				.select(['riders.id', 'riders.name', 'riders.number', 'countries.code as country_code', 'riders_results.points', 'riders_results.medal'])
+				.select((eb) => [
+					'riders.id',
+					'riders.name',
+					'riders.number',
+					'countries.code as country_code',
+					'riders_results.points',
+					'riders_results.medal',
+					viewerId != null
+						? eb
+								.selectFrom('users_picks')
+								.select(eb.fn.countAll<number>().as('c'))
+								.where('users_picks.gp_id', '=', gpId)
+								.where('users_picks.user_id', '=', viewerId)
+								.where((eb) =>
+									eb.or([
+										eb('users_picks.rider_1_id', '=', eb.ref('riders.id')),
+										eb('users_picks.rider_2_id', '=', eb.ref('riders.id')),
+										eb('users_picks.rider_3_id', '=', eb.ref('riders.id'))
+									])
+								)
+								.as('viewer_picked')
+						: eb.lit<number>(0).as('viewer_picked')
+				])
 				.where('riders_results.gp_id', '=', gpId)
 				.orderBy('riders_results.points', 'desc')
 				.limit(limit)

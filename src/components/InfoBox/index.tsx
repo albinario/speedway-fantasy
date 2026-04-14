@@ -7,7 +7,12 @@ type TInfoBox = {
 
 export function InfoBox({ children, className }: TInfoBox) {
 	return (
-		<div className={cn('bg-infobox rounded-md border border-border/50 p-3', className)}>
+		<div
+			className={cn(
+				'bg-surface border-border/50 rounded-md border p-3',
+				className
+			)}
+		>
 			{children}
 		</div>
 	)

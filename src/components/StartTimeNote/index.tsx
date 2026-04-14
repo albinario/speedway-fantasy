@@ -35,5 +35,10 @@ export function StartTimeNote({ date, eventTimeZone }: TStartTimeNote) {
 		hour12: false
 	})
 
-	return <span> • Where you are {userTime}</span>
+	return (
+		<span className="text-yellow-400">
+			<br />
+			Where you are {userTime}
+		</span>
+	)
 }

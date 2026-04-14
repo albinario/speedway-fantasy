@@ -9,10 +9,9 @@ import { db } from '@/lib/db'
  * If riders_results exist for the GP, returns those riders (covers historical/finished GPs).
  * Otherwise falls back to the 15 active seeded riders + wild card.
  */
-export async function getGpRiders(
-	gpId: number,
-	wildCardId: number | null | undefined
-): Promise<TPickRider[]> {
+export async function getGpRiders(gpId: number): Promise<TPickRider[]> {
+	const gp = await db.selectFrom('gps').select('wild_card_id').where('id', '=', gpId).executeTakeFirst()
+	const wildCardId = gp?.wild_card_id
 	// Check if riders_results exist for this GP
 	const fromResults = await dataFetch(
 		() =>
@@ -109,22 +108,24 @@ export async function getGpRiders(
 	]
 }
 
-/** Returns the viewer's result row for a GP, including picks and position. */
-export function getViewerGpRow(gpId: number, viewerId: number) {
-	return dataFetch(
+export type TUserPick = {
+	id: number
+	name: string
+	number: number
+	country_code: string | null
+	medal: number | null
+	points: number | null
+}
+
+/** Returns a user's 3 picked riders with full details and results. */
+export async function getUserPicksWithResults(
+	gpId: number,
+	userId: number
+): Promise<TUserPick[]> {
+	const row = await dataFetch(
 		() =>
 			db
-				.selectFrom('users_results')
-				.innerJoin(
-					'users_with_stars',
-					'users_with_stars.id',
-					'users_results.user_id'
-				)
-				.leftJoin('users_picks', (join) =>
-					join
-						.onRef('users_picks.user_id', '=', 'users_results.user_id')
-						.onRef('users_picks.gp_id', '=', 'users_results.gp_id')
-				)
+				.selectFrom('users_picks')
 				.leftJoin(
 					'riders_with_country as r1',
 					'r1.id',
@@ -140,48 +141,20 @@ export function getViewerGpRow(gpId: number, viewerId: number) {
 					'r3.id',
 					'users_picks.rider_3_id'
 				)
-				.select([
-					'users_results.user_id',
-					'users_results.pos',
-					'users_with_stars.first_name',
-					'users_with_stars.last_name',
-					'users_with_stars.stars',
-					'users_results.points',
-					'users_results.heats',
-					'users_results.medal_1',
-					'users_results.medal_2',
-					'users_results.medal_3',
-					'r1.country_code as pick_1_country',
-					'r1.number as pick_1_number',
-					'r2.country_code as pick_2_country',
-					'r2.number as pick_2_number',
-					'r3.country_code as pick_3_country',
-					'r3.number as pick_3_number'
-				])
-				.where('users_results.gp_id', '=', gpId)
-				.where('users_results.user_id', '=', viewerId)
-				.executeTakeFirst(),
-		null
-	)
-}
-
-/** Returns the viewer's 3 picks with full rider details. */
-export function getViewerPicksWithRiders(gpId: number, viewerId: number) {
-	return dataFetch(
-		() =>
-			db
-				.selectFrom('users_picks')
-				.leftJoin('riders_with_country as r1', 'r1.id', 'users_picks.rider_1_id')
-				.leftJoin('riders_with_country as r2', 'r2.id', 'users_picks.rider_2_id')
-				.leftJoin('riders_with_country as r3', 'r3.id', 'users_picks.rider_3_id')
 				.leftJoin('riders_results as rr1', (join) =>
-					join.onRef('rr1.rider_id', '=', 'users_picks.rider_1_id').on('rr1.gp_id', '=', gpId)
+					join
+						.onRef('rr1.rider_id', '=', 'users_picks.rider_1_id')
+						.on('rr1.gp_id', '=', gpId)
 				)
 				.leftJoin('riders_results as rr2', (join) =>
-					join.onRef('rr2.rider_id', '=', 'users_picks.rider_2_id').on('rr2.gp_id', '=', gpId)
+					join
+						.onRef('rr2.rider_id', '=', 'users_picks.rider_2_id')
+						.on('rr2.gp_id', '=', gpId)
 				)
 				.leftJoin('riders_results as rr3', (join) =>
-					join.onRef('rr3.rider_id', '=', 'users_picks.rider_3_id').on('rr3.gp_id', '=', gpId)
+					join
+						.onRef('rr3.rider_id', '=', 'users_picks.rider_3_id')
+						.on('rr3.gp_id', '=', gpId)
 				)
 				.select([
 					'r1.id as pick_1_id',
@@ -195,7 +168,7 @@ export function getViewerPicksWithRiders(gpId: number, viewerId: number) {
 					'r3.id as pick_3_id',
 					'r3.name as pick_3_name',
 					'r3.number as pick_3_number',
-					'r3.country_code as pick_3_country',
+					'r3.country_code as pick_3_country'
 				])
 				.select([
 					sql<number | null>`rr1.points`.as('pick_1_points'),
@@ -203,18 +176,52 @@ export function getViewerPicksWithRiders(gpId: number, viewerId: number) {
 					sql<number | null>`rr2.points`.as('pick_2_points'),
 					sql<number | null>`rr2.medal`.as('pick_2_medal'),
 					sql<number | null>`rr3.points`.as('pick_3_points'),
-					sql<number | null>`rr3.medal`.as('pick_3_medal'),
+					sql<number | null>`rr3.medal`.as('pick_3_medal')
 				])
 				.where('users_picks.gp_id', '=', gpId)
-				.where('users_picks.user_id', '=', viewerId)
+				.where('users_picks.user_id', '=', userId)
 				.executeTakeFirst(),
 		null
 	)
+
+	if (!row) return []
+
+	return [
+		{
+			id: row.pick_1_id,
+			name: row.pick_1_name,
+			number: row.pick_1_number,
+			country_code: row.pick_1_country,
+			medal: row.pick_1_medal ?? null,
+			points: row.pick_1_points ?? null
+		},
+		{
+			id: row.pick_2_id,
+			name: row.pick_2_name,
+			number: row.pick_2_number,
+			country_code: row.pick_2_country,
+			medal: row.pick_2_medal ?? null,
+			points: row.pick_2_points ?? null
+		},
+		{
+			id: row.pick_3_id,
+			name: row.pick_3_name,
+			number: row.pick_3_number,
+			country_code: row.pick_3_country,
+			medal: row.pick_3_medal ?? null,
+			points: row.pick_3_points ?? null
+		}
+	].filter(
+		(r): r is TUserPick => r.id != null && r.name != null && r.number != null
+	)
 }
 
-/** Returns the existing picks row for a viewer/GP pair, or null if none. */
-export function getViewerPicks(gpId: number, userId: number) {
-	return dataFetch(
+/** Returns the existing picks for a user/GP pair as a tuple, or null if none. */
+export async function getUserPicks(
+	gpId: number,
+	userId: number
+): Promise<[number, number, number] | null> {
+	const row = await dataFetch(
 		() =>
 			db
 				.selectFrom('users_picks')
@@ -224,4 +231,5 @@ export function getViewerPicks(gpId: number, userId: number) {
 				.executeTakeFirst(),
 		null
 	)
+	return row ? [row.rider_1_id, row.rider_2_id, row.rider_3_id] : null
 }

@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react'
 import { Save } from 'lucide-react'
 import { toast } from 'sonner'
 
+import { Flag } from '@/components/Flag'
 import { Button } from '@/components/ui/button'
 import {
 	Sheet,
@@ -30,7 +31,8 @@ type TPickRidersSheet = {
 	gpId: number
 	gpName: string
 	gpRound: number
-	viewerId: number
+	gpCountryCode: string
+	userId: number
 	riders: TPickRider[]
 	initialPicks: [number, number, number] | null
 	open: boolean
@@ -42,7 +44,8 @@ export function PickRidersSheet({
 	gpId,
 	gpName,
 	gpRound,
-	viewerId,
+	gpCountryCode,
+	userId,
 	riders,
 	initialPicks,
 	open,
@@ -71,7 +74,7 @@ export function PickRidersSheet({
 		startTransition(async () => {
 			const result = await savePicksAction(
 				gpId,
-				viewerId,
+				userId,
 				selected as [number, number, number]
 			)
 
@@ -97,14 +100,16 @@ export function PickRidersSheet({
 
 	return (
 		<Sheet open={open} onOpenChange={handleOpenChange}>
-			<SheetContent
-				side="bottom"
-				className="flex max-h-[90dvh] flex-col gap-0"
-			>
+			<SheetContent side="bottom" className="flex max-h-[90dvh] flex-col gap-0">
 				<SheetHeader className="border-b pb-3">
-					<SheetTitle>Pick your 3 riders</SheetTitle>
-					<SheetDescription>
-						Round {gpRound} · {gpName}
+					<SheetTitle className="font-black uppercase">
+						Pick your <span className="text-green-400">3</span> riders
+					</SheetTitle>
+					<SheetDescription className="flex items-center gap-2">
+						<Flag countryCode={gpCountryCode} className="h-4 w-auto" />
+						{gpName}
+						<span className="text-muted-foreground">·</span>
+						<span className="text-muted-foreground">Round <span className="text-brand-red">{gpRound}</span></span>
 					</SheetDescription>
 				</SheetHeader>
 
@@ -114,7 +119,8 @@ export function PickRidersSheet({
 							<RiderTile
 								key={rider.id}
 								rider={rider}
-								slotIndex={selected.indexOf(rider.id)}
+								inSheet
+								isSelected={selected.includes(rider.id)}
 								isDimmed={isComplete && !selected.includes(rider.id)}
 								onClick={() => handleTileClick(rider.id)}
 							/>

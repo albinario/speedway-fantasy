@@ -2,6 +2,7 @@ import { Flag } from '@/components/Flag'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
 
+import { InfoBox } from '../InfoBox'
 import { getActivityFeed } from './data'
 
 export const ActivityAction = {
@@ -29,7 +30,7 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 	if (!entries.length) return null
 
 	return (
-		<div className="overflow-hidden">
+		<>
 			{entries.map((entry, i) => {
 				const isLast = i === entries.length - 1
 				const isViewer = entry.user_id === viewerId
@@ -46,7 +47,7 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 								className={`bg-border w-px flex-1 ${i === 0 ? 'opacity-0' : ''}`}
 							/>
 							<div
-								className={`z-10 size-2 shrink-0 rounded-full ${isCreated ? 'bg-green-400' : 'bg-muted-foreground/50'}`}
+								className={`z-10 size-2 shrink-0 rounded-full ${isCreated ? 'bg-green-400' : 'bg-yellow-400'}`}
 							/>
 							<div
 								className={`bg-border w-px flex-1 ${isLast ? 'opacity-0' : ''}`}
@@ -71,7 +72,9 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 								)}
 								<span className="truncate text-xs">
 									{entry.city_name} ·{' '}
-									<span className={isCreated ? 'text-green-400' : ''}>
+									<span
+										className={isCreated ? 'text-green-400' : 'text-yellow-400'}
+									>
 										{ActivityActionLabel[entry.action]}
 									</span>
 								</span>
@@ -89,6 +92,6 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 					</div>
 				)
 			})}
-		</div>
+		</>
 	)
 }
