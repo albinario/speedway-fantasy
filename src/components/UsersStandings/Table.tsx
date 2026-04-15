@@ -21,8 +21,10 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 			meta: { className: 'pr-0' },
 			cell: ({ row }) => {
 				const { pos, prev_pos } = row.original
+				const index = row.index + 1
 
-				if (pos !== row.index + 1) return null
+				if (pos == null) return <PosBadge pos={index} />
+				if (pos !== index) return null
 
 				return <PosBadge pos={pos} prevPos={prev_pos} />
 			}

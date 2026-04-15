@@ -2,7 +2,7 @@ import type { getRidersStandings } from '@/app/riders/data'
 import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
-import { SectionTitle } from '@/components/SectionTitle'
+import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 
@@ -38,8 +38,8 @@ export function RidersLimitedTable({
 									<TableCell className="px-0">
 										<RiderImage
 											className="size-10"
-											riderId={row.rider_id}
 											name={row.name}
+											riderId={row.rider_id}
 										/>
 									</TableCell>
 

@@ -13,21 +13,25 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import type { TYears } from '@/data/year'
 import { paramKeys, paramValues, type TParamValues } from '@/lib/params'
-import type { TYearValues } from '@/lib/year'
 
 type TYearSelectorProps = {
-	yearValues: TYearValues
+	years: TYears
 }
 
-export function YearSelector({ yearValues }: TYearSelectorProps) {
+export function YearSelector({ years }: TYearSelectorProps) {
 	const router = useRouter()
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
 
-	const { activeYear, years } = yearValues
-
 	const latestYear = years[0]?.value
+	const yearParam = searchParams.get(paramKeys.year)
+	const activeYear: number | TParamValues =
+		yearParam === paramValues.all
+			? paramValues.all
+			: Number(yearParam) || latestYear || new Date().getFullYear()
+
 	const showClearButton = Boolean(
 		activeYear === paramValues.all || (latestYear && activeYear !== latestYear)
 	)

@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
 import { RidersTable } from '@/components/RidersTable'
-import { YearSelector } from '@/components/YearSelector'
 import { paramValues, type TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
@@ -21,14 +20,12 @@ export const metadata: Metadata = metaData
 export default async function RidersPage({ searchParams }: TRidersPage) {
 	const yearValues = await getYearValues(searchParams)
 	const ridersStandings = await getRidersStandings(yearValues.activeYear)
-	const ridersActive = ridersStandings.length <= 0 ? await getRidersActive() : []
+	const ridersActive =
+		ridersStandings.length <= 0 ? await getRidersActive() : []
 
 	return (
 		<>
-			<div className="flex items-center justify-between py-4">
-				<PageTitle title={metaData.title} />
-				<YearSelector yearValues={yearValues} />
-			</div>
+			<PageHeader title={metaData.title} />
 
 			{ridersStandings.length > 0 ? (
 				<RidersTable

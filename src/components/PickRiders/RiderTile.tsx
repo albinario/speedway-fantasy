@@ -12,7 +12,8 @@ import type { TPickRider } from './Sheet'
 type TRiderTile = {
 	rider: TPickRider
 	className?: string
-	inSheet?: boolean
+	linked?: boolean
+	hideFirstName?: boolean
 	isSelected?: boolean
 	isDimmed?: boolean
 	onClick?: () => void
@@ -23,7 +24,8 @@ type TRiderTile = {
 export function RiderTile({
 	rider,
 	className,
-	inSheet = false,
+	linked = false,
+	hideFirstName = false,
 	isSelected = false,
 	isDimmed = false,
 	onClick,
@@ -31,6 +33,10 @@ export function RiderTile({
 	points
 }: TRiderTile) {
 	const Comp = onClick ? 'button' : 'div'
+
+	const nameToRender = hideFirstName
+		? (rider.name.split(' ').pop() ?? '')
+		: rider.name
 
 	return (
 		<Comp
@@ -48,34 +54,31 @@ export function RiderTile({
 					isSelected &&
 						'ring-offset-background rounded-full ring-2 ring-green-400 ring-offset-2'
 				)}
+				name={rider.name}
 				riderId={rider.id}
 			/>
 
-			<div className="flex w-full flex-col items-center gap-0.5">
-				{inSheet ? (
-					<span className="w-full text-center text-xs leading-tight break-words">
-						{rider.name}
-					</span>
-				) : (
+			<div className="flex w-full flex-1 flex-col items-center gap-0.5">
+				{linked ? (
 					<RiderName
-						className="text-center text-xs leading-tight"
-						name={rider.name.split(' ').pop() ?? ''}
+						className="text-center leading-tight"
+						name={nameToRender}
 						riderId={rider.id}
 					/>
+				) : (
+					<span className="w-full text-center text-xs leading-tight">
+						{nameToRender}
+					</span>
 				)}
 
 				<FlagNumber countryCode={rider.country_code} number={rider.number} />
 
 				{(medal != null || points != null) && (
-					<div className="mt-0.5 flex items-center gap-1">
+					<div className="mt-auto flex items-center gap-1">
 						{medal != null && <MedalIcon type={medal} />}
+
 						{points != null && (
-							<span
-								className={cn(
-									'text-sm font-black',
-									medal != null ? getMedalColorStr(medal, 'text') : undefined
-								)}
-							>
+							<span className="text-sm font-black">
 								{points}{' '}
 								<span className="text-muted-foreground text-sm">pts</span>
 							</span>

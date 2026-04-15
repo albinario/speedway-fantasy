@@ -17,11 +17,23 @@ export function FlagNumber({
 	reverse = false
 }: TFlagNumber) {
 	return (
-		<div className={cn('flex items-center gap-1', highlight && 'rounded px-1 ring-1 ring-white/30')}>
-			{countryCode && <Flag className={flagClassName} countryCode={countryCode} />}
+		<div
+			className={cn(
+				'flex items-center gap-1',
+				highlight && 'rounded px-1 ring-1 ring-white/30'
+			)}
+		>
+			{countryCode && (
+				<Flag className={flagClassName} countryCode={countryCode} />
+			)}
 
 			{number && (
-				<span className={cn('text-muted-foreground', reverse && 'order-first')}>
+				<span
+					className={cn(
+						'text-muted-foreground text-sm',
+						reverse && 'order-first'
+					)}
+				>
 					{number}
 				</span>
 			)}

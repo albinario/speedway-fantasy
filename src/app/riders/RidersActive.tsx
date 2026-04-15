@@ -1,5 +1,4 @@
-import { RiderInfo } from '@/components/RiderInfo'
-import { Card } from '@/components/ui/card'
+import { RiderTile } from '@/components/PickRiders/RiderTile'
 
 import type { getRidersActive } from './data'
 
@@ -9,22 +8,23 @@ type TRidersActive = {
 
 export function RidersActive({ riders }: TRidersActive) {
 	return (
-		<div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-			{riders.map((rider) => (
-				<Card
-					key={rider.id}
-					className="flex items-center justify-center bg-transparent p-4"
-				>
-					<RiderInfo
-						countryCode={rider.country_code}
-						imageSize={20}
-						name={rider.name}
-						number={rider.number}
-						riderId={rider.id}
-						stack
-					/>
-				</Card>
-			))}
+		<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+			{riders
+				.flatMap((r) =>
+					r.id != null && r.name != null && r.number != null
+						? [
+								{
+									id: r.id,
+									name: r.name,
+									number: r.number,
+									country_code: r.country_code
+								}
+							]
+						: []
+				)
+				.map((rider) => (
+					<RiderTile key={rider.id} rider={rider} linked />
+				))}
 		</div>
 	)
 }

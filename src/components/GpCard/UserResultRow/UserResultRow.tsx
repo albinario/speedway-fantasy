@@ -8,15 +8,10 @@ import { getUserGpRow } from './data'
 
 type TUserResultRow = {
 	gpId: number
-	noHighlight?: boolean
 	userId: number
 }
 
-export async function UserResultRow({
-	gpId,
-	noHighlight = false,
-	userId
-}: TUserResultRow) {
+export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 	const [viewer, row] = await Promise.all([
 		getViewer(),
 		getUserGpRow(gpId, userId)
@@ -32,7 +27,7 @@ export async function UserResultRow({
 	const medals = buildMedals(row)
 
 	return (
-		<InfoBox className="flex items-center gap-3">
+		<InfoBox className="flex items-center gap-4">
 			<span
 				className={`shrink-0 text-xl font-black tabular-nums ${isMedal && pos != null ? getMedalColorStr(pos, 'text') : 'text-muted-foreground'}`}
 			>

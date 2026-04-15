@@ -31,7 +31,11 @@ export function RiderInfo({
 			)}
 		>
 			{riderId && (
-				<RiderImage className={`size-${imageSize}`} riderId={riderId} />
+				<RiderImage
+					className={`size-${imageSize}`}
+					name={name}
+					riderId={riderId}
+				/>
 			)}
 
 			<div

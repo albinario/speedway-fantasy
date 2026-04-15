@@ -25,7 +25,7 @@ export function UserName({
 	return (
 		<Link
 			className={cn(
-				'inline-flex items-baseline gap-1 truncate',
+				'inline-flex items-start gap-0.5 truncate',
 				isViewer && 'text-orange-400',
 				className
 			)}
@@ -33,7 +33,7 @@ export function UserName({
 		>
 			{firstName} {lastName}
 			{stars && stars.length > 0 && (
-				<span className="inline-flex -translate-y-1 gap-0.5 [&_svg]:size-2.5">
+				<span className="mt-0.25 inline-flex gap-0.5 [&_svg]:size-2.5">
 					{stars.filter(Boolean).map((type, i) => {
 						const medalColor = getMedalColorHex(type)
 						return <StarIcon key={i} fill={medalColor} stroke={medalColor} />

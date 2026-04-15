@@ -1,11 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { DatabaseZap, LogIn, LogOut } from 'lucide-react'
+import { DatabaseZap, LogIn } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { logo } from '@/config/brand'
 import { getViewer } from '@/lib/auth/get-viewer'
+
+import { PickRidersLoader } from './PickRidersLoader'
 
 export async function Header() {
 	const viewer = await getViewer()
@@ -26,22 +28,18 @@ export async function Header() {
 			<div className="flex flex-col items-end gap-2">
 				{viewer.isAuthenticated ? (
 					<div className="flex items-center gap-2">
-						<span className="text-sm">
-							{viewer.db?.first_name} {viewer.db?.last_name}
-						</span>
-
 						{viewer.isAdmin && (
-							<Button asChild variant="outline" size="icon">
+							<Button asChild variant="outline" size="icon-lg">
 								<Link href="/admin">
 									<DatabaseZap />
 								</Link>
 							</Button>
 						)}
 
-						<Button asChild variant="outline">
-							<a href="/auth/logout">
-								Log out <LogOut />
-							</a>
+						<PickRidersLoader />
+
+						<Button asChild variant="outline" size="lg">
+							<Link href={`/users/${viewer.db?.id}`}>My page</Link>
 						</Button>
 					</div>
 				) : (

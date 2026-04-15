@@ -4,7 +4,7 @@ import { getMedalColorStr } from '@/lib/medals'
 
 type TPosBadge = {
 	pos: number | null | undefined
-	prevPos: number | null | undefined
+	prevPos?: number | null
 }
 
 export function PosBadge({ pos, prevPos }: TPosBadge) {

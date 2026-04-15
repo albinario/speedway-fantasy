@@ -2,7 +2,7 @@ import { getNextGp } from '@/app/gps/data'
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { GpCard } from '@/components/GpCard'
 import { InfoBox } from '@/components/InfoBox'
-import { SectionTitle } from '@/components/SectionTitle'
+import { SectionTitle } from '@/components/SectionHeader'
 import { EMacroStage } from '@/enums'
 
 export default async function ActivityFeedPage() {
