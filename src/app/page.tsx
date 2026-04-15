@@ -3,7 +3,7 @@ import { ActivityFeed } from '@/components/ActivityFeed'
 import { GpCard } from '@/components/GpCard'
 import { InfoBox } from '@/components/InfoBox'
 import { RidersStandings } from '@/components/RidersStandings'
-import { SectionTitle } from '@/components/SectionTitle'
+import { SectionTitle } from '@/components/SectionHeader'
 import { UsersStandings } from '@/components/UsersStandings'
 import { getYearValues } from '@/lib/year'
 

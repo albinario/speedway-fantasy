@@ -8,7 +8,7 @@ export function getUsers() {
 export function getViewerDb(auth0Id: string) {
 	return db
 		.selectFrom('users')
-		.select(['id', 'first_name', 'last_name'])
+		.select(['id', 'first_name', 'last_name', 'reminder'])
 		.where('auth0_id', '=', auth0Id)
 		.executeTakeFirst()
 }

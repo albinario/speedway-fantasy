@@ -1,7 +1,7 @@
 import { getGp } from '@/app/gps/[id]/data'
 import { GpCard } from '@/components/GpCard'
 import { InfoBox } from '@/components/InfoBox'
-import { SectionTitle } from '@/components/SectionTitle'
+import { SectionTitle } from '@/components/SectionHeader'
 
 type TColorSwatch = {
 	name: string
@@ -146,7 +146,7 @@ export default async function ColorsPage() {
 			<div>
 				<SectionTitle>All together</SectionTitle>
 				<InfoBox>
-					<div className="flex flex-wrap gap-3">
+					<div className="4 flex flex-wrap">
 						{[...existing, ...proposed].map((s) => (
 							<div
 								key={s.name}

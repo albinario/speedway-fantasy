@@ -28,7 +28,7 @@ export function RiderImage({ className, name, riderId }: TRiderImage) {
 		return (
 			<span
 				className={cn(
-					'inline-flex shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold',
+					'inline-flex shrink-0 items-center justify-center rounded-full bg-white/10 font-bold',
 					className
 				)}
 			>

@@ -20,7 +20,7 @@ export function RiderTilesEmpty({
 			{Array.from({ length: count }, (_, i) => (
 				<div
 					key={i}
-					className="flex flex-col items-center gap-1 rounded-lg bg-black/40 p-3"
+					className="flex flex-col items-center gap-1 rounded-lg bg-black/40 p-4"
 				>
 					<div
 						className={`${circle} flex size-14 items-center justify-center rounded-full`}

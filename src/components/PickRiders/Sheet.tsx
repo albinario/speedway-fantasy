@@ -32,7 +32,7 @@ type TPickRidersSheet = {
 	gpName: string
 	gpRound: number
 	gpCountryCode: string
-	userId: number
+	viewerId: number
 	riders: TPickRider[]
 	initialPicks: [number, number, number] | null
 	open: boolean
@@ -45,7 +45,7 @@ export function PickRidersSheet({
 	gpName,
 	gpRound,
 	gpCountryCode,
-	userId,
+	viewerId,
 	riders,
 	initialPicks,
 	open,
@@ -74,7 +74,7 @@ export function PickRidersSheet({
 		startTransition(async () => {
 			const result = await savePicksAction(
 				gpId,
-				userId,
+				viewerId,
 				selected as [number, number, number]
 			)
 
@@ -105,11 +105,11 @@ export function PickRidersSheet({
 					<SheetTitle className="font-black uppercase">
 						Pick your <span className="text-green-400">3</span> riders
 					</SheetTitle>
+
 					<SheetDescription className="flex items-center gap-2">
 						<Flag countryCode={gpCountryCode} className="h-4 w-auto" />
 						{gpName}
-						<span className="text-muted-foreground">·</span>
-						<span className="text-muted-foreground">Round <span className="text-brand-red">{gpRound}</span></span>
+						<span className="text-muted-foreground"> · Round {gpRound}</span>
 					</SheetDescription>
 				</SheetHeader>
 
@@ -119,7 +119,7 @@ export function PickRidersSheet({
 							<RiderTile
 								key={rider.id}
 								rider={rider}
-								inSheet
+								hideFirstName
 								isSelected={selected.includes(rider.id)}
 								isDimmed={isComplete && !selected.includes(rider.id)}
 								onClick={() => handleTileClick(rider.id)}
@@ -144,11 +144,11 @@ export function PickRidersSheet({
 
 				<SheetFooter className="border-t pt-3">
 					<Button
-						variant="success"
-						size="lg"
 						className="w-full"
 						disabled={!isComplete || isPending}
 						onClick={handleSave}
+						size="lg"
+						variant="success"
 					>
 						{isPending ? (
 							<>

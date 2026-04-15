@@ -6,6 +6,7 @@ import { RegisteredPlayers } from '@/components/RegisteredPlayers'
 import { Button } from '@/components/ui/button'
 import { WildCardInfoBox } from '@/components/WildCardInfoBox'
 import { EMacroStage } from '@/enums'
+import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
 
 import { GpCardBase } from './Base'
@@ -19,7 +20,7 @@ type TGpCard = {
 	isUpNext?: boolean
 	linked?: boolean
 	macroStage?: EMacroStage
-	userId?: number
+	viewerId?: number
 }
 
 export async function GpCard({
@@ -27,9 +28,10 @@ export async function GpCard({
 	isUpNext = false,
 	linked = false,
 	macroStage: macroStageProp,
-	userId
+	viewerId: viewerIdProp
 }: TGpCard) {
 	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
+	const viewerId = viewerIdProp ?? (await getViewer())?.db?.id
 
 	return (
 		<GpCardBase
@@ -38,7 +40,7 @@ export async function GpCard({
 			linked={linked}
 			macroStage={macroStage}
 		>
-			{!userId && macroStage === EMacroStage.Before && (
+			{!viewerId && macroStage === EMacroStage.Before && (
 				<Button className="w-full" asChild variant="outline">
 					<a href="/auth/login">
 						Sign in to pick riders
@@ -51,25 +53,25 @@ export async function GpCard({
 				<HeatsFinished heatsFinished={gp.heats_finished ?? 0} />
 			)}
 
-			{!!userId && macroStage !== EMacroStage.Before && (
-				<UserResultRow gpId={gp.id} userId={userId} />
+			{!!viewerId && macroStage !== EMacroStage.Before && (
+				<UserResultRow gpId={gp.id} userId={viewerId} />
 			)}
 
-			{!!userId && (
+			{!!viewerId && (
 				<UserPicks
+					gpCountryCode={gp.country_code}
 					gpId={gp.id}
 					gpName={gp.city_name}
 					gpRound={gp.round}
-					gpCountryCode={gp.country_code}
-					userId={userId}
 					macroStage={macroStage}
+					userId={viewerId}
 				/>
 			)}
 
 			{macroStage === EMacroStage.After && <TopPlayers gpId={gp.id} />}
 
 			{macroStage === EMacroStage.After && (
-				<TopRiders gpId={gp.id} userId={userId} />
+				<TopRiders gpId={gp.id} viewerId={viewerId} />
 			)}
 
 			<WildCardInfoBox

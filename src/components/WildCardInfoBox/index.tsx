@@ -14,8 +14,10 @@ export function WildCardInfoBox({ countryCode, name, riderId }: TWildCard) {
 	return (
 		<InfoBox>
 			<div className="flex justify-between">
-				<div className="flex items-center gap-3">
-					{riderId && <RiderImage className="size-14" riderId={riderId} />}
+				<div className="flex items-center gap-4">
+					{riderId && (
+						<RiderImage className="size-14" name={name} riderId={riderId} />
+					)}
 
 					<div className="flex min-w-0 flex-1 flex-col gap-0.5">
 						{riderId && name ? (

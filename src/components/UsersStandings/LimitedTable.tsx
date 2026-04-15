@@ -1,5 +1,5 @@
 import { MedalCounts } from '@/components/MedalCounts'
-import { SectionTitle } from '@/components/SectionTitle'
+import { SectionTitle } from '@/components/SectionHeader'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'

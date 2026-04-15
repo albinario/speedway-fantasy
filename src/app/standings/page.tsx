@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 
-import { PageTitle } from '@/components/PageTitle'
+import { PageHeader } from '@/components/PageHeader'
 import { UsersStandings } from '@/components/UsersStandings'
-import { YearSelector } from '@/components/YearSelector'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
@@ -21,11 +20,7 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl flex-col gap-4">
-			<div className="flex items-center justify-between">
-				<PageTitle title={metaData.title} />
-				<YearSelector yearValues={yearValues} />
-			</div>
-
+			<PageHeader title={metaData.title} />
 			<UsersStandings year={yearValues.activeYear} />
 		</div>
 	)

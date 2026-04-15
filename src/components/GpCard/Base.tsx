@@ -35,9 +35,7 @@ export function GpCardBase({
 				showCountdown={isUpNext}
 			/>
 
-			<CardContent className="flex flex-col gap-3">
-				{children}
-			</CardContent>
+			<CardContent className="flex flex-col gap-4">{children}</CardContent>
 		</Card>
 	)
 }

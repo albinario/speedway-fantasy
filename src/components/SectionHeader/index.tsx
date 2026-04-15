@@ -16,6 +16,7 @@ export function SectionTitle({
 	return (
 		<div className="flex items-center justify-between p-3 uppercase">
 			<span className="text-xl font-black">{children}</span>
+
 			{href && (
 				<Link
 					href={href}

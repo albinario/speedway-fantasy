@@ -22,7 +22,7 @@ export async function TopPlayers({ gpId }: TTopPlayers) {
 	if (!validRows.length || validRows[0].points === 0) return null
 
 	return (
-		<InfoBox className="flex flex-col gap-3">
+		<InfoBox className="flex flex-col gap-4">
 			<div className="font-black uppercase">
 				Top <span className="text-green-400">3</span> players
 			</div>
@@ -34,7 +34,7 @@ export async function TopPlayers({ gpId }: TTopPlayers) {
 					const medals = buildMedals(row)
 
 					return (
-						<div key={row.id!} className="flex items-center gap-3 px-3 py-2">
+						<div key={row.id!} className="flex items-center gap-4 px-3 py-2">
 							<span
 								className={`inline-flex size-5 shrink-0 items-center justify-center rounded text-xs ${isMedal ? `${getMedalColorStr(pos, 'bg')} text-black` : 'bg-white/10'}`}
 							>

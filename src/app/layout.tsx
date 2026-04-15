@@ -44,12 +44,15 @@ export default async function RootLayout({
 	}
 
 	return (
-		<html lang="en" className="dark" style={{ colorScheme: 'dark' }} data-scroll-behavior="smooth">
+		<html
+			lang="en"
+			className="dark"
+			style={{ colorScheme: 'dark' }}
+			data-scroll-behavior="smooth"
+		>
 			<body className={`${inter.className} flex min-h-screen flex-col`}>
 				<Header />
-
-				<main className="fluid-container flex-1 p-0 sm:p-4">{children}</main>
-
+				<main className="fluid-container flex-1 p-0 sm:px-3">{children}</main>
 				<NavFooter />
 				<Toaster />
 				<Analytics />

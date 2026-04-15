@@ -8,11 +8,11 @@ import { getMedalColorStr } from '@/lib/medals'
 
 type TTopRiders = {
 	gpId: number
-	userId?: number
+	viewerId?: number
 }
 
-export async function TopRiders({ gpId, userId }: TTopRiders) {
-	const rows = await getGpTopRiders(gpId, 3, userId)
+export async function TopRiders({ gpId, viewerId }: TTopRiders) {
+	const rows = await getGpTopRiders(gpId, 3, viewerId)
 
 	const validRows = rows.filter(
 		(r): r is typeof r & { id: number } => r.id != null
@@ -20,7 +20,7 @@ export async function TopRiders({ gpId, userId }: TTopRiders) {
 	if (!validRows.length || validRows[0].points === 0) return null
 
 	return (
-		<InfoBox className="flex flex-col gap-3">
+		<InfoBox className="flex flex-col gap-4">
 			<div className="font-black uppercase">
 				Top <span className="text-green-400">3</span> riders
 			</div>
@@ -30,15 +30,15 @@ export async function TopRiders({ gpId, userId }: TTopRiders) {
 					const pos = i + 1
 
 					return (
-						<div key={row.id} className="flex items-center gap-3 p-1">
+						<div key={row.id} className="flex items-center gap-4 p-1">
 							<span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-white/10 text-xs">
 								{pos}
 							</span>
 
 							<RiderImage
 								className="size-8 shrink-0"
-								riderId={row.id}
 								name={row.name}
+								riderId={row.id}
 							/>
 
 							<div className="min-w-0 flex-1">
