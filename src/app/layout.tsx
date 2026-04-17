@@ -1,16 +1,16 @@
+import { Suspense } from 'react'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
-import { Header } from '@/components/Header'
-import { NavFooter } from '@/components/Nav'
+import { Splash } from '@/components/Splash'
 import { Toaster } from '@/components/ui/sonner'
 import { metaData } from '@/config/brand'
-import { getViewer } from '@/lib/auth/get-viewer'
+
+import { AppShell } from './AppShell'
 
 import './globals.css'
 
@@ -25,24 +25,11 @@ export const metadata: Metadata = {
 	description: metaData.description
 }
 
-export default async function RootLayout({
+export default function RootLayout({
 	children
 }: Readonly<{
 	children: React.ReactNode
 }>) {
-	const h = await headers()
-	const pathname = h.get('x-pathname') ?? ''
-
-	const isExempt =
-		pathname.startsWith('/onboarding') || pathname.startsWith('/auth')
-
-	if (!isExempt) {
-		const viewer = await getViewer()
-		if (viewer.isAuthenticated && !viewer.db?.first_name) {
-			redirect('/onboarding')
-		}
-	}
-
 	return (
 		<html
 			lang="en"
@@ -51,9 +38,9 @@ export default async function RootLayout({
 			data-scroll-behavior="smooth"
 		>
 			<body className={`${inter.className} flex min-h-screen flex-col`}>
-				<Header />
-				<main className="fluid-container flex-1 p-0 sm:px-3">{children}</main>
-				<NavFooter />
+				<Suspense fallback={<Splash />}>
+					<AppShell>{children}</AppShell>
+				</Suspense>
 				<Toaster />
 				<Analytics />
 				<SpeedInsights />

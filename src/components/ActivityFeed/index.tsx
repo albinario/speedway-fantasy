@@ -39,7 +39,7 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 				return (
 					<div
 						key={entry.id}
-						className="grid grid-cols-[auto_1fr_auto] gap-x-3 py-2"
+						className="grid grid-cols-[auto_1fr_auto] gap-x-3 pt-2"
 					>
 						{/* Timeline */}
 						<div className="flex flex-col items-center">

@@ -60,7 +60,7 @@ export function AssignWildCard({ gps, riders }: TAssignWildCard) {
 							<Label htmlFor="gp_id">GP</Label>
 
 							<Select name="gp_id" value={gpId} onValueChange={setGpId}>
-								<SelectTrigger id="gp_id">
+								<SelectTrigger id="gp_id" className="w-full">
 									<SelectValue placeholder="Select a GP" />
 								</SelectTrigger>
 
@@ -82,7 +82,7 @@ export function AssignWildCard({ gps, riders }: TAssignWildCard) {
 								value={riderId}
 								onValueChange={setRiderId}
 							>
-								<SelectTrigger id="rider_id">
+								<SelectTrigger id="rider_id" className="w-full">
 									<SelectValue placeholder="Select a rider" />
 								</SelectTrigger>
 

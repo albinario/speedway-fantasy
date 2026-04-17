@@ -8,6 +8,11 @@ import { db } from '@/lib/db'
 import { getRoles, ROLE_CLAIM } from './auth0-claims'
 
 export const auth0 = new Auth0Client({
+	session: {
+		rolling: true,
+		absoluteDuration: 60 * 60 * 24 * 365 * 10, // 10 years
+		inactivityDuration: 60 * 60 * 24 * 365 * 10 // 10 years
+	},
 	beforeSessionSaved: async (session) => {
 		const baseClaims = filterDefaultIdTokenClaims(session.user ?? {})
 		const roles = getRoles(session.user as Record<string, unknown> | undefined)

@@ -1,7 +1,6 @@
 import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'
 import { UserName } from '@/components/UserName'
-import { getViewer } from '@/lib/auth/get-viewer'
 import { buildMedals, getMedalColorStr } from '@/lib/medals'
 
 import { getUserGpRow } from './data'
@@ -12,14 +11,9 @@ type TUserResultRow = {
 }
 
 export async function UserResultRow({ gpId, userId }: TUserResultRow) {
-	const [viewer, row] = await Promise.all([
-		getViewer(),
-		getUserGpRow(gpId, userId)
-	])
+	const row = await getUserGpRow(gpId, userId)
 
 	if (!row) return null
-
-	const isViewer = viewer?.db?.id === userId
 
 	const { pos } = row
 	const isMedal = pos != null && pos <= 3
@@ -27,7 +21,7 @@ export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 	const medals = buildMedals(row)
 
 	return (
-		<InfoBox className="flex items-center gap-4">
+		<InfoBox className="flex items-center gap-2">
 			<span
 				className={`shrink-0 text-xl font-black tabular-nums ${isMedal && pos != null ? getMedalColorStr(pos, 'text') : 'text-muted-foreground'}`}
 			>

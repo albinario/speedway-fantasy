@@ -7,7 +7,7 @@ import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
-import { buildMedals, getMedalColorStr } from '@/lib/medals'
+import { getMedalColorStr } from '@/lib/medals'
 import { sortedPicks } from '@/lib/picks'
 
 import type { getGpUsersResults } from './data'

@@ -37,7 +37,6 @@ function buildColumns({
 			id: 'pos',
 			header: '',
 			enableSorting: false,
-			// meta: { className: 'pr-0' },
 			cell: ({ row }) => {
 				return (
 					<span className="inline-flex size-7 items-center justify-center rounded-md bg-white/10">

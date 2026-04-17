@@ -57,6 +57,7 @@ export function OnboardingForm({ action }: TOnboardingForm) {
 					form="onboarding-form"
 					className="w-full"
 					disabled={disabled}
+					size="lg"
 				>
 					Save and continue
 				</Button>

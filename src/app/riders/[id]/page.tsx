@@ -28,24 +28,22 @@ export default async function RiderPage({ params, searchParams }: TRiderPage) {
 	])
 
 	return (
-		<>
+		<div className="flex flex-col gap-4">
 			<PageHeader title={rider.name} />
 
-			<div className="flex flex-col gap-4">
-				<RiderHero
-					countryCode={rider.country_code}
-					name={rider.name}
-					number={rider.number}
-					riderId={riderId}
-					stats={stats}
-				/>
+			<RiderHero
+				countryCode={rider.country_code}
+				name={rider.name}
+				number={rider.number}
+				riderId={riderId}
+				stats={stats}
+			/>
 
-				<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-					{gps.map((gp) => (
-						<RiderGpCard key={gp.id} gp={gp} />
-					))}
-				</div>
+			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+				{gps.map((gp) => (
+					<RiderGpCard key={gp.id} gp={gp} />
+				))}
 			</div>
-		</>
+		</div>
 	)
 }

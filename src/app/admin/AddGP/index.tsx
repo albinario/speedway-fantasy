@@ -90,7 +90,7 @@ export function AddGP({ cities }: TAddGP) {
 							<Label htmlFor="city_id">City</Label>
 
 							<Select name="city_id" value={cityId} onValueChange={setCityId}>
-								<SelectTrigger id="city_id">
+								<SelectTrigger id="city_id" className="w-full">
 									<SelectValue placeholder="Select a city" />
 								</SelectTrigger>
 

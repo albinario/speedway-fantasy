@@ -38,7 +38,7 @@ export default async function Home() {
 			<div>
 				<SectionTitle href="/activity">Latest activity</SectionTitle>
 
-				<InfoBox>
+				<InfoBox className="pt-0">
 					<ActivityFeed limit={10} />
 				</InfoBox>
 			</div>

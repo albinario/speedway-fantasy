@@ -40,7 +40,7 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 	const isUpNext = stages.indexOf(EMacroStage.Before)
 
 	return (
-		<>
+		<div className="flex flex-col gap-4">
 			<PageHeader>
 				<UserName
 					className="text-xl font-black uppercase"
@@ -51,23 +51,22 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				/>
 			</PageHeader>
 
-			<div className="flex flex-col gap-4">
-				<UserHero starRecords={starRecords} />
-				{viewer.db?.id === userId && (
-					<UserViewerBar reminder={viewer.db.reminder} />
-				)}
+			<UserHero starRecords={starRecords} />
 
-				<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-					{gps.map((gp, i) => (
-						<UserGpCard
-							key={gp.id}
-							gp={gp}
-							isUpNext={i === isUpNext}
-							userId={userId}
-						/>
-					))}
-				</div>
+			{viewer.db?.id === userId && (
+				<UserViewerBar reminder={viewer.db.reminder} />
+			)}
+
+			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+				{gps.map((gp, i) => (
+					<UserGpCard
+						key={gp.id}
+						gp={gp}
+						isUpNext={i === isUpNext}
+						userId={userId}
+					/>
+				))}
 			</div>
-		</>
+		</div>
 	)
 }

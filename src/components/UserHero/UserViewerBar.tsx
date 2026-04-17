@@ -16,7 +16,8 @@ export function UserViewerBar({ reminder }: TUserViewerBar) {
 				<ReminderToggle defaultChecked={reminder} />
 				<Button asChild variant="destructive" size="lg">
 					<a href="/auth/logout">
-						<LogOut /> Log out
+						Log out
+						<LogOut />
 					</a>
 				</Button>
 			</CardContent>

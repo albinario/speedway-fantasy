@@ -39,7 +39,6 @@ export function getGps(year: number | 'all') {
 	}, [])
 }
 
-
 const gpCardSelect = [
 	'gps.id',
 	'gps.round',
@@ -131,12 +130,16 @@ export function getGpTopRiders(gpId: number, limit = 3, viewerId?: number) {
 	)
 }
 
-export function getGpTopUsers(gpId: number, limit = 3) {
+export function getGpUserResult(gpId: number, userId: number) {
 	return dataFetch(
 		() =>
 			db
 				.selectFrom('users_results')
-				.innerJoin('users_with_stars', 'users_with_stars.id', 'users_results.user_id')
+				.innerJoin(
+					'users_with_stars',
+					'users_with_stars.id',
+					'users_results.user_id'
+				)
 				.innerJoin('gps', 'gps.id', 'users_results.gp_id')
 				.leftJoin('users_standings', (join) =>
 					join
@@ -152,15 +155,46 @@ export function getGpTopUsers(gpId: number, limit = 3) {
 					'users_results.pos',
 					'users_results.medal_1',
 					'users_results.medal_2',
-					'users_results.medal_3',
+					'users_results.medal_3'
 				])
 				.where('users_results.gp_id', '=', gpId)
-				.orderBy('users_results.points', 'desc')
-				.orderBy(sql`users_standings.pos asc nulls last`)
+				.where('users_results.user_id', '=', userId)
+				.executeTakeFirst(),
+		undefined
+	)
+}
+
+export function getGpTopUsers(gpId: number, limit = 3) {
+	return dataFetch(
+		() =>
+			db
+				.selectFrom('users_results')
+				.innerJoin(
+					'users_with_stars',
+					'users_with_stars.id',
+					'users_results.user_id'
+				)
+				.innerJoin('gps', 'gps.id', 'users_results.gp_id')
+				.leftJoin('users_standings', (join) =>
+					join
+						.onRef('users_standings.user_id', '=', 'users_results.user_id')
+						.on(sql`users_standings.year = EXTRACT(YEAR FROM gps.start_date)`)
+				)
+				.select([
+					'users_with_stars.id',
+					'users_with_stars.first_name',
+					'users_with_stars.last_name',
+					'users_with_stars.stars',
+					'users_results.points',
+					'users_results.pos',
+					'users_results.medal_1',
+					'users_results.medal_2',
+					'users_results.medal_3'
+				])
+				.where('users_results.gp_id', '=', gpId)
+				.orderBy(sql`users_results.pos asc nulls last`)
 				.limit(limit)
 				.execute(),
 		[]
 	)
 }
-
-

@@ -4,15 +4,15 @@ import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
-import { getMedalColorStr } from '@/lib/medals'
 
 type TTopRiders = {
 	gpId: number
 	viewerId?: number
+	limit?: number
 }
 
-export async function TopRiders({ gpId, viewerId }: TTopRiders) {
-	const rows = await getGpTopRiders(gpId, 3, viewerId)
+export async function TopRiders({ gpId, viewerId, limit = 3 }: TTopRiders) {
+	const rows = await getGpTopRiders(gpId, limit, viewerId)
 
 	const validRows = rows.filter(
 		(r): r is typeof r & { id: number } => r.id != null
@@ -20,9 +20,9 @@ export async function TopRiders({ gpId, viewerId }: TTopRiders) {
 	if (!validRows.length || validRows[0].points === 0) return null
 
 	return (
-		<InfoBox className="flex flex-col gap-4">
+		<InfoBox className="flex flex-col gap-4 pb-0">
 			<div className="font-black uppercase">
-				Top <span className="text-green-400">3</span> riders
+				Top <span className="text-green-400">{limit}</span> riders
 			</div>
 
 			<div className="divide-border -mx-2 divide-y">
@@ -57,13 +57,11 @@ export async function TopRiders({ gpId, viewerId }: TTopRiders) {
 								/>
 							</div>
 
-							{row.medal != null && <MedalIcon type={row.medal} />}
+							<div className="flex items-center gap-2">
+								{row.medal != null && <MedalIcon type={row.medal} />}
 
-							<span
-								className={`text-lg ${row.medal != null ? (getMedalColorStr(pos, 'text') ?? '') : ''}`}
-							>
-								{row.points}
-							</span>
+								<span className="text-lg">{row.points}</span>
+							</div>
 						</div>
 					)
 				})}
