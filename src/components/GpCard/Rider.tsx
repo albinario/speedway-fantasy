@@ -8,19 +8,17 @@ import { GpCardBase } from './Base'
 
 type TRiderGpCard = {
 	gp: Awaited<ReturnType<typeof getRiderGps>>[number]
-	linked?: boolean
 	macroStage?: EMacroStage
 }
 
 export async function RiderGpCard({
 	gp,
-	linked = false,
 	macroStage: macroStageProp
 }: TRiderGpCard) {
 	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
 
 	return (
-		<GpCardBase gp={gp} linked={linked} macroStage={macroStage}>
+		<GpCardBase gp={gp} linked macroStage={macroStage}>
 			<InfoBox className="flex items-center gap-4">
 				{gp.medal != null && <MedalIcon type={gp.medal} />}
 

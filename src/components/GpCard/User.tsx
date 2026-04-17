@@ -2,6 +2,7 @@ import type { getGps } from '@/app/gps/data'
 import { EMacroStage } from '@/enums'
 import { getMacroStage } from '@/lib/dates'
 
+import { RegisteredPlayers } from '../RegisteredPlayers'
 import { GpCardBase } from './Base'
 import { UserPicks } from './UserPicks'
 import { UserResultRow } from './UserResultRow/UserResultRow'
@@ -9,7 +10,6 @@ import { UserResultRow } from './UserResultRow/UserResultRow'
 type TUserGpCard = {
 	gp: Awaited<ReturnType<typeof getGps>>[number]
 	isUpNext?: boolean
-	linked?: boolean
 	macroStage?: EMacroStage
 	userId: number
 }
@@ -17,19 +17,13 @@ type TUserGpCard = {
 export async function UserGpCard({
 	gp,
 	isUpNext = false,
-	linked = false,
 	macroStage: macroStageProp,
 	userId
 }: TUserGpCard) {
 	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
 
 	return (
-		<GpCardBase
-			gp={gp}
-			isUpNext={isUpNext}
-			linked={linked}
-			macroStage={macroStage}
-		>
+		<GpCardBase gp={gp} isUpNext={isUpNext} linked macroStage={macroStage}>
 			{macroStage !== EMacroStage.Before && (
 				<UserResultRow gpId={gp.id} userId={userId} />
 			)}
@@ -41,6 +35,11 @@ export async function UserGpCard({
 				gpCountryCode={gp.country_code}
 				userId={userId}
 				macroStage={macroStage}
+			/>
+
+			<RegisteredPlayers
+				gpId={gp.id}
+				showActivity={macroStage === EMacroStage.Before}
 			/>
 		</GpCardBase>
 	)

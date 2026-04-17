@@ -78,7 +78,7 @@ export function AddCity({ countries }: TAddCity) {
 								value={countryId}
 								onValueChange={setCountryId}
 							>
-								<SelectTrigger id="country_id">
+								<SelectTrigger id="country_id" className="w-full">
 									<SelectValue placeholder="Select a country" />
 								</SelectTrigger>
 
