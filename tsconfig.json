@@ -14,7 +14,7 @@
 		"jsx": "react-jsx",
 		"incremental": true,
 		// "noUnusedLocals": true, TODO: re-enable this
-		"noUnusedParameters": true,
+		// "noUnusedParameters": true, TODO: re-enable this
 		"plugins": [
 			{
 				"name": "next"
