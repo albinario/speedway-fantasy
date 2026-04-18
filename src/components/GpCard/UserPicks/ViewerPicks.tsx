@@ -5,8 +5,8 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 import { InfoBox } from '@/components/InfoBox'
-import { RiderTile } from '@/components/PickRiders/RiderTile'
-import { PickRidersSheet, type TPickRider } from '@/components/PickRiders/Sheet'
+import { PickRidersSheet } from '@/components/PickRidersSheet'
+import { RiderTile, type TRider } from '@/components/RiderTile'
 import { Button } from '@/components/ui/button'
 
 import { RiderTilesEmpty } from './RiderTilesEmpty'
@@ -17,7 +17,7 @@ type TViewerPicks = {
 	gpRound: number
 	gpCountryCode: string
 	viewerId: number
-	riders: TPickRider[]
+	riders: TRider[]
 	initialPicks: [number, number, number] | null
 	canEdit: boolean
 }
@@ -37,7 +37,7 @@ export function ViewerPicks({
 
 	const pickedRiders = savedPicks
 		?.map((id) => riders.find((r) => r.id === id))
-		.filter(Boolean) as TPickRider[] | undefined
+		.filter(Boolean) as TRider[] | undefined
 
 	return (
 		<>

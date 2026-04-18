@@ -1,5 +1,5 @@
 import { InfoBox } from '@/components/InfoBox'
-import { RiderTile } from '@/components/PickRiders/RiderTile'
+import { RiderTile } from '@/components/RiderTile'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
 

@@ -1,4 +1,4 @@
-import { getGpTopUsers, getGpUserResult } from '@/app/gps/data'
+import { getGpTopUsers, getGpUserResult } from '@/app/gps/[id]/data'
 import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'
 import { UserName } from '@/components/UserName'
@@ -86,6 +86,17 @@ export async function TopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 								isViewer
 							/>
 						</div>
+
+						{(() => {
+							const medals = buildMedals(viewerRow)
+							return medals.length > 0 ? (
+								<div className="flex gap-1">
+									{medals.map((m, j) => (
+										<MedalIcon key={j} type={m} />
+									))}
+								</div>
+							) : null
+						})()}
 
 						<span className="text-lg">{viewerRow.points}</span>
 					</div>
