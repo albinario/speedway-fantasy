@@ -1,5 +1,6 @@
 import { sql } from 'kysely'
 
+import type { TRider } from '@/components/RiderTile'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
@@ -21,6 +22,45 @@ export function getRidersActive() {
 				.execute(),
 		[]
 	)
+}
+
+export async function getActiveRidersForGp(gpId: number): Promise<TRider[]> {
+	const [gp, activeRaw] = await Promise.all([
+		db
+			.selectFrom('gps')
+			.select('wild_card_id')
+			.where('id', '=', gpId)
+			.executeTakeFirst(),
+		getRidersActive()
+	])
+
+	const active = activeRaw.filter(
+		(r) => r.id != null && r.name != null && r.number != null
+	) as TRider[]
+
+	const wildCardId = gp?.wild_card_id
+	if (!wildCardId) return active
+
+	const wildCard = await dataFetch(
+		() =>
+			db
+				.selectFrom('riders_with_country')
+				.select(['id', 'name', 'number', 'country_code'])
+				.where('id', '=', wildCardId)
+				.executeTakeFirst(),
+		null
+	)
+
+	if (
+		!wildCard ||
+		wildCard.id == null ||
+		wildCard.name == null ||
+		wildCard.number == null
+	) {
+		return active
+	}
+
+	return [...active, wildCard as TRider]
 }
 
 export function getRidersStandings(

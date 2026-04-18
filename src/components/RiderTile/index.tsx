@@ -4,13 +4,17 @@ import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
-import { getMedalColorStr } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
-import type { TPickRider } from './Sheet'
+export type TRider = {
+	id: number
+	name: string
+	number: number
+	country_code: string | null
+}
 
 type TRiderTile = {
-	rider: TPickRider
+	rider: TRider
 	className?: string
 	linked?: boolean
 	hideFirstName?: boolean

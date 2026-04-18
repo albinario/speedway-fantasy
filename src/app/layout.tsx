@@ -11,7 +11,6 @@ import { Toaster } from '@/components/ui/sonner'
 import { metaData } from '@/config/brand'
 
 import { AppShell } from './AppShell'
-
 import './globals.css'
 
 const inter = Inter({
@@ -38,10 +37,17 @@ export default function RootLayout({
 			data-scroll-behavior="smooth"
 		>
 			<body className={`${inter.className} flex min-h-screen flex-col`}>
+				{process.env.DB_ENV === 'test' && (
+					<div className="fixed top-3 left-3 z-[60] rounded bg-yellow-400 px-2 py-0.5 text-xs font-bold text-black">
+						TEST
+					</div>
+				)}
+
 				<Suspense fallback={<Splash />}>
 					<AppShell>{children}</AppShell>
 				</Suspense>
-				<Toaster />
+
+				<Toaster position="top-center" />
 				<Analytics />
 				<SpeedInsights />
 			</body>

@@ -6,6 +6,8 @@ import { Save } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Flag } from '@/components/Flag'
+import { RiderTile } from '@/components/RiderTile'
+import type { TRider } from '@/components/RiderTile'
 import { Button } from '@/components/ui/button'
 import {
 	Sheet,
@@ -18,14 +20,6 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 
 import { savePicksAction } from './actions'
-import { RiderTile } from './RiderTile'
-
-export type TPickRider = {
-	id: number
-	name: string
-	number: number
-	country_code: string | null
-}
 
 type TPickRidersSheet = {
 	gpId: number
@@ -33,7 +27,7 @@ type TPickRidersSheet = {
 	gpRound: number
 	gpCountryCode: string
 	viewerId: number
-	riders: TPickRider[]
+	riders: TRider[]
 	initialPicks: [number, number, number] | null
 	open: boolean
 	onOpenChange: (open: boolean) => void

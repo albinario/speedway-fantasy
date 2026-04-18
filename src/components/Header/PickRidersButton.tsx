@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 
+import { PickRidersSheet } from '@/components/PickRidersSheet'
+import type { TRider } from '@/components/RiderTile'
 import { Button } from '@/components/ui/button'
-import { PickRidersSheet, type TPickRider } from '@/components/PickRiders/Sheet'
 
 type TPickRidersButton = {
 	gpId: number
@@ -11,7 +12,7 @@ type TPickRidersButton = {
 	gpRound: number
 	gpCountryCode: string
 	viewerId: number
-	riders: TPickRider[]
+	riders: TRider[]
 	initialPicks: [number, number, number] | null
 }
 

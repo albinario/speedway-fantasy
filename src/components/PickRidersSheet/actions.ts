@@ -25,6 +25,20 @@ export async function savePicksAction(
 		.where('user_id', '=', userId)
 		.executeTakeFirst()
 
+	const year = new Date(gp.start_date).getFullYear()
+
+	await db
+		.insertInto('users_standings')
+		.values({ user_id: userId, year })
+		.onConflict((oc) => oc.columns(['user_id', 'year']).doNothing())
+		.execute()
+
+	await db
+		.insertInto('users_results')
+		.values({ user_id: userId, gp_id: gpId })
+		.onConflict((oc) => oc.columns(['gp_id', 'user_id']).doNothing())
+		.execute()
+
 	const [rider_1_id, rider_2_id, rider_3_id] = riderIds
 
 	await db
@@ -46,14 +60,18 @@ export async function savePicksAction(
 		)
 		.execute()
 
-	const action = existing ? ActivityAction.PickUpdated : ActivityAction.PickCreated
+	const action = existing
+		? ActivityAction.PickUpdated
+		: ActivityAction.PickCreated
 
 	await db
 		.insertInto('activity_log')
 		.values({ user_id: userId, gp_id: gpId, action })
 		.onConflict((oc) =>
 			action === ActivityAction.PickUpdated
-				? oc.columns(['user_id', 'gp_id', 'action']).doUpdateSet({ created_at: new Date() })
+				? oc
+						.columns(['user_id', 'gp_id', 'action'])
+						.doUpdateSet({ created_at: new Date() })
 				: oc.doNothing()
 		)
 		.execute()

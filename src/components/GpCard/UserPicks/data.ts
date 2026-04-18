@@ -1,6 +1,6 @@
 import { sql } from 'kysely'
 
-import type { TPickRider } from '@/components/PickRiders'
+import type { TRider } from '@/components/RiderTile'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
@@ -9,8 +9,12 @@ import { db } from '@/lib/db'
  * If riders_results exist for the GP, returns those riders (covers historical/finished GPs).
  * Otherwise falls back to the 15 active seeded riders + wild card.
  */
-export async function getGpRiders(gpId: number): Promise<TPickRider[]> {
-	const gp = await db.selectFrom('gps').select('wild_card_id').where('id', '=', gpId).executeTakeFirst()
+export async function getGpRiders(gpId: number): Promise<TRider[]> {
+	const gp = await db
+		.selectFrom('gps')
+		.select('wild_card_id')
+		.where('id', '=', gpId)
+		.executeTakeFirst()
 	const wildCardId = gp?.wild_card_id
 	// Check if riders_results exist for this GP
 	const fromResults = await dataFetch(
@@ -40,7 +44,7 @@ export async function getGpRiders(gpId: number): Promise<TPickRider[]> {
 
 	if (fromResults.length > 0) {
 		return fromResults.filter(
-			(r): r is TPickRider => r.id != null && r.name != null && r.number != null
+			(r): r is TRider => r.id != null && r.name != null && r.number != null
 		)
 	}
 
@@ -67,8 +71,8 @@ export async function getGpRiders(gpId: number): Promise<TPickRider[]> {
 		}[]
 	)
 
-	const active: TPickRider[] = activeRaw.filter(
-		(r): r is TPickRider => r.id != null && r.name != null && r.number != null
+	const active: TRider[] = activeRaw.filter(
+		(r): r is TRider => r.id != null && r.name != null && r.number != null
 	)
 
 	if (!wildCardId) return active

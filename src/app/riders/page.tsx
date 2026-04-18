@@ -24,7 +24,7 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 		ridersStandings.length <= 0 ? await getRidersActive() : []
 
 	return (
-		<>
+		<div className="flex flex-col gap-4">
 			<PageHeader title={metaData.title} />
 
 			{ridersStandings.length > 0 ? (
@@ -45,6 +45,6 @@ export default async function RidersPage({ searchParams }: TRidersPage) {
 			) : ridersActive.length > 0 ? (
 				<RidersActive riders={ridersActive} />
 			) : null}
-		</>
+		</div>
 	)
 }

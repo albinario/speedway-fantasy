@@ -1,4 +1,4 @@
-import { getGpTopRiders } from '@/app/gps/data'
+import { getGpTopRiders } from '@/app/gps/[id]/data'
 import { FlagNumber } from '@/components/FlagNumber'
 import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'

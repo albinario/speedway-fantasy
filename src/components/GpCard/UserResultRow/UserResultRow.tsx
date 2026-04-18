@@ -22,12 +22,14 @@ export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 
 	return (
 		<InfoBox className="flex items-center gap-2">
-			<span
-				className={`shrink-0 text-xl font-black tabular-nums ${isMedal && pos != null ? getMedalColorStr(pos, 'text') : 'text-muted-foreground'}`}
-			>
-				<span className="text-lg">#</span>
-				{pos}
-			</span>
+			{pos && (
+				<span
+					className={`shrink-0 text-xl font-black tabular-nums ${isMedal && pos != null ? getMedalColorStr(pos, 'text') : 'text-muted-foreground'}`}
+				>
+					<span className="text-lg">#</span>
+					{pos}
+				</span>
+			)}
 
 			<div className="min-w-0 flex-1">
 				<UserName

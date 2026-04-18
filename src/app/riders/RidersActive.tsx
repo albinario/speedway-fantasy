@@ -1,4 +1,4 @@
-import { RiderTile } from '@/components/PickRiders/RiderTile'
+import { RiderTile } from '@/components/RiderTile'
 
 import type { getRidersActive } from './data'
 
