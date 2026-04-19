@@ -97,8 +97,8 @@ export function getActiveGp() {
 		() =>
 			gpCardQuery()
 				.where('gps.finished', '=', false)
-				.where('gps.start_date', '<=', new Date())
-				.orderBy('gps.start_date', 'desc')
+				// .where('gps.start_date', '<=', new Date())
+				.orderBy('gps.start_date', 'asc')
 				.limit(1)
 				.executeTakeFirst(),
 		null

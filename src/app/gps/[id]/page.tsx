@@ -19,11 +19,11 @@ export default async function GpPage({ params }: TGpPage) {
 
 	const macroStage = getMacroStage(gp.start_date, gp.finished)
 	const viewer = await getViewer()
-	const userId = viewer?.db?.id
+	const viewerId = viewer?.db?.id
 
 	const [ridersResults, usersResults] = await Promise.all([
 		macroStage !== EMacroStage.Before
-			? getGpRidersResults(gp.id, userId)
+			? getGpRidersResults(gp.id, viewerId)
 			: Promise.resolve([]),
 		macroStage !== EMacroStage.Before
 			? getGpUsersResults(gp.id)
@@ -31,11 +31,11 @@ export default async function GpPage({ params }: TGpPage) {
 	])
 
 	return (
-		<div className="columns-1 gap-4 space-y-4 md:columns-2 2xl:columns-3 [&>*]:break-inside-avoid">
+		<div className="columns-1 gap-4 xl:columns-2 2xl:columns-3 [&>*]:break-inside-avoid">
 			<GpCard gp={gp} macroStage={macroStage} />
 
 			{usersResults.length > 0 && (
-				<GpUsersResultsTable data={usersResults} viewerId={userId} />
+				<GpUsersResultsTable data={usersResults} viewerId={viewerId} />
 			)}
 
 			{ridersResults.length > 0 && (

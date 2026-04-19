@@ -1,13 +1,18 @@
-import { MedalIcon as MedalIconComponent } from 'lucide-react'
+import { Trophy } from 'lucide-react'
 
 import { getMedalColorHex } from '@/lib/medals'
 
 type TMedalIcon = {
 	type: number
+	size?: 'default' | 'lg'
 }
 
-export function MedalIcon({ type }: TMedalIcon) {
+export function MedalIcon({ type, size = 'default' }: TMedalIcon) {
 	return (
-		<MedalIconComponent className="size-4" stroke={getMedalColorHex(type)} />
+		<Trophy
+			className={size === 'lg' ? 'size-6' : 'size-4'}
+			stroke={getMedalColorHex(type)}
+			fill="none"
+		/>
 	)
 }

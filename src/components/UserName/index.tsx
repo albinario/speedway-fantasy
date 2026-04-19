@@ -8,19 +8,19 @@ import { cn } from '@/lib/utils'
 type TUserName = {
 	className?: string
 	firstName: string | null
-	isViewer?: boolean
 	lastName: string | null
-	userId: number
+	isViewer?: boolean
 	stars?: number[] | null
+	userId: number
 }
 
 export function UserName({
 	className,
-	isViewer,
 	firstName,
 	lastName,
-	userId,
-	stars
+	isViewer = false,
+	stars,
+	userId
 }: TUserName) {
 	return (
 		<Link

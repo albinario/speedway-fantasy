@@ -5,15 +5,9 @@ type TInfoBox = {
 	className?: string
 }
 
+// TODO: do we still use this?
 export function InfoBox({ children, className }: TInfoBox) {
 	return (
-		<div
-			className={cn(
-				'bg-surface border-border/50 rounded-md border p-3',
-				className
-			)}
-		>
-			{children}
-		</div>
+		<div className={cn('bg-surface rounded-md p-3', className)}>{children}</div>
 	)
 }

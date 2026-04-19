@@ -3,19 +3,21 @@ import { cn } from '@/lib/utils'
 
 type TFlagNumber = {
 	countryCode: string | null | undefined
-	flagClassName?: string
 	highlight?: boolean
 	number: number | null | undefined
 	reverse?: boolean
+	size?: 'xs' | 'sm'
 }
 
 export function FlagNumber({
 	countryCode,
-	flagClassName = 'h-auto w-5',
 	highlight = false,
 	number,
-	reverse = false
+	reverse = false,
+	size = 'sm'
 }: TFlagNumber) {
+	const flagWidthClass = size === 'sm' ? 'w-6' : 'w-4'
+
 	return (
 		<div
 			className={cn(
@@ -23,14 +25,13 @@ export function FlagNumber({
 				highlight && 'rounded px-1 ring-1 ring-white/30'
 			)}
 		>
-			{countryCode && (
-				<Flag className={flagClassName} countryCode={countryCode} />
-			)}
+			{countryCode && <Flag widthClass={flagWidthClass} countryCode={countryCode} />}
 
 			{number && (
 				<span
 					className={cn(
-						'text-muted-foreground text-sm',
+						'text-muted-foreground',
+						`text-${size}`,
 						reverse && 'order-first'
 					)}
 				>

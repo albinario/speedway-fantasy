@@ -1,7 +1,8 @@
-import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'
+import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
-import { buildMedals, getMedalColorStr } from '@/lib/medals'
+import { PosBadge } from '@/components/UsersStandings/PosBadge'
+import { buildMedals } from '@/lib/medals'
 
 import { getUserGpRow } from './data'
 
@@ -16,20 +17,18 @@ export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 	if (!row) return null
 
 	const { pos } = row
-	const isMedal = pos != null && pos <= 3
 
 	const medals = buildMedals(row)
 
 	return (
-		<InfoBox className="flex items-center gap-2">
-			{pos && (
-				<span
-					className={`shrink-0 text-xl font-black tabular-nums ${isMedal && pos != null ? getMedalColorStr(pos, 'text') : 'text-muted-foreground'}`}
-				>
-					<span className="text-lg">#</span>
-					{pos}
-				</span>
-			)}
+		<div className="flex items-center gap-2">
+			<PosBadge pos={pos} size="lg" />
+
+			<UserAvatar
+				firstName={row.first_name}
+				lastName={row.last_name}
+				className="size-10 shrink-0 text-xs"
+			/>
 
 			<div className="min-w-0 flex-1">
 				<UserName
@@ -52,6 +51,6 @@ export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 			<span className="text-lg">
 				{row.points} <span className="text-muted-foreground text-sm">pts</span>
 			</span>
-		</InfoBox>
+		</div>
 	)
 }

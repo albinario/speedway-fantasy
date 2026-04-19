@@ -1,8 +1,7 @@
 import { Flag } from '@/components/Flag'
 import { UserName } from '@/components/UserName'
-import { getViewer } from '@/lib/auth/get-viewer'
+import { cn } from '@/lib/utils'
 
-import { InfoBox } from '../InfoBox'
 import { getActivityFeed } from './data'
 
 export const ActivityAction = {
@@ -21,59 +20,57 @@ type TActivityFeed = {
 }
 
 export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
-	const [entries, viewer] = await Promise.all([
-		getActivityFeed(gpId, limit),
-		getViewer()
-	])
-	const viewerId = viewer?.db?.id
+	const entries = await getActivityFeed(gpId, limit)
 
 	if (!entries.length) return null
 
 	return (
-		<>
+		<div className="flex flex-col">
 			{entries.map((entry, i) => {
 				const isLast = i === entries.length - 1
-				const isViewer = entry.user_id === viewerId
 				const isCreated = entry.action === ActivityAction.PickCreated
 
 				return (
 					<div
 						key={entry.id}
-						className="grid grid-cols-[auto_1fr_auto] gap-x-3 pt-2"
+						className="grid grid-cols-[auto_1fr_auto] gap-x-3"
 					>
 						{/* Timeline */}
 						<div className="flex flex-col items-center">
 							<div
-								className={`bg-border w-px flex-1 ${i === 0 ? 'opacity-0' : ''}`}
+								className={cn(
+									'w-px flex-1 bg-white/20',
+									i === 0 && 'opacity-0'
+								)}
 							/>
 							<div
-								className={`z-10 size-2 shrink-0 rounded-full ${isCreated ? 'bg-green-400' : 'bg-yellow-400'}`}
+								className={cn(
+									'z-10 size-2 shrink-0 rounded-full',
+									isCreated ? 'bg-green-400' : 'bg-yellow-400'
+								)}
 							/>
 							<div
-								className={`bg-border w-px flex-1 ${isLast ? 'opacity-0' : ''}`}
+								className={cn('w-px flex-1 bg-white/20', isLast && 'opacity-0')}
 							/>
 						</div>
 
 						{/* Content */}
-						<div className="min-w-0">
+						<div className="min-w-0 py-2">
 							<UserName
 								className="opacity-90"
 								firstName={entry.first_name}
 								lastName={entry.last_name}
 								userId={entry.user_id}
-								isViewer={isViewer}
 							/>
 							<div className="text-muted-foreground mt-0.5 flex items-center gap-1.5">
-								{!gpId && (
-									<Flag
-										className="h-auto w-3.5 shrink-0"
-										countryCode={entry.country_code}
-									/>
-								)}
+								{!gpId && <Flag widthClass="w-3.5" countryCode={entry.country_code} />}
+
 								<span className="truncate text-xs">
 									{entry.city_name} ·{' '}
 									<span
-										className={isCreated ? 'text-green-400' : 'text-yellow-400'}
+										className={cn(
+											isCreated ? 'text-green-400' : 'text-yellow-400'
+										)}
 									>
 										{ActivityActionLabel[entry.action]}
 									</span>
@@ -92,6 +89,6 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 					</div>
 				)
 			})}
-		</>
+		</div>
 	)
 }

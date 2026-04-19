@@ -2,9 +2,11 @@
 
 import type { ColumnDef } from '@tanstack/react-table'
 
+import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
+import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
 
 import type { getUsersStandings } from './data'
@@ -34,13 +36,30 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 			header: '',
 			enableSorting: false,
 			cell: ({ row }) => (
-				<UserName
-					firstName={row.original.first_name}
-					lastName={row.original.last_name}
-					stars={row.original.stars}
-					userId={row.original.user_id}
-					isViewer={row.original.user_id === viewerId}
-				/>
+				<div className="flex items-center gap-2">
+					<UserAvatar
+						firstName={row.original.first_name}
+						lastName={row.original.last_name}
+						className="size-10 text-xs"
+					/>
+
+					<div>
+						<UserName
+							firstName={row.original.first_name}
+							lastName={row.original.last_name}
+							stars={row.original.stars}
+							userId={row.original.user_id}
+							isViewer={row.original.user_id === viewerId}
+						/>
+						<div className="mt-1">
+							<MedalCounts
+								medal_1={Number(row.original.medal_1)}
+								medal_2={Number(row.original.medal_2)}
+								medal_3={Number(row.original.medal_3)}
+							/>
+						</div>
+					</div>
+				</div>
 			)
 		},
 		{
@@ -74,7 +93,7 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 		{
 			accessorKey: 'gps',
 			header: 'GPs',
-			meta: { className: 'hidden px-1 text-center sm:table-cell' }
+			meta: { className: 'px-1 text-center' }
 		}
 	]
 }
@@ -87,7 +106,13 @@ type TUsersStandingsTable = {
 export function UsersStandingsTable({ data, viewerId }: TUsersStandingsTable) {
 	return (
 		<Card>
-			<DataTable columns={makeColumns(viewerId)} data={data} />
+			<DataTable
+				columns={makeColumns(viewerId)}
+				data={data}
+				getRowClassName={(row) =>
+					row.user_id === viewerId ? 'bg-orange-400/5' : undefined
+				}
+			/>
 		</Card>
 	)
 }

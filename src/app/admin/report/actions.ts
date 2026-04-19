@@ -49,14 +49,16 @@ export async function reportHeatAction(
 			.execute()
 	}
 
-	await db
-		.updateTable('gps')
-		.set({
-			...(noHeat ? {} : { heats_finished: sql`heats_finished + 1` }),
-			...(isFinal ? { finished: true } : {})
-		})
-		.where('id', '=', gpId)
-		.execute()
+	if (!noHeat || isFinal) {
+		await db
+			.updateTable('gps')
+			.set({
+				...(noHeat ? {} : { heats_finished: sql`heats_finished + 1` }),
+				...(isFinal ? { finished: true } : {})
+			})
+			.where('id', '=', gpId)
+			.execute()
+	}
 
 	for (const { riderId, points } of results) {
 		const medal = isFinal ? medalFromPoints(points) : undefined
@@ -87,29 +89,31 @@ export async function reportHeatAction(
 		.execute()
 
 	for (const pick of picks) {
-		const slots = [
-			{ riderId: pick.rider_1_id, medalField: 'medal_1' as const },
-			{ riderId: pick.rider_2_id, medalField: 'medal_2' as const },
-			{ riderId: pick.rider_3_id, medalField: 'medal_3' as const }
-		]
+		const riderIds = [pick.rider_1_id, pick.rider_2_id, pick.rider_3_id]
 
 		let earnedPoints = 0
 		let earnedHeats = 0
-		const medalUpdates: Partial<
-			Record<'medal_1' | 'medal_2' | 'medal_3', number>
-		> = {}
+		const medalCounts = { medal_1: 0, medal_2: 0, medal_3: 0 }
 
-		for (const { riderId, medalField } of slots) {
+		for (const riderId of riderIds) {
 			const pts = pointsByRiderId.get(riderId)
 			if (pts !== undefined) {
 				earnedPoints += pts
 				earnedHeats += 1
 				if (isFinal) {
 					const medal = medalFromPoints(pts)
-					if (medal != null) medalUpdates[medalField] = medal
+					if (medal === 1) medalCounts.medal_1++
+					else if (medal === 2) medalCounts.medal_2++
+					else if (medal === 3) medalCounts.medal_3++
 				}
 			}
 		}
+
+		const medalUpdates = isFinal
+			? Object.fromEntries(
+					Object.entries(medalCounts).filter(([, v]) => v > 0)
+				) as Partial<Record<'medal_1' | 'medal_2' | 'medal_3', number>>
+			: {}
 
 		if (earnedHeats === 0) continue
 
@@ -149,6 +153,17 @@ export async function reportHeatAction(
 			)
 			.execute()
 	}
+
+	await sql`
+		UPDATE riders_results
+		SET pos = ranking.pos
+		FROM (
+			SELECT id, RANK() OVER (ORDER BY points DESC) AS pos
+			FROM riders_results
+			WHERE gp_id = ${gpId}
+		) AS ranking
+		WHERE riders_results.id = ranking.id
+	`.execute(db)
 
 	await sql`
 		UPDATE users_results

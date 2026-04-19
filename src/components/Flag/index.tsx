@@ -1,16 +1,20 @@
 import { hasFlag } from 'country-flag-icons'
 import * as Flags from 'country-flag-icons/react/3x2'
 
+import { cn } from '@/lib/utils'
+
 type TFlag = {
 	countryCode?: string | null
 	title?: string
-	className?: string
+	widthClass?: string
 }
 
-export function Flag({ countryCode, title, className = 'w-6 h-auto' }: TFlag) {
+export function Flag({ countryCode, title, widthClass = 'w-6' }: TFlag) {
 	if (!countryCode || !hasFlag(countryCode)) return null
 
 	const Flag = Flags[countryCode as keyof typeof Flags]
 
-	return <Flag className={className} title={title ?? countryCode} />
+	return (
+		<Flag className={cn('h-auto', widthClass)} title={title ?? countryCode} />
+	)
 }

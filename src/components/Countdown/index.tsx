@@ -31,7 +31,7 @@ function getCountdownParts(startDate: Date): TCountdownParts | null {
 function Segment({ value, label }: { value: number; label: string }) {
 	return (
 		<div className="flex flex-col items-center">
-			<span className="text-base font-black leading-none tabular-nums">
+			<span className="text-base leading-none font-black tabular-nums">
 				{String(value).padStart(2, '0')}
 			</span>
 			<span className="text-[10px] font-normal opacity-60">{label}</span>
@@ -49,16 +49,19 @@ export function Countdown({ startDate }: TCountdown) {
 	useEffect(() => {
 		setParts(getCountdownParts(startDate))
 
-		const interval = setInterval(() => {
-			setParts(getCountdownParts(startDate))
-		}, 1000)
+		const interval = setInterval(
+			() => setParts(getCountdownParts(startDate)),
+			1000
+		)
 
 		return () => clearInterval(interval)
 	}, [startDate])
 
 	if (!parts) return null
 
-	const showSeconds = parts.days === 0 && parts.hours === 0
+	const showSeconds = parts.days === 0
+	// const showSeconds = parts.days === 0 && parts.hours === 0
+	// const showSeconds = true
 
 	return (
 		<Badge variant="frosted" className="text-green-400">

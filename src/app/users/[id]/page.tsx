@@ -1,17 +1,15 @@
 import { getGps } from '@/app/gps/data'
 import { UserGpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
+import { UserAvatar } from '@/components/UserAvatar'
 import { UserHero } from '@/components/UserHero'
 import { UserViewerBar } from '@/components/UserHero/UserViewerBar'
 import { UserName } from '@/components/UserName'
-import { getUserStandingRow } from '@/components/UsersStandings/data'
-import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
-import { getMacroStage } from '@/lib/dates'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
-import { getUser, getUserStars } from './data'
+import { getUser } from './data'
 
 type TUserPage = {
 	params: Promise<{ id: string }>
@@ -30,18 +28,16 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 
 	if (!user) return null
 
-	const [gps, standings, starRecords] = await Promise.all([
-		getGps(yearValues.activeYear),
-		getUserStandingRow(yearValues.activeYear, userId),
-		getUserStars(userId)
-	])
-
-	const stages = gps.map((gp) => getMacroStage(gp.start_date, gp.finished))
-	const isUpNext = stages.indexOf(EMacroStage.Before)
+	const gps = await getGps(yearValues.activeYear)
 
 	return (
 		<div className="flex flex-col gap-4">
 			<PageHeader>
+				<UserAvatar
+					firstName={user.first_name}
+					lastName={user.last_name}
+					className="size-12 shrink-0"
+				/>
 				<UserName
 					className="text-xl font-black uppercase"
 					firstName={user.first_name}
@@ -51,7 +47,7 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				/>
 			</PageHeader>
 
-			<UserHero starRecords={starRecords} />
+			<UserHero userId={userId} year={yearValues.activeYear} />
 
 			{viewer.db?.id === userId && (
 				<UserViewerBar reminder={viewer.db.reminder} />
@@ -62,8 +58,8 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 					<UserGpCard
 						key={gp.id}
 						gp={gp}
-						isUpNext={i === isUpNext}
 						userId={userId}
+						viewerId={viewer.db?.id}
 					/>
 				))}
 			</div>

@@ -12,11 +12,3 @@ export function getPicksCount(gpId: number) {
 		{ count: 0 }
 	)
 }
-
-export async function getPicksRecord() {
-	const { record } = await dataFetch(
-		() => db.selectFrom('picks_record').selectAll().executeTakeFirstOrThrow(),
-		{ record: 0 }
-	)
-	return { record: Number(record ?? 0) }
-}

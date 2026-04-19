@@ -1,7 +1,6 @@
 'use client'
 
 import { FlagNumber } from '@/components/FlagNumber'
-import { MedalIcon } from '@/components/MedalIcon'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
 import { cn } from '@/lib/utils'
@@ -21,8 +20,6 @@ type TRiderTile = {
 	isSelected?: boolean
 	isDimmed?: boolean
 	onClick?: () => void
-	medal?: number | null
-	points?: number | null
 }
 
 export function RiderTile({
@@ -32,9 +29,7 @@ export function RiderTile({
 	hideFirstName = false,
 	isSelected = false,
 	isDimmed = false,
-	onClick,
-	medal,
-	points
+	onClick
 }: TRiderTile) {
 	const Comp = onClick ? 'button' : 'div'
 
@@ -64,11 +59,7 @@ export function RiderTile({
 
 			<div className="flex w-full flex-1 flex-col items-center gap-0.5">
 				{linked ? (
-					<RiderName
-						className="text-center leading-tight"
-						name={nameToRender}
-						riderId={rider.id}
-					/>
+					<RiderName name={nameToRender} riderId={rider.id} />
 				) : (
 					<span className="w-full text-center text-xs leading-tight">
 						{nameToRender}
@@ -76,19 +67,6 @@ export function RiderTile({
 				)}
 
 				<FlagNumber countryCode={rider.country_code} number={rider.number} />
-
-				{(medal != null || points != null) && (
-					<div className="mt-auto flex items-center gap-1">
-						{medal != null && <MedalIcon type={medal} />}
-
-						{points != null && (
-							<span className="text-sm font-black">
-								{points}{' '}
-								<span className="text-muted-foreground text-sm">pts</span>
-							</span>
-						)}
-					</div>
-				)}
 			</div>
 		</Comp>
 	)

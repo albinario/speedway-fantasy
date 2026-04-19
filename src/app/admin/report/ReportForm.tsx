@@ -61,7 +61,7 @@ export function ReportForm({
 			setSelected([])
 			setIsFinal(false)
 			setNoHeat(false)
-			setHeatsFinished((n) => n + 1)
+			if (!noHeat) setHeatsFinished((n) => n + 1)
 		})
 	}
 
