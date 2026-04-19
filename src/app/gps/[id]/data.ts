@@ -3,38 +3,62 @@ import { sql } from 'kysely'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
-export function getGpTopRiders(gpId: number, limit = 3, viewerId?: number) {
+export function getGpViewerPickedRiders(gpId: number, viewerId: number) {
+	return dataFetch(async () => {
+		const picks = await db
+			.selectFrom('users_picks')
+			.select(['rider_1_id', 'rider_2_id', 'rider_3_id'])
+			.where('gp_id', '=', gpId)
+			.where('user_id', '=', viewerId)
+			.executeTakeFirst()
+
+		if (!picks) return []
+
+		const riderIds = [
+			picks.rider_1_id,
+			picks.rider_2_id,
+			picks.rider_3_id
+		].filter((id): id is number => id != null)
+		if (!riderIds.length) return []
+
+		return db
+			.selectFrom('riders_results')
+			.innerJoin('riders', 'riders.id', 'riders_results.rider_id')
+			.innerJoin('countries', 'countries.id', 'riders.country_id')
+			.select([
+				'riders.id',
+				'riders.name',
+				'riders.number',
+				'countries.code as country_code',
+				'riders_results.points',
+				'riders_results.medal',
+				'riders_results.pos'
+			])
+			.where('riders_results.gp_id', '=', gpId)
+			.where('riders_results.rider_id', 'in', riderIds)
+			.orderBy(sql`riders_results.pos asc nulls last`)
+			.execute()
+	}, [])
+}
+
+export function getGpTopRiders(gpId: number, limit = 3) {
 	return dataFetch(
 		() =>
 			db
 				.selectFrom('riders_results')
 				.innerJoin('riders', 'riders.id', 'riders_results.rider_id')
 				.innerJoin('countries', 'countries.id', 'riders.country_id')
-				.select((eb) => [
+				.select([
 					'riders.id',
 					'riders.name',
 					'riders.number',
 					'countries.code as country_code',
 					'riders_results.points',
 					'riders_results.medal',
-					viewerId != null
-						? eb
-								.selectFrom('users_picks')
-								.select(eb.fn.countAll<number>().as('c'))
-								.where('users_picks.gp_id', '=', gpId)
-								.where('users_picks.user_id', '=', viewerId)
-								.where((eb) =>
-									eb.or([
-										eb('users_picks.rider_1_id', '=', eb.ref('riders.id')),
-										eb('users_picks.rider_2_id', '=', eb.ref('riders.id')),
-										eb('users_picks.rider_3_id', '=', eb.ref('riders.id'))
-									])
-								)
-								.as('viewer_picked')
-						: eb.lit<number>(0).as('viewer_picked')
+					'riders_results.pos'
 				])
 				.where('riders_results.gp_id', '=', gpId)
-				.orderBy('riders_results.points', 'desc')
+				.orderBy(sql`riders_results.pos asc nulls last`)
 				.limit(limit)
 				.execute(),
 		[]

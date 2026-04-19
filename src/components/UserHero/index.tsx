@@ -1,122 +1,148 @@
-import { MedalIcon as MedalIconLucide, StarIcon } from 'lucide-react'
+import { ArrowDown, ArrowUp, Flame, Trophy } from 'lucide-react'
 
-import { PosBadge } from '@/components/UsersStandings/PosBadge'
+import { getUserStars } from '@/app/users/[id]/data'
+import { MedalCounts } from '@/components/MedalCounts'
+import { getUserStandingRow } from '@/components/UsersStandings/data'
 import { getMedalColorHex } from '@/lib/medals'
+import { type TParamValues } from '@/lib/params'
 
-type TStar = {
-	type: number
-	year: number
-}
+import { getLeaderPoints, getUserStreak } from './data'
 
 type TUserHero = {
-	starRecords: TStar[]
+	userId: number
+	year: number | TParamValues
 }
 
-function Stat({ label, value }: { label: string; value: string | number }) {
-	return (
-		<div className="flex flex-col items-center gap-0.5">
-			<span className="text-lg leading-none font-black">{value}</span>
-			<span className="text-muted-foreground text-xs">{label}</span>
-		</div>
-	)
-}
+export async function UserHero({ userId, year }: TUserHero) {
+	const [standings, leaderPoints, streak, starRecords] = await Promise.all([
+		getUserStandingRow(year, userId),
+		getLeaderPoints(year),
+		getUserStreak(userId),
+		getUserStars(userId)
+	])
 
-function MedalStat({ type, count }: { type: number; count: number }) {
-	const color = getMedalColorHex(type)
-	return (
-		<div className="flex flex-col items-center gap-0.5">
-			<div className="flex items-center gap-1">
-				<MedalIconLucide className="size-4" stroke={color} />
-				<span className="text-lg leading-none font-black">{count}</span>
-			</div>
-			<span className="text-muted-foreground text-xs">
-				{type === 1 ? 'Gold' : type === 2 ? 'Silver' : 'Bronze'}
-			</span>
-		</div>
-	)
-}
+	const pos = standings?.pos ?? null
+	const prevPos = standings?.prev_pos ?? null
+	const points = Number(standings?.points ?? 0)
+	const leader = Number(leaderPoints ?? points)
+	const medals = {
+		gold: Number(standings?.medal_1 ?? 0),
+		silver: Number(standings?.medal_2 ?? 0),
+		bronze: Number(standings?.medal_3 ?? 0)
+	}
 
-function StarStat({ type, year }: { type: number; year: number }) {
-	const color = getMedalColorHex(type)
-	const label = type === 1 ? 'Winner' : type === 2 ? 'Second' : 'Third'
-	return (
-		<div className="flex flex-col items-center gap-0.5">
-			<div className="flex items-center gap-1">
-				<StarIcon className="size-4" fill={color} stroke={color} />
-				<span className="text-lg leading-none font-black">{label}</span>
-			</div>
-			<span className="text-muted-foreground text-xs">{year}</span>
-		</div>
-	)
-}
-
-function Divider() {
-	return (
-		<div className="bg-foreground/10 hidden h-8 w-px self-center sm:block" />
-	)
-}
-
-export function UserHero({ starRecords }: TUserHero) {
-	// Mock values — replace with real data when ready
-	const pos = 3
-	const prevPos = 5
-	const points = 47
-	const gps = 8
-	const totalGps = 12
-	const heats = 23
-	const avgPts = 5.9
-	const bestResultPos = 1
-	const bestResultCity = 'Warsaw'
-	const pointsBehindLeader = 6
-	const bestYear = { year: 2024, pos: 1 }
-	const medals = { gold: 2, silver: 1, bronze: 3 }
+	const moved = pos != null && prevPos != null ? prevPos - pos : null
+	const gap = leader - points
+	const progressPct =
+		leader > 0 ? Math.min(100, Math.round((points / leader) * 100)) : 100
 
 	return (
-		<div className="bg-card ring-foreground/10 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 rounded-xl p-4 ring-1">
-			<div className="flex items-center gap-2">
-				<PosBadge pos={pos} prevPos={prevPos} />
-			</div>
-
-			<Divider />
-
-			<div className="flex gap-6">
-				<Stat label="Points" value={points} />
-				<MedalStat type={1} count={medals.gold} />
-				<MedalStat type={2} count={medals.silver} />
-				<MedalStat type={3} count={medals.bronze} />
-			</div>
-
-			<Divider />
-
-			<div className="flex gap-6">
-				<Stat label="GPs" value={`${gps}/${totalGps}`} />
-				<Stat label="Heats" value={heats} />
-				<Stat label="Avg / GP" value={avgPts} />
-			</div>
-
-			<Divider />
-
-			<div className="flex gap-6">
-				<Stat
-					label="Best result"
-					value={`#${bestResultPos} ${bestResultCity}`}
-				/>
-				<Stat label="Behind leader" value={`-${pointsBehindLeader}`} />
-				<Stat label="Best year" value={`#${bestYear.pos} ${bestYear.year}`} />
-			</div>
-
-			{starRecords.length > 0 && (
-				<>
-					<Divider />
-
-					<div className="flex gap-6">
-						{starRecords.map(({ year, type }) => (
-							<StarStat key={year} type={type} year={year} />
-						))}
+		<div className="flex flex-col gap-1">
+			<div className="bg-card flex flex-col divide-y divide-white/5 rounded-xl">
+				{/* Row 1: Points + medals + streak */}
+				<div className="flex items-center gap-6 p-4">
+					<div className="flex flex-col items-center">
+						<span className="text-5xl leading-none font-black">{points}</span>
+						<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
+							Points
+						</span>
 					</div>
-				</>
-			)}
 
+					<MedalCounts
+						medal_1={medals.gold}
+						medal_2={medals.silver}
+						medal_3={medals.bronze}
+						size="lg"
+					/>
+
+					{streak > 0 && (
+						<div className="ml-auto flex items-center gap-1.5">
+							<span className="text-xl font-black">{streak}</span>
+							<Flame size={25} className="text-brand-red" />
+							<span className="text-muted-foreground text-xs tracking-wide uppercase">
+								Streak
+							</span>
+						</div>
+					)}
+				</div>
+
+				{/* Row 2: Position + progress bar */}
+				{pos != null && (
+					<div className="flex flex-col gap-2 p-4">
+						<div className="flex items-baseline justify-between">
+							<div className="flex items-center gap-2">
+								<span className="text-2xl font-black">
+									#<span className="text-4xl">{pos}</span>
+								</span>
+
+								{moved != null && moved > 0 && (
+									<span className="flex items-center gap-0.5 rounded-full bg-green-400/20 px-2 py-0.5 text-xs font-black text-green-400">
+										<ArrowUp size={12} />
+										{moved} pos
+									</span>
+								)}
+								{moved != null && moved < 0 && (
+									<span className="flex items-center gap-0.5 rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-black text-red-500">
+										<ArrowDown size={12} /> {Math.abs(moved)} pos
+									</span>
+								)}
+							</div>
+
+							<span className="tracking-wide uppercase">
+								<span className="text-brand-red">{gap} pts</span>{' '}
+								<span className="text-muted-foreground text-xs">
+									behind leader
+								</span>
+							</span>
+						</div>
+
+						{leader > 0 && (
+							<>
+								<div className="bg-foreground/10 h-4 overflow-hidden rounded-full">
+									<div
+										className="from-brand-red/60 to-brand-red h-full rounded-full bg-gradient-to-r"
+										style={{ width: `${progressPct}%` }}
+									/>
+								</div>
+
+								<div className="flex justify-between">
+									<span className="text-xs font-black tracking-wide uppercase">
+										You · {points} pts
+									</span>
+									<span className="text-xs font-black tracking-wide uppercase">
+										#1 · {leader} pts
+									</span>
+								</div>
+							</>
+						)}
+					</div>
+				)}
+
+				{/* Stars */}
+				{starRecords.length > 0 && (
+					<div className="flex justify-center gap-6 p-4">
+						{starRecords.map(({ year: starYear, type }) => {
+							const color = getMedalColorHex(type)
+							const label =
+								type === 1 ? 'Winner' : type === 2 ? 'Second' : 'Third'
+							return (
+								<div
+									key={starYear}
+									className="flex flex-col items-center gap-0.5"
+								>
+									<div className="flex items-center gap-1">
+										<Trophy size={14} stroke={color} fill="none" />
+										<span className="leading-none font-black">{label}</span>
+									</div>
+									<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
+										{starYear}
+									</span>
+								</div>
+							)
+						})}
+					</div>
+				)}
+			</div>
 		</div>
 	)
 }

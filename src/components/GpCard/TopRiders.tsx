@@ -1,71 +1,53 @@
-import { getGpTopRiders } from '@/app/gps/[id]/data'
-import { FlagNumber } from '@/components/FlagNumber'
-import { InfoBox } from '@/components/InfoBox'
-import { MedalIcon } from '@/components/MedalIcon'
-import { RiderImage } from '@/components/RiderImage'
-import { RiderName } from '@/components/RiderName'
+import { getGpTopRiders, getGpViewerPickedRiders } from '@/app/gps/[id]/data'
+import { RidersResultRow } from '@/components/RidersResultRow'
 
 type TTopRiders = {
 	gpId: number
-	viewerId?: number
 	limit?: number
+	viewerId?: number
 }
 
-export async function TopRiders({ gpId, viewerId, limit = 3 }: TTopRiders) {
-	const rows = await getGpTopRiders(gpId, limit, viewerId)
+export async function GpTopRiders({ gpId, limit = 3, viewerId }: TTopRiders) {
+	const [rows, viewerPicks] = await Promise.all([
+		getGpTopRiders(gpId, limit),
+		viewerId != null
+			? getGpViewerPickedRiders(gpId, viewerId)
+			: Promise.resolve([])
+	])
 
 	const validRows = rows.filter(
 		(r): r is typeof r & { id: number } => r.id != null
 	)
 	if (!validRows.length || validRows[0].points === 0) return null
 
+	const topIds = new Set(validRows.map((r) => r.id))
+	const pickedIds = new Set(viewerPicks.map((r) => r.id))
+	const extraRows = viewerPicks.filter(
+		(r): r is typeof r & { id: number } => r.id != null && !topIds.has(r.id)
+	)
+	const displayRows = [...validRows, ...extraRows]
+
 	return (
-		<InfoBox className="flex flex-col gap-4 pb-0">
+		<div className="flex flex-col gap-2">
 			<div className="font-black uppercase">
 				Top <span className="text-green-400">{limit}</span> riders
 			</div>
 
-			<div className="divide-border -mx-2 divide-y">
-				{validRows.map((row, i) => {
-					const pos = i + 1
-
-					return (
-						<div key={row.id} className="flex items-center gap-4 p-1">
-							<span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-white/10 text-xs">
-								{pos}
-							</span>
-
-							<RiderImage
-								className="size-8 shrink-0"
-								name={row.name}
-								riderId={row.id}
-							/>
-
-							<div className="min-w-0 flex-1">
-								<RiderName
-									className={
-										(row.viewer_picked ?? 0) > 0 ? 'text-orange-400' : undefined
-									}
-									name={row.name}
-									riderId={row.id}
-								/>
-
-								<FlagNumber
-									countryCode={row.country_code}
-									number={row.number}
-									flagClassName="h-auto w-4"
-								/>
-							</div>
-
-							<div className="flex items-center gap-2">
-								{row.medal != null && <MedalIcon type={row.medal} />}
-
-								<span className="text-lg">{row.points}</span>
-							</div>
-						</div>
-					)
-				})}
+			<div className="divide-border -mx-3 divide-y">
+				{displayRows.map((row, i) => (
+					<RidersResultRow
+						key={row.id}
+						riderId={row.id!}
+						name={row.name}
+						countryCode={row.country_code}
+						number={row.number}
+						medal={row.medal}
+						points={row.points}
+						pos={row.pos ?? null}
+						isPicked={pickedIds.has(row.id!)}
+					/>
+				))}
 			</div>
-		</InfoBox>
+		</div>
 	)
 }

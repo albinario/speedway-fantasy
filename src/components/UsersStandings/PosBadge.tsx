@@ -1,28 +1,31 @@
 import { ArrowDown, ArrowUp } from 'lucide-react'
 
-import { getMedalColorStr } from '@/lib/medals'
+import { cn } from '@/lib/utils'
 
 type TPosBadge = {
-	pos: number | null | undefined
+	pos: number | null
 	prevPos?: number | null
+	size?: 'default' | 'lg'
 }
 
-export function PosBadge({ pos, prevPos }: TPosBadge) {
-	const isMedal = pos != null && pos <= 3
+export function PosBadge({ pos, prevPos, size = 'default' }: TPosBadge) {
 	const moved = pos != null && prevPos != null ? pos - prevPos : null
 
 	return (
 		<div className="flex items-center gap-1">
 			<span
-				className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos, 'bg')} text-black` : 'bg-white/10'}`}
+				className={cn(
+					'inline-flex items-center justify-center rounded-md bg-white/10',
+					size === 'lg' ? 'size-8' : 'size-7'
+				)}
 			>
 				{pos}
 			</span>
 			{moved !== null && moved < 0 && (
-				<ArrowUp className="size-4 text-green-400" />
+				<ArrowUp className="text-muted-foreground size-4" />
 			)}
 			{moved !== null && moved > 0 && (
-				<ArrowDown className="size-4 text-red-500" />
+				<ArrowDown className="text-muted-foreground size-4" />
 			)}
 		</div>
 	)

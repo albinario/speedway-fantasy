@@ -15,7 +15,7 @@ export async function PageHeader({
 	const years = hideYearSelector ? null : await getYears()
 
 	return (
-		<div className="flex flex-wrap items-center justify-between gap-2">
+		<div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-0">
 			{children ?? (
 				<span className="text-xl font-black uppercase">{title}</span>
 			)}

@@ -23,18 +23,13 @@ export default async function GpCardPage() {
 
 			{/* Logged out row */}
 			<div className="text-end">Me</div>
-			<UserGpCard gp={gp} macroStage={EMacroStage.Before} userId={1} isUpNext />
+			<UserGpCard gp={gp} macroStage={EMacroStage.Before} userId={1} />
 			<UserGpCard gp={gp} macroStage={EMacroStage.During} userId={1} />
 			<UserGpCard gp={gp} macroStage={EMacroStage.After} userId={1} />
 
 			{/* Logged in row */}
 			<div className="text-end">You</div>
-			<UserGpCard
-				gp={gp}
-				macroStage={EMacroStage.Before}
-				userId={158}
-				isUpNext
-			/>
+			<UserGpCard gp={gp} macroStage={EMacroStage.Before} userId={158} />
 			<UserGpCard gp={gp} macroStage={EMacroStage.During} userId={158} />
 			<UserGpCard gp={gp} macroStage={EMacroStage.After} userId={158} />
 		</div>

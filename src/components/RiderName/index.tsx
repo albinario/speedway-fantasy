@@ -3,14 +3,17 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 type TRiderName = {
-	className?: string
-	name: string
+	name: string | null | undefined
 	riderId: number
+	highlight?: boolean
 }
 
-export function RiderName({ className, name, riderId }: TRiderName) {
+export function RiderName({ name, riderId, highlight = false }: TRiderName) {
 	return (
-		<Link className={cn('break-words', className)} href={`/riders/${riderId}`}>
+		<Link
+			className={cn({ 'text-orange-400': highlight }, 'break-words')}
+			href={`/riders/${riderId}`}
+		>
 			{name}
 		</Link>
 	)

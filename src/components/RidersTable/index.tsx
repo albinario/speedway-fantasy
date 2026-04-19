@@ -71,7 +71,7 @@ function buildColumns({
 					<>
 						{name && (
 							<RiderName
-								className={pickedByViewer ? 'text-orange-400' : undefined}
+								highlight={pickedByViewer}
 								name={name}
 								riderId={riderId}
 							/>
@@ -142,7 +142,11 @@ export function RidersTable({ data, condensedMedals }: TRidersTable) {
 
 	return (
 		<Card>
-			<DataTable columns={columns} data={data} />
+			<DataTable
+				columns={columns}
+				data={data}
+				getRowClassName={(row) => (row.pickedByViewer ? 'bg-orange-400/5' : undefined)}
+			/>
 		</Card>
 	)
 }

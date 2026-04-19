@@ -24,7 +24,7 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 	const [gps] = await Promise.all([getGps(yearValues.activeYear)])
 
 	return (
-		<>
+		<div className="flex flex-col gap-4">
 			<ScrollToId id="up-next" />
 			<PageHeader title={metaData.title} />
 
@@ -48,6 +48,6 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 					</div>
 				)
 			})()}
-		</>
+		</div>
 	)
 }

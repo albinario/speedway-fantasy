@@ -4,10 +4,11 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
+import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
-import { getMedalColorStr } from '@/lib/medals'
+import { PosBadge } from '@/components/UsersStandings/PosBadge'
 import { sortedPicks } from '@/lib/picks'
 
 import type { getGpUsersResults } from './data'
@@ -15,7 +16,7 @@ import type { getGpUsersResults } from './data'
 type TRow = Awaited<ReturnType<typeof getGpUsersResults>>[number]
 
 function makeColumns(
-	userId?: number,
+	viewerId?: number,
 	firstOccurrenceByRider = new Map<number, number>()
 ): ColumnDef<TRow>[] {
 	return [
@@ -28,15 +29,7 @@ function makeColumns(
 
 				if (pos !== row.index + 1) return null
 
-				const isMedal = pos != null && pos <= 3
-
-				return (
-					<span
-						className={`inline-flex size-7 items-center justify-center rounded-md ${isMedal ? `${getMedalColorStr(pos!, 'bg')} text-black` : 'bg-white/10'}`}
-					>
-						{pos}
-					</span>
-				)
+				return <PosBadge pos={pos} size="lg" />
 			}
 		},
 		{
@@ -54,7 +47,7 @@ function makeColumns(
 							firstName={first_name}
 							lastName={last_name}
 							stars={stars}
-							isViewer={user_id === userId}
+							isViewer={user_id === viewerId}
 						/>
 						<div className="mt-1 flex items-center gap-2">
 							{picks.map((pick, i) => (
@@ -66,6 +59,7 @@ function makeColumns(
 										pick.number != null &&
 										firstOccurrenceByRider.get(pick.number) === row.index
 									}
+									size="sm"
 								/>
 							))}
 						</div>
@@ -77,7 +71,7 @@ function makeColumns(
 			id: 'medals',
 			header: '',
 			enableSorting: false,
-			meta: { className: 'px-0' },
+			meta: { className: 'hidden px-0 sm:table-cell' },
 			cell: ({ row }) => {
 				const { medal_1, medal_2, medal_3 } = row.original
 				const medals = [
@@ -132,11 +126,18 @@ export function GpUsersResultsTable({ data, viewerId }: TGpUsersResultsTable) {
 	})
 
 	return (
-		<Card className="max-h-[63.5rem] overflow-y-auto bg-black p-0">
-			<DataTable
-				columns={makeColumns(viewerId, firstOccurrenceByRider)}
-				data={data}
-			/>
-		</Card>
+		<div>
+			<SectionTitle>Players</SectionTitle>
+
+			<Card className="max-h-[63.5rem] overflow-y-auto p-0">
+				<DataTable
+					columns={makeColumns(viewerId, firstOccurrenceByRider)}
+					data={data}
+					getRowClassName={(row) =>
+						row.user_id === viewerId ? 'bg-orange-400/5' : undefined
+					}
+				/>
+			</Card>
+		</div>
 	)
 }

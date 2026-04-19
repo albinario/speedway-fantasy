@@ -101,7 +101,7 @@ export function PickRidersSheet({
 					</SheetTitle>
 
 					<SheetDescription className="flex items-center gap-2">
-						<Flag countryCode={gpCountryCode} className="h-4 w-auto" />
+						<Flag countryCode={gpCountryCode} />
 						{gpName}
 						<span className="text-muted-foreground"> · Round {gpRound}</span>
 					</SheetDescription>

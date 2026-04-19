@@ -53,12 +53,13 @@ export function GpCardHeader({
 
 			<div
 				aria-hidden="true"
-				className="absolute inset-0 z-30 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-colors duration-200 group-hover:bg-black/20"
+				className="absolute inset-0 z-30 transition-colors duration-200 group-hover:bg-black/20"
 			/>
 
 			<div className="absolute inset-0 z-40 flex flex-col justify-end gap-1 p-4">
-				<Flag countryCode={countryCode} className="size-8" />
+				<Flag countryCode={countryCode} widthClass="w-8" />
 				<h2 className="text-3xl font-black uppercase">{cityName}</h2>
+
 				<div className="text-sm font-black uppercase opacity-80">
 					<span className="text-brand-red">Round {round}</span>
 					{' • '}
