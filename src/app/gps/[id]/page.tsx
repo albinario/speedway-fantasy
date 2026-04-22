@@ -31,7 +31,7 @@ export default async function GpPage({ params }: TGpPage) {
 	])
 
 	return (
-		<div className="columns-1 gap-4 xl:columns-2 2xl:columns-3 [&>*]:break-inside-avoid">
+		<div className="columns-1 sm:columns-2 lg:columns-3 [&>*]:break-inside-avoid">
 			<GpCard gp={gp} macroStage={macroStage} />
 
 			{usersResults.length > 0 && (

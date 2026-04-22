@@ -38,9 +38,13 @@ export async function UserGpCard({
 			{macroStage !== EMacroStage.Before && (
 				<>
 					{viewerId && viewerId !== userId && (
-						<UserResultRow gpId={gp.id} userId={viewerId} />
+						<UserResultRow gpId={gp.id} isViewer userId={viewerId} />
 					)}
-					<UserResultRow gpId={gp.id} userId={userId} />
+					<UserResultRow
+						gpId={gp.id}
+						isViewer={viewerId === userId}
+						userId={userId}
+					/>
 					<UserPicksResults gpId={gp.id} userId={userId} />
 				</>
 			)}

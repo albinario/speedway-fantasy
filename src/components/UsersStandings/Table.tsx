@@ -35,6 +35,7 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 			accessorKey: 'first_name',
 			header: '',
 			enableSorting: false,
+			meta: { className: 'pl-0' },
 			cell: ({ row }) => (
 				<div className="flex items-center gap-2">
 					<UserAvatar
@@ -93,7 +94,7 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 		{
 			accessorKey: 'gps',
 			header: 'GPs',
-			meta: { className: 'px-1 text-center' }
+			meta: { className: 'hidden px-1 text-center sm:table-cell' }
 		}
 	]
 }

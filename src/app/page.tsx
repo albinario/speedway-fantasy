@@ -12,7 +12,7 @@ export default async function Home() {
 	const [nextGp, latestGp] = await Promise.all([getNextGp(), getLatestGp()])
 
 	return (
-		<div className="columns-1 gap-4 space-y-4 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
+		<div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
 			<UsersStandings year={yearValues.activeYear} limit={5} />
 
 			{nextGp && (

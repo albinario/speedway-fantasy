@@ -38,11 +38,6 @@ export const navItems: TNavItem[] = [
 		icon: MessagesSquare
 	},
 	{
-		label: 'My page',
-		href: '/users/:id',
-		icon: UserIcon
-	},
-	{
 		label: 'Hall of fame',
 		href: '/hall-of-fame',
 		icon: Trophy,
@@ -53,5 +48,10 @@ export const navItems: TNavItem[] = [
 		href: '/rules',
 		icon: BookOpen,
 		hideOnMobile: true
+	},
+	{
+		label: 'My page',
+		href: '/users/:id',
+		icon: UserIcon
 	}
 ]

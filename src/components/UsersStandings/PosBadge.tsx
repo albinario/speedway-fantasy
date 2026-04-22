@@ -21,11 +21,12 @@ export function PosBadge({ pos, prevPos, size = 'default' }: TPosBadge) {
 			>
 				{pos}
 			</span>
+
 			{moved !== null && moved < 0 && (
-				<ArrowUp className="text-muted-foreground size-4" />
+				<ArrowUp className="size-4 text-green-400" />
 			)}
 			{moved !== null && moved > 0 && (
-				<ArrowDown className="text-muted-foreground size-4" />
+				<ArrowDown className="size-4 text-red-400" />
 			)}
 		</div>
 	)

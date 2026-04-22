@@ -1,5 +1,6 @@
 import { Flag } from '@/components/Flag'
 import { UserName } from '@/components/UserName'
+import { getViewer } from '@/lib/auth/get-viewer'
 import { cn } from '@/lib/utils'
 
 import { getActivityFeed } from './data'
@@ -20,7 +21,11 @@ type TActivityFeed = {
 }
 
 export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
-	const entries = await getActivityFeed(gpId, limit)
+	const [entries, viewer] = await Promise.all([
+		getActivityFeed(gpId, limit),
+		getViewer()
+	])
+	const viewerId = viewer?.db?.id
 
 	if (!entries.length) return null
 
@@ -60,10 +65,13 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 								className="opacity-90"
 								firstName={entry.first_name}
 								lastName={entry.last_name}
+								isViewer={entry.user_id === viewerId}
 								userId={entry.user_id}
 							/>
 							<div className="text-muted-foreground mt-0.5 flex items-center gap-1.5">
-								{!gpId && <Flag widthClass="w-3.5" countryCode={entry.country_code} />}
+								{!gpId && (
+									<Flag widthClass="w-3.5" countryCode={entry.country_code} />
+								)}
 
 								<span className="truncate text-xs">
 									{entry.city_name} ·{' '}

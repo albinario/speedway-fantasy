@@ -25,7 +25,7 @@ export async function UserPicksResults({ gpId, userId }: TUserPicksResults) {
 					number={row.number}
 					medal={row.medal}
 					points={row.points}
-					pos={i + 1}
+					pos={row.pos}
 				/>
 			))}
 		</div>

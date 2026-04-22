@@ -129,7 +129,7 @@ export function GpUsersResultsTable({ data, viewerId }: TGpUsersResultsTable) {
 		<div>
 			<SectionTitle>Players</SectionTitle>
 
-			<Card className="max-h-[63.5rem] overflow-y-auto p-0">
+			<Card>
 				<DataTable
 					columns={makeColumns(viewerId, firstOccurrenceByRider)}
 					data={data}
