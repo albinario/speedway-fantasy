@@ -53,13 +53,7 @@ export async function UserPicks({
 			<div className="font-black uppercase">Picked riders</div>
 
 			<div className="grid grid-cols-3 gap-2">
-				{hasPicks ? (
-					userPicks.map((rider) => (
-						<RiderTile key={rider.id} linked rider={rider} />
-					))
-				) : (
-					<RiderTilesEmpty count={3} variant={hasPicks ? 'green' : 'red'} />
-				)}
+				<RiderTilesEmpty count={3} variant={hasPicks ? 'green' : 'red'} />
 			</div>
 		</>
 	)

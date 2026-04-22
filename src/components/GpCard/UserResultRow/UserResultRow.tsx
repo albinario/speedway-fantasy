@@ -8,10 +8,15 @@ import { getUserGpRow } from './data'
 
 type TUserResultRow = {
 	gpId: number
+	isViewer?: boolean
 	userId: number
 }
 
-export async function UserResultRow({ gpId, userId }: TUserResultRow) {
+export async function UserResultRow({
+	gpId,
+	isViewer = false,
+	userId
+}: TUserResultRow) {
 	const row = await getUserGpRow(gpId, userId)
 
 	if (!row) return null
@@ -35,6 +40,7 @@ export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 					className="text-lg"
 					firstName={row.first_name}
 					lastName={row.last_name}
+					isViewer={isViewer}
 					stars={row.stars}
 					userId={row.user_id}
 				/>
@@ -48,9 +54,7 @@ export async function UserResultRow({ gpId, userId }: TUserResultRow) {
 				</div>
 			)}
 
-			<span className="text-lg">
-				{row.points} <span className="text-muted-foreground text-sm">pts</span>
-			</span>
+			<span className="text-lg">{row.points}</span>
 		</div>
 	)
 }

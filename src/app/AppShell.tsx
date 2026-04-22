@@ -1,8 +1,8 @@
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
-import { NavFooter } from '@/components/Nav'
 import { getViewer } from '@/lib/auth/get-viewer'
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
@@ -20,13 +20,13 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
 	return (
 		<>
-			<Header />
+			<Header viewer={viewer} />
 
 			<main className="fluid-container flex-1 px-0 py-3 sm:px-3">
 				{children}
 			</main>
 
-			<NavFooter viewerId={viewer.db?.id} />
+			<Footer viewerId={viewer.db?.id} />
 		</>
 	)
 }

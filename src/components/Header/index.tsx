@@ -1,15 +1,19 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { DatabaseZap, LogIn, UserIcon } from 'lucide-react'
+import { DatabaseZap, FlagIcon, LogIn, UserIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { logo } from '@/config/brand'
 import { getViewer } from '@/lib/auth/get-viewer'
 
-export async function Header() {
-	const viewer = await getViewer()
+import { HeaderNav } from './Nav'
 
+type THeader = {
+	viewer: Awaited<ReturnType<typeof getViewer>>
+}
+
+export async function Header({ viewer }: THeader) {
 	return (
 		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-4 backdrop-blur-sm">
 			<Link href="/" className="w-32 sm:w-48 md:w-64">
@@ -23,23 +27,37 @@ export async function Header() {
 				/>
 			</Link>
 
-			<div className="flex flex-col items-end gap-2">
+			<div className="flex items-start gap-2">
 				{viewer.isAuthenticated ? (
-					<div className="flex items-center gap-2">
+					<>
 						<Button asChild variant="outline" size="lg">
 							<Link href={`/users/${viewer.db?.id}`}>
-								My page <UserIcon />
+								{!viewer.isAdmin && 'My page'} <UserIcon />
 							</Link>
 						</Button>
 
 						{viewer.isAdmin && (
-							<Button asChild variant="outline" size="icon-lg">
-								<Link href="/admin">
-									<DatabaseZap />
-								</Link>
-							</Button>
+							<>
+								<Button asChild variant="outline" size="icon-lg">
+									<Link href="/admin">
+										<DatabaseZap />
+									</Link>
+								</Button>
+
+								<Button asChild variant="outline" size="icon-lg">
+									<Link href="/admin/correct">
+										<FlagIcon className="text-red-500" />
+									</Link>
+								</Button>
+
+								<Button asChild variant="outline" size="icon-lg">
+									<Link href="/admin/report">
+										<FlagIcon className="text-green-500" />
+									</Link>
+								</Button>
+							</>
 						)}
-					</div>
+					</>
 				) : (
 					<Button asChild variant="outline">
 						<a href="/auth/login">
@@ -47,6 +65,8 @@ export async function Header() {
 						</a>
 					</Button>
 				)}
+
+				<HeaderNav />
 			</div>
 		</div>
 	)

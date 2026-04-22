@@ -17,7 +17,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 		getGpTopUsers(gpId, limit),
 		getViewer()
 	])
-	const userId = viewer?.db?.id
+	const viewerId = viewer?.db?.id
 
 	const validRows = rows.filter(
 		(r): r is typeof r & { id: number } => r.id != null
@@ -25,10 +25,10 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 	if (!validRows.length || validRows[0].points === 0) return null
 
 	const topIds = new Set(validRows.map((r) => r.id))
-	const viewerInTop = userId != null && topIds.has(userId)
+	const viewerInTop = viewerId != null && topIds.has(viewerId)
 	const viewerRow =
-		userId != null && !viewerInTop
-			? await getGpUserResult(gpId, userId)
+		viewerId != null && !viewerInTop
+			? await getGpUserResult(gpId, viewerId)
 			: undefined
 
 	const extraRows =
@@ -45,8 +45,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 
 			<div className="divide-border -mx-3 divide-y">
 				{displayRows.map((row, i) => {
-					const isViewer = row.id === userId
-					const isExtra = !topIds.has(row.id)
+					const isViewer = row.id === viewerId
 					const medals = buildMedals(row)
 
 					return (
@@ -67,6 +66,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 									userId={row.id!}
 									firstName={row.first_name}
 									lastName={row.last_name}
+									isViewer={isViewer}
 									stars={row.stars}
 								/>
 							</div>

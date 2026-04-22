@@ -9,7 +9,7 @@ export default async function ActivityFeedPage() {
 	const latestGp = await getNextGp()
 
 	return (
-		<div className="columns-1 gap-4 p-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
+		<div className="columns-1 p-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
 			<div>
 				<SectionTitle href="/activity">Latest activity</SectionTitle>
 

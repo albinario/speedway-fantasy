@@ -11,7 +11,7 @@ type TRiderName = {
 export function RiderName({ name, riderId, highlight = false }: TRiderName) {
 	return (
 		<Link
-			className={cn({ 'text-orange-400': highlight }, 'break-words')}
+			className={cn({ 'text-orange-400': highlight }, 'text-center text-wrap')}
 			href={`/riders/${riderId}`}
 		>
 			{name}
