@@ -10,6 +10,8 @@ import { RiderName } from '@/components/RiderName'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 
+import { PosBadge } from '../UsersStandings/PosBadge'
+
 export type TRiderRow = {
 	riderId: number
 	name: string | null | undefined
@@ -21,6 +23,7 @@ export type TRiderRow = {
 	gps?: number
 	timesPicked?: number
 	pickedByViewer?: boolean
+	pos: number | null
 }
 
 type TRidersTable = {
@@ -37,13 +40,7 @@ function buildColumns({
 			id: 'pos',
 			header: '',
 			enableSorting: false,
-			cell: ({ row }) => {
-				return (
-					<span className="inline-flex size-7 items-center justify-center rounded-md bg-white/10">
-						{row.index + 1}
-					</span>
-				)
-			}
+			cell: ({ row }) => <PosBadge pos={row.original.pos} />
 		},
 		{
 			id: 'avatar',
@@ -145,7 +142,9 @@ export function RidersTable({ data, condensedMedals }: TRidersTable) {
 			<DataTable
 				columns={columns}
 				data={data}
-				getRowClassName={(row) => (row.pickedByViewer ? 'bg-orange-400/5' : undefined)}
+				getRowClassName={(row) =>
+					row.pickedByViewer ? 'bg-orange-400/5' : undefined
+				}
 			/>
 		</Card>
 	)

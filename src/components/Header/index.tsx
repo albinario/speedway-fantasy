@@ -15,7 +15,7 @@ type THeader = {
 
 export async function Header({ viewer }: THeader) {
 	return (
-		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-4 backdrop-blur-sm">
+		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-3 backdrop-blur-sm">
 			<Link href="/" className="w-32 sm:w-48 md:w-64">
 				<Image
 					alt={logo.alt}
@@ -32,7 +32,7 @@ export async function Header({ viewer }: THeader) {
 					<>
 						<Button asChild variant="outline" size="lg">
 							<Link href={`/users/${viewer.db?.id}`}>
-								{!viewer.isAdmin && 'My page'} <UserIcon />
+								My page <UserIcon />
 							</Link>
 						</Button>
 
@@ -45,14 +45,8 @@ export async function Header({ viewer }: THeader) {
 								</Button>
 
 								<Button asChild variant="outline" size="icon-lg">
-									<Link href="/admin/correct">
-										<FlagIcon className="text-red-500" />
-									</Link>
-								</Button>
-
-								<Button asChild variant="outline" size="icon-lg">
 									<Link href="/admin/report">
-										<FlagIcon className="text-green-500" />
+										<FlagIcon />
 									</Link>
 								</Button>
 							</>
@@ -66,7 +60,7 @@ export async function Header({ viewer }: THeader) {
 					</Button>
 				)}
 
-				<HeaderNav />
+				<HeaderNav viewerId={viewer.db?.id} />
 			</div>
 		</div>
 	)

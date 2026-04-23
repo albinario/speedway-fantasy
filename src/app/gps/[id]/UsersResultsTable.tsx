@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 import type { ColumnDef } from '@tanstack/react-table'
 
 import { FlagNumber } from '@/components/FlagNumber'
@@ -51,16 +53,21 @@ function makeColumns(
 						/>
 						<div className="mt-1 flex items-center gap-2">
 							{picks.map((pick, i) => (
-								<FlagNumber
+								<Link
 									key={i}
-									countryCode={pick.countryCode}
-									number={pick.number}
-									highlight={
-										pick.number != null &&
-										firstOccurrenceByRider.get(pick.number) === row.index
-									}
-									size="sm"
-								/>
+									href={`/riders/${pick.riderId}`}
+									className={pick.riderId == null ? 'pointer-events-none' : ''}
+								>
+									<FlagNumber
+										countryCode={pick.countryCode}
+										number={pick.number}
+										highlight={
+											pick.number != null &&
+											firstOccurrenceByRider.get(pick.number) === row.index
+										}
+										size="xs"
+									/>
+								</Link>
 							))}
 						</div>
 					</>

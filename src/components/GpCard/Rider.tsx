@@ -1,5 +1,4 @@
 import type { getRiderGps } from '@/app/riders/[id]/data'
-import { InfoBox } from '@/components/InfoBox'
 import { MedalIcon } from '@/components/MedalIcon'
 import { EMacroStage } from '@/enums'
 import { getMacroStage } from '@/lib/dates'
@@ -19,19 +18,17 @@ export async function RiderGpCard({
 
 	return (
 		<GpCardBase gp={gp} linked macroStage={macroStage}>
-			<InfoBox className="flex items-center gap-4">
+			<div className="flex items-center">
 				{gp.medal != null && <MedalIcon type={gp.medal} />}
 
 				<span className="text-lg font-black">
 					{gp.points} <span className="text-muted-foreground text-sm">pts</span>
 				</span>
 
-				<span className="text-muted-foreground text-sm">{gp.heats} heats</span>
-
 				<span className="text-muted-foreground ml-auto text-sm">
 					Picked by {gp.times_picked}/{gp.total_pickers}
 				</span>
-			</InfoBox>
+			</div>
 		</GpCardBase>
 	)
 }

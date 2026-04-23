@@ -1,6 +1,8 @@
+import { FlagNumber } from '@/components/FlagNumber'
 import { RiderGpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
 import { RiderHero } from '@/components/RiderHero'
+import { RiderImage } from '@/components/RiderImage'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
@@ -29,15 +31,25 @@ export default async function RiderPage({ params, searchParams }: TRiderPage) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader title={rider.name} />
+			<PageHeader>
+				<div className="flex items-center gap-2">
+					<RiderImage
+						className="size-12 shrink-0"
+						name={rider.name}
+						riderId={riderId}
+					/>
+					<div className="flex flex-col">
+						<span className="text-xl font-black uppercase">{rider.name}</span>
+						<FlagNumber
+							countryCode={rider.country_code}
+							number={rider.number}
+							size="sm"
+						/>
+					</div>
+				</div>
+			</PageHeader>
 
-			<RiderHero
-				countryCode={rider.country_code}
-				name={rider.name}
-				number={rider.number}
-				riderId={riderId}
-				stats={stats}
-			/>
+			<RiderHero stats={stats} />
 
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
 				{gps.map((gp) => (

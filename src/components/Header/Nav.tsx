@@ -16,8 +16,20 @@ import {
 import { navItems } from '@/config/nav'
 import { cn } from '@/lib/utils'
 
-export function HeaderNav() {
+type THeaderNav = {
+	viewerId?: number
+}
+
+export function HeaderNav({ viewerId }: THeaderNav) {
 	const pathname = usePathname()
+
+	const items = navItems.flatMap((item) => {
+		if (item.href === '/users') {
+			if (!viewerId) return []
+			return [{ ...item, href: `/users/${viewerId}` }]
+		}
+		return [item]
+	})
 
 	return (
 		<Sheet>
@@ -33,7 +45,7 @@ export function HeaderNav() {
 				</SheetHeader>
 
 				<nav className="mt-4 flex flex-col gap-1">
-					{navItems.map((item) => {
+					{items.map((item) => {
 						const isActive =
 							item.href === '/'
 								? pathname === '/'

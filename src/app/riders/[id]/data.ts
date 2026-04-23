@@ -102,8 +102,7 @@ export function getRiderGps(riderId: number, year: number | TParamValues) {
 					.as('total_pickers')
 			])
 			.where('riders_results.rider_id', '=', riderId)
-			.where('gps.finished', '=', true)
-			.orderBy('gps.start_date', 'desc')
+			.orderBy('gps.start_date', 'asc')
 
 		if (year !== paramValues.all) {
 			query = query.where(sql`EXTRACT(YEAR FROM gps.start_date)`, '=', year)

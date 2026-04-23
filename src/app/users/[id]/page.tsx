@@ -33,28 +33,32 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 	return (
 		<div className="flex flex-col gap-4">
 			<PageHeader>
-				<UserAvatar
-					firstName={user.first_name}
-					lastName={user.last_name}
-					className="size-12 shrink-0"
-				/>
-				<UserName
-					className="text-xl font-black uppercase"
-					firstName={user.first_name}
-					lastName={user.last_name}
-					stars={user.stars}
-					userId={userId}
-				/>
+				<div className="flex items-center gap-2">
+					<UserAvatar
+						firstName={user.first_name}
+						lastName={user.last_name}
+						className="size-12 shrink-0"
+					/>
+					<UserName
+						className="text-xl font-black uppercase"
+						firstName={user.first_name}
+						lastName={user.last_name}
+						stars={user.stars}
+						userId={userId}
+					/>
+				</div>
 			</PageHeader>
+
+			{viewer.db?.id === userId && (
+				<div className="flex justify-end px-3 sm:px-0">
+					<UserViewerBar reminder={viewer.db.reminder} />
+				</div>
+			)}
 
 			<UserHero userId={userId} year={yearValues.activeYear} />
 
-			{viewer.db?.id === userId && (
-				<UserViewerBar reminder={viewer.db.reminder} />
-			)}
-
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-				{gps.map((gp, i) => (
+				{gps.map((gp) => (
 					<UserGpCard
 						key={gp.id}
 						gp={gp}

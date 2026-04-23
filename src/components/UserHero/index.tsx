@@ -40,7 +40,7 @@ export async function UserHero({ userId, year }: TUserHero) {
 		<div className="flex flex-col gap-1">
 			<div className="bg-card flex flex-col divide-y divide-white/5 rounded-xl">
 				{/* Row 1: Points + medals + streak */}
-				<div className="flex items-center gap-6 p-4">
+				<div className="flex flex-wrap items-center gap-6 p-4">
 					<div className="flex flex-col items-center">
 						<span className="text-5xl leading-none font-black">{points}</span>
 						<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
@@ -60,7 +60,7 @@ export async function UserHero({ userId, year }: TUserHero) {
 							<span className="text-xl font-black">{streak}</span>
 							<Flame size={25} className="text-brand-red" />
 							<span className="text-muted-foreground text-xs tracking-wide uppercase">
-								Streak
+								GP Streak
 							</span>
 						</div>
 					)}
