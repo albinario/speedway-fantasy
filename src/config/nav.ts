@@ -51,7 +51,7 @@ export const navItems: TNavItem[] = [
 	},
 	{
 		label: 'My page',
-		href: '/users/:id',
+		href: '/users',
 		icon: UserIcon
 	}
 ]

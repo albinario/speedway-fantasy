@@ -24,7 +24,7 @@ const AdminPage = auth0.withPageAuthRequired(
 		])
 
 		return (
-			<div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
+			<div className="columns-1 space-y-4 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
 				<AddGP cities={cities} />
 				<AssignWildCard gps={gpsWildCard} riders={ridersWildCard} />
 				<AddRider countries={countries} />

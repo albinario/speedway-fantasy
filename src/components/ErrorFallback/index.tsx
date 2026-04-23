@@ -20,3 +20,9 @@ export function ErrorFallback({
 		</>
 	)
 }
+
+export function createErrorPage(label: string, fetchFailed: string) {
+	return function ErrorPage(props: TErrorProps) {
+		return <ErrorFallback {...props} label={label} fetchFailed={fetchFailed} />
+	}
+}

@@ -3,8 +3,16 @@ import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
 
-import { getGp, getGpRidersResults, getGpUsersResults } from './data'
-import { GpRidersResultsTable } from './RidersResultsTable'
+import {
+	getGp,
+	getGpRidersPreview,
+	getGpRidersResults,
+	getGpUsersResults
+} from './data'
+import {
+	GpRidersPreviewTable,
+	GpRidersResultsTable
+} from './RidersResultsTable'
 import { GpUsersResultsTable } from './UsersResultsTable'
 
 type TGpPage = {
@@ -30,17 +38,24 @@ export default async function GpPage({ params }: TGpPage) {
 			: Promise.resolve([])
 	])
 
+	const ridersPreview =
+		ridersResults.length === 0
+			? await getGpRidersPreview(gp.id, gp.wild_card_id, viewerId)
+			: []
+
 	return (
-		<div className="columns-1 sm:columns-2 lg:columns-3 [&>*]:break-inside-avoid">
+		<div className="columns-1 space-y-4 sm:columns-2 xl:columns-3 [&>*]:break-inside-avoid">
 			<GpCard gp={gp} macroStage={macroStage} />
 
 			{usersResults.length > 0 && (
 				<GpUsersResultsTable data={usersResults} viewerId={viewerId} />
 			)}
 
-			{ridersResults.length > 0 && (
+			{ridersResults.length > 0 ? (
 				<GpRidersResultsTable data={ridersResults} />
-			)}
+			) : ridersPreview.length > 0 ? (
+				<GpRidersPreviewTable data={ridersPreview} />
+			) : null}
 		</div>
 	)
 }

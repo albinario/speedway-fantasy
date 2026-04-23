@@ -14,7 +14,7 @@ export function NavFooter({ viewerId }: TNavFooter) {
 	const pathname = usePathname()
 
 	const items = navItems.map((item) => {
-		if (item.href === '/users/:id') {
+		if (item.href === '/users') {
 			return viewerId
 				? { ...item, href: `/users/${viewerId}` }
 				: { ...item, label: 'Log in', href: '/auth/login' }

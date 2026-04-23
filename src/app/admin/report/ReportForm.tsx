@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 
 import { toast } from 'sonner'
 
-import { HeatsFinished } from '@/components/HeatsFinished'
+import { HeatsCounter } from '@/components/HeatsCounter'
 import { RiderTile, type TRider } from '@/components/RiderTile'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
@@ -93,7 +93,7 @@ export function ReportForm({
 				</div>
 			</div>
 
-			<HeatsFinished heatsFinished={heatsFinished} />
+			<HeatsCounter heatsFinished={heatsFinished} />
 
 			<div className="grid grid-cols-4 gap-2">
 				{riders.map((rider) => {

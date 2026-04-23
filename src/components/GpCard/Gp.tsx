@@ -1,5 +1,5 @@
 import type { getGps } from '@/app/gps/data'
-import { HeatsFinished } from '@/components/HeatsFinished'
+import { HeatsCounter } from '@/components/HeatsCounter'
 import { RegisteredPlayers } from '@/components/RegisteredPlayers'
 import { WildCard } from '@/components/WildCard'
 import { EMacroStage } from '@/enums'
@@ -37,7 +37,7 @@ export async function GpCard({
 			macroStage={macroStage}
 		>
 			{macroStage === EMacroStage.During && (
-				<HeatsFinished heatsFinished={gp.heats_finished ?? 0} />
+				<HeatsCounter heatsFinished={gp.heats_finished ?? 0} />
 			)}
 
 			{linked && macroStage !== EMacroStage.Before && (

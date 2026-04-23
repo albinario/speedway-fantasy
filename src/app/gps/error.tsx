@@ -1,16 +1,7 @@
 'use client'
 
-import { ErrorFallback } from '@/components/ErrorFallback'
-import type { TErrorProps } from '@/types/error'
+import { createErrorPage } from '@/components/ErrorFallback'
 
 import { fetchFailed, metaData } from './[id]/constants'
 
-export default function Error(props: TErrorProps) {
-	return (
-		<ErrorFallback
-			{...props}
-			label={metaData.title}
-			fetchFailed={fetchFailed}
-		/>
-	)
-}
+export default createErrorPage(metaData.title, fetchFailed)

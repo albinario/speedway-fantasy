@@ -18,7 +18,7 @@ export async function RidersStandings({ year, limit }: TRidersStandings) {
 		return <RidersLimitedTable data={standings} limit={limit} />
 	}
 
-	const data = standings.map((r) => ({
+	const data = standings.map((r, i) => ({
 		riderId: r.rider_id,
 		name: r.name,
 		countryCode: r.country_code,
@@ -27,7 +27,8 @@ export async function RidersStandings({ year, limit }: TRidersStandings) {
 		points: r.total_points,
 		heats: r.heats,
 		gps: r.gps,
-		timesPicked: r.times_picked
+		timesPicked: r.times_picked,
+		pos: i + 1
 	}))
 
 	return <RidersTable data={data} />

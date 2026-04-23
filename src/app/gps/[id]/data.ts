@@ -186,6 +186,7 @@ export function getGpRidersResults(gpId: number, viewerId?: number) {
 					'riders_results.points',
 					'riders_results.heats',
 					'riders_results.medal',
+					'riders_results.pos',
 					eb
 						.selectFrom('users_picks')
 						.select(eb.fn.countAll<number>().as('c'))
@@ -239,6 +240,7 @@ export function getGpRidersResults(gpId: number, viewerId?: number) {
 						: eb.lit<number>(0).as('viewer_picked')
 				])
 				.where('riders_results.gp_id', '=', gpId)
+				.where('riders_results.pos', 'is not', null)
 				.orderBy('riders_results.points', 'desc')
 				.execute(),
 		[]
@@ -294,10 +296,13 @@ export function getGpUsersResults(gpId: number) {
 					'users_results.medal_3',
 					'r1.country_code as pick_1_country',
 					'r1.number as pick_1_number',
+					'users_picks.rider_1_id as pick_1_id',
 					'r2.country_code as pick_2_country',
 					'r2.number as pick_2_number',
+					'users_picks.rider_2_id as pick_2_id',
 					'r3.country_code as pick_3_country',
 					'r3.number as pick_3_number',
+					'users_picks.rider_3_id as pick_3_id',
 					'users_standings.points as season_points'
 				])
 				.where('users_results.gp_id', '=', gpId)
@@ -306,4 +311,71 @@ export function getGpUsersResults(gpId: number) {
 				.execute(),
 		[]
 	)
+}
+
+export function getGpRidersPreview(
+	gpId: number,
+	wildCardId: number | null,
+	viewerId?: number
+) {
+	return dataFetch(() => {
+		const year = new Date().getFullYear()
+
+		const seasonStats = db
+			.selectFrom('riders_results')
+			.innerJoin('gps as rr_gps', 'rr_gps.id', 'riders_results.gp_id')
+			.select((eb) => [
+				'riders_results.rider_id',
+				eb.fn.sum<number>('riders_results.points').as('points'),
+				eb.fn.sum<number>('riders_results.heats').as('heats'),
+				eb.fn.count<number>('riders_results.gp_id').as('gps'),
+				sql<
+					number[]
+				>`ARRAY_AGG(riders_results.medal ORDER BY riders_results.medal) FILTER (WHERE riders_results.medal IS NOT NULL)`.as(
+					'medals'
+				)
+			])
+			.where(sql`EXTRACT(YEAR FROM rr_gps.start_date)`, '=', year)
+			.groupBy('riders_results.rider_id')
+
+		return db
+			.selectFrom('riders')
+			.innerJoin('riders_with_country', 'riders_with_country.id', 'riders.id')
+			.leftJoin(seasonStats.as('ss'), 'ss.rider_id', 'riders.id')
+			.select((eb) => [
+				sql<number>`riders.id`.as('rider_id'),
+				'riders_with_country.name',
+				'riders_with_country.number',
+				'riders_with_country.country_code',
+				sql<number>`COALESCE(ss.points, 0)`.as('points'),
+				sql<number>`COALESCE(ss.heats, 0)`.as('heats'),
+				sql<number>`COALESCE(ss.gps, 0)`.as('gps'),
+				sql<number[] | null>`ss.medals`.as('medals'),
+				viewerId != null
+					? eb
+							.selectFrom('users_picks')
+							.select(eb.fn.countAll<number>().as('c'))
+							.where('users_picks.gp_id', '=', gpId)
+							.where('users_picks.user_id', '=', viewerId)
+							.where((eb) =>
+								eb.or([
+									eb('users_picks.rider_1_id', '=', eb.ref('riders.id')),
+									eb('users_picks.rider_2_id', '=', eb.ref('riders.id')),
+									eb('users_picks.rider_3_id', '=', eb.ref('riders.id'))
+								])
+							)
+							.as('viewer_picked')
+					: eb.lit<number>(0).as('viewer_picked')
+			])
+			.where((eb) =>
+				wildCardId != null
+					? eb.or([
+							eb('riders.active', 'is not', null),
+							eb('riders.id', '=', wildCardId)
+						])
+					: eb('riders.active', 'is not', null)
+			)
+			.orderBy(sql`COALESCE(ss.points, 0)`, 'desc')
+			.execute()
+	}, [])
 }

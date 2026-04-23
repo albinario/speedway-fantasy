@@ -86,7 +86,7 @@ export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
 							</div>
 						</div>
 
-						<time className="text-muted-foreground shrink-0 self-end text-xs tabular-nums">
+						<time className="text-muted-foreground shrink-0 self-center text-xs tabular-nums">
 							{new Date(entry.created_at).toLocaleString('sv-SE', {
 								month: 'short',
 								day: 'numeric',

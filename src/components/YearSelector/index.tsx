@@ -59,7 +59,11 @@ export function YearSelector({ years }: TYearSelectorProps) {
 		<DropdownMenu>
 			<div className="flex items-center gap-2">
 				<DropdownMenuTrigger asChild>
-					<Button variant="outline" className="group flex items-center gap-2">
+					<Button
+						className="group flex items-center gap-2"
+						size="lg"
+						variant="outline"
+					>
 						<span>
 							{activeYear === paramValues.all ? 'All time' : activeYear}
 						</span>
@@ -72,7 +76,7 @@ export function YearSelector({ years }: TYearSelectorProps) {
 				</DropdownMenuTrigger>
 
 				{showClearButton && (
-					<Button onClick={clearYear} variant="outline">
+					<Button onClick={clearYear} size="lg" variant="outline">
 						<X aria-hidden className="size-4 text-white" /> Reset
 						<span className="hidden sm:inline"> to current year</span>
 					</Button>
