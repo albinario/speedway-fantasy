@@ -10,7 +10,7 @@ export const getComments = unstable_cache(
 			() =>
 				db
 					.selectFrom('comments')
-					.leftJoin('users', 'comments.user_id', 'users.id')
+					.leftJoin('users_with_stars', 'comments.user_id', 'users_with_stars.id')
 					.leftJoin('gps', 'comments.gp_id', 'gps.id')
 					.leftJoin('cities', 'gps.city_id', 'cities.id')
 					.leftJoin('countries', 'cities.country_id', 'countries.id')
@@ -21,9 +21,10 @@ export const getComments = unstable_cache(
 						'comments.reply_to_id',
 						'comments.user_id',
 						'comments.gp_id',
-						'users.first_name',
-						'users.last_name',
-						'gps.round as gp_round',
+						'users_with_stars.first_name',
+						'users_with_stars.last_name',
+						'users_with_stars.stars',
+						'gps.start_date as gp_start_date',
 						'cities.name as city_name',
 						'countries.code as country_code',
 					])

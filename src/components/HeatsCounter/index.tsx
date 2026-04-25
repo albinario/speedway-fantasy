@@ -18,13 +18,11 @@ export function HeatsCounter({ heatsFinished }: THeatsFinished) {
 				</div>
 			</div>
 
-			<div className="flex gap-0.5">
-				{Array.from({ length: MAX_HEATS }, (_, i) => (
-					<div
-						key={i}
-						className={`h-1.5 flex-1 rounded-full transition-all ${i < heatsFinished ? 'bg-green-400' : 'bg-foreground/10'}`}
-					/>
-				))}
+			<div className="bg-foreground/10 h-1.5 w-full overflow-hidden rounded-full">
+				<div
+					className="h-full rounded-full bg-gradient-to-r from-green-400/60 to-green-400 transition-all"
+					style={{ width: `${(heatsFinished / MAX_HEATS) * 100}%` }}
+				/>
 			</div>
 		</div>
 	)

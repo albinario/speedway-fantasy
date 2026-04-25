@@ -9,6 +9,7 @@ import { MedalIcon } from '@/components/MedalIcon'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
+import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
 import { PosBadge } from '@/components/UsersStandings/PosBadge'
 import { sortedPicks } from '@/lib/picks'
@@ -19,21 +20,24 @@ type TRow = Awaited<ReturnType<typeof getGpUsersResults>>[number]
 
 function makeColumns(
 	viewerId?: number,
-	firstOccurrenceByRider = new Map<number, number>()
+	firstOccurrenceByRider = new Map<number, number>(),
+	isBefore = false
 ): ColumnDef<TRow>[] {
 	return [
-		{
-			id: 'pos',
-			header: '',
-			meta: { className: 'pr-0' },
-			cell: ({ row }) => {
-				const { pos } = row.original
-
-				if (pos !== row.index + 1) return null
-
-				return <PosBadge pos={pos} size="lg" />
-			}
-		},
+		...(!isBefore
+			? [
+					{
+						id: 'pos',
+						header: '',
+						meta: { className: 'pr-0' },
+						cell: ({ row }: { row: { original: TRow; index: number } }) => {
+							const { pos } = row.original
+							if (pos !== row.index + 1) return null
+							return <PosBadge pos={pos} size="lg" />
+						}
+					} as ColumnDef<TRow>
+				]
+			: []),
 		{
 			id: 'name',
 			header: '',
@@ -43,34 +47,43 @@ function makeColumns(
 				const picks = sortedPicks(row.original)
 
 				return (
-					<>
-						<UserName
-							userId={user_id}
+					<div className="flex items-center gap-2">
+						<UserAvatar
 							firstName={first_name}
 							lastName={last_name}
-							stars={stars}
-							isViewer={user_id === viewerId}
+							className="size-8 shrink-0 text-xs"
 						/>
-						<div className="mt-1 flex items-center gap-2">
-							{picks.map((pick, i) => (
-								<Link
-									key={i}
-									href={`/riders/${pick.riderId}`}
-									className={pick.riderId == null ? 'pointer-events-none' : ''}
-								>
-									<FlagNumber
-										countryCode={pick.countryCode}
-										number={pick.number}
-										highlight={
-											pick.number != null &&
-											firstOccurrenceByRider.get(pick.number) === row.index
+						<div>
+							<UserName
+								userId={user_id}
+								firstName={first_name}
+								lastName={last_name}
+								stars={stars}
+								isViewer={user_id === viewerId}
+							/>
+							<div className="mt-1 flex items-center gap-2">
+								{picks.map((pick, i) => (
+									<Link
+										key={i}
+										href={`/riders/${pick.riderId}`}
+										className={
+											pick.riderId == null ? 'pointer-events-none' : ''
 										}
-										size="xs"
-									/>
-								</Link>
-							))}
+									>
+										<FlagNumber
+											countryCode={pick.countryCode}
+											number={pick.number}
+											highlight={
+												pick.number != null &&
+												firstOccurrenceByRider.get(pick.number) === row.index
+											}
+											size="xs"
+										/>
+									</Link>
+								))}
+							</div>
 						</div>
-					</>
+					</div>
 				)
 			}
 		},
@@ -119,10 +132,15 @@ function makeColumns(
 
 type TGpUsersResultsTable = {
 	data: TRow[]
+	isBefore?: boolean
 	viewerId?: number
 }
 
-export function GpUsersResultsTable({ data, viewerId }: TGpUsersResultsTable) {
+export function GpUsersResultsTable({
+	data,
+	viewerId,
+	isBefore
+}: TGpUsersResultsTable) {
 	const firstOccurrenceByRider = new Map<number, number>()
 	data.forEach((row, index) => {
 		for (const pick of sortedPicks(row)) {
@@ -138,7 +156,7 @@ export function GpUsersResultsTable({ data, viewerId }: TGpUsersResultsTable) {
 
 			<Card>
 				<DataTable
-					columns={makeColumns(viewerId, firstOccurrenceByRider)}
+					columns={makeColumns(viewerId, firstOccurrenceByRider, isBefore)}
 					data={data}
 					getRowClassName={(row) =>
 						row.user_id === viewerId ? 'bg-orange-400/5' : undefined
