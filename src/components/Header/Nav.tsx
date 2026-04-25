@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Menu } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
 	Sheet,
+	SheetClose,
 	SheetContent,
 	SheetHeader,
 	SheetTitle,
@@ -16,11 +17,14 @@ import {
 import { navItems } from '@/config/nav'
 import { cn } from '@/lib/utils'
 
+import { ReminderToggle } from '../UserHero/ReminderToggle'
+
 type THeaderNav = {
 	viewerId?: number
+	reminder?: boolean
 }
 
-export function HeaderNav({ viewerId }: THeaderNav) {
+export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 	const pathname = usePathname()
 
 	const items = navItems.flatMap((item) => {
@@ -39,7 +43,7 @@ export function HeaderNav({ viewerId }: THeaderNav) {
 				</Button>
 			</SheetTrigger>
 
-			<SheetContent side="right" className="w-56">
+			<SheetContent side="right" className="flex w-56 flex-col">
 				<SheetHeader>
 					<SheetTitle>Menu</SheetTitle>
 				</SheetHeader>
@@ -52,20 +56,36 @@ export function HeaderNav({ viewerId }: THeaderNav) {
 								: pathname.startsWith(item.href)
 
 						return (
-							<Button
-								key={item.href}
-								asChild
-								className={cn('justify-start', isActive && 'text-brand-red')}
-								variant="ghost"
-							>
-								<Link href={item.href}>
-									{item.icon && <item.icon />}
-									{item.label}
-								</Link>
-							</Button>
+							<SheetClose key={item.href} asChild>
+								<Button
+									asChild
+									className={cn('justify-start', isActive && 'text-brand-red')}
+									variant="ghost"
+								>
+									<Link href={item.href}>
+										{item.icon && <item.icon />}
+										{item.label}
+									</Link>
+								</Button>
+							</SheetClose>
 						)
 					})}
 				</nav>
+
+				{viewerId && (
+					<div className="mt-auto flex flex-col gap-4 p-4">
+						<ReminderToggle defaultChecked={reminder ?? false} />
+
+						<SheetClose asChild>
+							<Button asChild variant="destructive">
+								<a href="/auth/logout">
+									Log out
+									<LogOut />
+								</a>
+							</Button>
+						</SheetClose>
+					</div>
+				)}
 			</SheetContent>
 		</Sheet>
 	)

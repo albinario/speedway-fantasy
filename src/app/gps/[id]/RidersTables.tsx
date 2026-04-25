@@ -14,7 +14,7 @@ export function GpRidersResultsTable({ data }: TGpRidersResultsTable) {
 		<div>
 			<SectionTitle>Riders</SectionTitle>
 			<RidersTable
-				data={data.map((r) => ({
+				data={data.map((r, i) => ({
 					riderId: r.rider_id,
 					name: r.name,
 					countryCode: r.country_code,
@@ -24,7 +24,7 @@ export function GpRidersResultsTable({ data }: TGpRidersResultsTable) {
 					heats: r.heats,
 					timesPicked: r.times_picked ?? 0,
 					pickedByViewer: (r.viewer_picked ?? 0) > 0,
-					pos: r.pos
+					pos: r.pos === i + 1 ? r.pos : null
 				}))}
 			/>
 		</div>

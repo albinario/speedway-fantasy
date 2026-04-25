@@ -40,8 +40,9 @@ export function getRiderStats(riderId: number, year: number | TParamValues) {
 				sql<number>`(
 					SELECT COUNT(*) FROM users_picks up
 					INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
-					WHERE ${year !== paramValues.all ? sql`EXTRACT(YEAR FROM pick_gps.start_date) = ${year} AND` : sql``}
-					(up.rider_1_id = ${riderId} OR up.rider_2_id = ${riderId} OR up.rider_3_id = ${riderId})
+					WHERE pick_gps.start_date <= NOW()
+					${year !== paramValues.all ? sql`AND EXTRACT(YEAR FROM pick_gps.start_date) = ${year}` : sql``}
+					AND (up.rider_1_id = ${riderId} OR up.rider_2_id = ${riderId} OR up.rider_3_id = ${riderId})
 				)`.as('times_picked')
 			])
 			.where('riders_results.rider_id', '=', riderId)
@@ -83,10 +84,12 @@ export function getRiderGps(riderId: number, year: number | TParamValues) {
 				'riders_results.points',
 				'riders_results.heats',
 				'riders_results.medal',
+				'riders_results.pos',
 				eb
 					.selectFrom('users_picks')
 					.select(eb.fn.countAll<number>().as('c'))
 					.where('users_picks.gp_id', '=', eb.ref('gps.id'))
+					.where(sql<boolean>`gps.start_date <= NOW()`)
 					.where((eb) =>
 						eb.or([
 							eb('users_picks.rider_1_id', '=', riderId),

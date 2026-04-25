@@ -1,6 +1,8 @@
+import { unstable_cache } from 'next/cache'
 import { sql } from 'kysely'
 
 import type { TRider } from '@/components/RiderTile'
+import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
@@ -63,7 +65,13 @@ export async function getActiveRidersForGp(gpId: number): Promise<TRider[]> {
 	return [...active, wildCard as TRider]
 }
 
-export function getRidersStandings(
+export const getRidersStandings = unstable_cache(
+	(year: number | TParamValues, limit?: number) => _getRidersStandings(year, limit),
+	['riders-standings'],
+	{ tags: [cacheTags.ridersStandings] }
+)
+
+function _getRidersStandings(
 	year: number | TParamValues,
 	limit?: number
 ) {
@@ -74,6 +82,7 @@ export function getRidersStandings(
 				FROM users_picks up
 				INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
 				WHERE EXTRACT(YEAR FROM pick_gps.start_date) = ${year}
+				  AND pick_gps.start_date <= NOW()
 				  AND (
 				    up.rider_1_id = riders_results.rider_id
 				    OR up.rider_2_id = riders_results.rider_id
@@ -123,9 +132,13 @@ export function getRidersStandings(
 		const timesPickedAllYears = sql<number>`(
 			SELECT COUNT(*)
 			FROM users_picks up
-			WHERE up.rider_1_id = riders_results.rider_id
-			   OR up.rider_2_id = riders_results.rider_id
-			   OR up.rider_3_id = riders_results.rider_id
+			INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
+			WHERE pick_gps.start_date <= NOW()
+			  AND (
+			    up.rider_1_id = riders_results.rider_id
+			    OR up.rider_2_id = riders_results.rider_id
+			    OR up.rider_3_id = riders_results.rider_id
+			  )
 		)`
 
 		let query = db

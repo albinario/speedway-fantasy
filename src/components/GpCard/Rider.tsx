@@ -1,27 +1,26 @@
 import type { getRiderGps } from '@/app/riders/[id]/data'
 import { MedalIcon } from '@/components/MedalIcon'
 import { EMacroStage } from '@/enums'
-import { getMacroStage } from '@/lib/dates'
 
 import { GpCardBase } from './Base'
 
 type TRiderGpCard = {
 	gp: Awaited<ReturnType<typeof getRiderGps>>[number]
-	macroStage?: EMacroStage
 }
 
-export async function RiderGpCard({
-	gp,
-	macroStage: macroStageProp
-}: TRiderGpCard) {
-	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
-
+export async function RiderGpCard({ gp }: TRiderGpCard) {
 	return (
-		<GpCardBase gp={gp} linked macroStage={macroStage}>
-			<div className="flex items-center">
+		<GpCardBase gp={gp} linked macroStage={EMacroStage.After}>
+			<div className="flex items-center gap-4">
+				{gp.pos != null && (
+					<span className="text-xl font-black opacity-70">
+						#<span className="text-2xl">{gp.pos}</span>
+					</span>
+				)}
+
 				{gp.medal != null && <MedalIcon type={gp.medal} />}
 
-				<span className="text-lg font-black">
+				<span className="text-2xl font-black">
 					{gp.points} <span className="text-muted-foreground text-sm">pts</span>
 				</span>
 

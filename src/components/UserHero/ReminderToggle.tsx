@@ -18,7 +18,7 @@ export function ReminderToggle({ defaultChecked }: TReminderToggle) {
 	}
 
 	return (
-		<div className="flex items-center gap-1.5">
+		<div className="flex items-center gap-2">
 			<Switch checked={checked} onCheckedChange={handleChange} />
 			<span className="text-muted-foreground text-xs">Email reminder</span>
 		</div>

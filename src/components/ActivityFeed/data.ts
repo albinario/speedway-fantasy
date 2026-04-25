@@ -1,7 +1,16 @@
+import { unstable_cache } from 'next/cache'
+
+import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
-export function getActivityFeed(gpId?: number, limit = 5) {
+export const getActivityFeed = unstable_cache(
+	(gpId?: number, limit = 5) => _getActivityFeed(gpId, limit),
+	['activity-feed'],
+	{ tags: [cacheTags.activity] }
+)
+
+function _getActivityFeed(gpId?: number, limit = 5) {
 	return dataFetch(() => {
 		let query = db
 			.selectFrom('activity_log')

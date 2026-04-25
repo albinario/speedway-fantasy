@@ -1,11 +1,12 @@
 import { getGps } from '@/app/gps/data'
 import { UserGpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
+import { ShowOlderToggle } from '@/components/ShowOlderToggle'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserHero } from '@/components/UserHero'
-import { UserViewerBar } from '@/components/UserHero/UserViewerBar'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
+import { filterGps } from '@/lib/filter-gps'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
@@ -13,12 +14,13 @@ import { getUser } from './data'
 
 type TUserPage = {
 	params: Promise<{ id: string }>
-	searchParams: Promise<{ year?: string | TParamValues }>
+	searchParams: Promise<{ year?: string | TParamValues; show?: string }>
 }
 
 export default async function UserPage({ params, searchParams }: TUserPage) {
 	const { id } = await params
 	const userId = Number(id)
+	const { show } = await searchParams
 
 	const [user, yearValues, viewer] = await Promise.all([
 		getUser(userId),
@@ -29,6 +31,10 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 	if (!user) return null
 
 	const gps = await getGps(yearValues.activeYear)
+
+	const showAll = show === 'all'
+	const isPastYear = Number(yearValues.activeYear) < new Date().getFullYear()
+	const { visible, showToggle, isUpNext } = filterGps(gps, showAll, isPastYear)
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -49,19 +55,17 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				</div>
 			</PageHeader>
 
-			{viewer.db?.id === userId && (
-				<div className="flex justify-end px-3 sm:px-0">
-					<UserViewerBar reminder={viewer.db.reminder} />
-				</div>
-			)}
-
 			<UserHero userId={userId} year={yearValues.activeYear} />
 
+			{showToggle && <ShowOlderToggle checked={showAll} />}
+
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-				{gps.map((gp) => (
+				{visible.map(({ gp, stage }, i) => (
 					<UserGpCard
 						key={gp.id}
 						gp={gp}
+						isUpNext={i === isUpNext}
+						macroStage={stage}
 						userId={userId}
 						viewerId={viewer.db?.id}
 					/>

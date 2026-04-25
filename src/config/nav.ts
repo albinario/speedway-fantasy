@@ -1,4 +1,5 @@
 import {
+	Beer,
 	BookOpen,
 	Flag,
 	House,
@@ -13,7 +14,7 @@ export type TNavItem = {
 	label: string
 	href: string
 	icon?: LucideIcon
-	hideOnMobile?: boolean
+	hideInFooter?: boolean
 }
 
 export const navItems: TNavItem[] = [
@@ -41,13 +42,19 @@ export const navItems: TNavItem[] = [
 		label: 'Hall of fame',
 		href: '/hall-of-fame',
 		icon: Trophy,
-		hideOnMobile: true
+		hideInFooter: true
 	},
 	{
 		label: 'Rules',
 		href: '/rules',
 		icon: BookOpen,
-		hideOnMobile: true
+		hideInFooter: true
+	},
+	{
+		label: 'Beer',
+		href: '/beer',
+		icon: Beer,
+		hideInFooter: true
 	},
 	{
 		label: 'My page',
