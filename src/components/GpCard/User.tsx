@@ -10,6 +10,7 @@ import { UserResultRow } from './UserResultRow/UserResultRow'
 
 type TUserGpCard = {
 	gp: Awaited<ReturnType<typeof getGps>>[number]
+	isUpNext?: boolean
 	macroStage?: EMacroStage
 	userId: number
 	viewerId?: number
@@ -17,6 +18,7 @@ type TUserGpCard = {
 
 export async function UserGpCard({
 	gp,
+	isUpNext = false,
 	macroStage: macroStageProp,
 	userId,
 	viewerId
@@ -24,7 +26,7 @@ export async function UserGpCard({
 	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
 
 	return (
-		<GpCardBase gp={gp} linked macroStage={macroStage}>
+		<GpCardBase gp={gp} isUpNext={isUpNext} linked macroStage={macroStage}>
 			{macroStage === EMacroStage.Before && (
 				<UserPicks
 					gpId={gp.id}

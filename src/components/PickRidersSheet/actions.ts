@@ -1,6 +1,9 @@
 'use server'
 
+import { updateTag } from 'next/cache'
+
 import { ActivityAction } from '@/components/ActivityFeed'
+import { cacheTags } from '@/lib/cache-tags'
 import { db } from '@/lib/db'
 
 export async function savePicksAction(
@@ -75,6 +78,9 @@ export async function savePicksAction(
 				: oc.doNothing()
 		)
 		.execute()
+
+	updateTag(cacheTags.picks)
+	updateTag(cacheTags.activity)
 
 	return {}
 }

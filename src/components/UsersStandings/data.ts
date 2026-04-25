@@ -1,10 +1,18 @@
+import { unstable_cache } from 'next/cache'
 import { sql } from 'kysely'
 
+import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
 
-export function getUserStandingRow(year: number | TParamValues, userId: number) {
+export const getUserStandingRow = unstable_cache(
+	(year: number | TParamValues, userId: number) => _getUserStandingRow(year, userId),
+	['user-standing-row'],
+	{ tags: [cacheTags.standings] }
+)
+
+async function _getUserStandingRow(year: number | TParamValues, userId: number) {
 	return dataFetch(async () => {
 		if (year !== paramValues.all) {
 			return db
@@ -77,7 +85,13 @@ export function getUserStandingRow(year: number | TParamValues, userId: number) 
 	}, null)
 }
 
-export function getUsersStandings(year: number | TParamValues, limit?: number) {
+export const getUsersStandings = unstable_cache(
+	(year: number | TParamValues, limit?: number) => _getUsersStandings(year, limit),
+	['users-standings'],
+	{ tags: [cacheTags.standings] }
+)
+
+function _getUsersStandings(year: number | TParamValues, limit?: number) {
 	return dataFetch(() => {
 		if (year !== paramValues.all) {
 			let query = db

@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 
 import { GpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
-import { ScrollToId } from '@/components/ScrollToId'
-import { EMacroStage } from '@/enums'
-import { getMacroStage } from '@/lib/dates'
+import { ShowOlderToggle } from '@/components/ShowOlderToggle'
+import { filterGps } from '@/lib/filter-gps'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
@@ -14,40 +13,38 @@ import { getGps } from './data'
 type TGpsPage = {
 	searchParams: Promise<{
 		year?: string | TParamValues
+		show?: string
 	}>
 }
 
 export const metadata: Metadata = metaData
 
 export default async function GpsPage({ searchParams }: TGpsPage) {
+	const { show } = await searchParams
 	const yearValues = await getYearValues(searchParams)
-	const [gps] = await Promise.all([getGps(yearValues.activeYear)])
+	const gps = await getGps(yearValues.activeYear)
+
+	const showAll = show === 'all'
+	const isPastYear = Number(yearValues.activeYear) < new Date().getFullYear()
+	const { visible, showToggle, isUpNext } = filterGps(gps, showAll, isPastYear)
 
 	return (
 		<div className="flex flex-col gap-4">
-			<ScrollToId id="up-next" />
 			<PageHeader title={metaData.title} />
 
-			{(() => {
-				const stages = gps.map((gp) =>
-					getMacroStage(gp.start_date, gp.finished)
-				)
-				const isUpNext = stages.indexOf(EMacroStage.Before)
+			{showToggle && <ShowOlderToggle checked={showAll} />}
 
-				return (
-					<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-						{gps.map((gp, i) => (
-							<GpCard
-								key={gp.id}
-								gp={gp}
-								isUpNext={i === isUpNext}
-								linked
-								macroStage={stages[i]}
-							/>
-						))}
-					</div>
-				)
-			})()}
+			<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+				{visible.map(({ gp, stage }, i) => (
+					<GpCard
+						key={gp.id}
+						gp={gp}
+						isUpNext={i === isUpNext}
+						linked
+						macroStage={stage}
+					/>
+				))}
+			</div>
 		</div>
 	)
 }

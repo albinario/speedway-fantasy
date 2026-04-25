@@ -30,7 +30,7 @@ export async function Header({ viewer }: THeader) {
 			<div className="flex items-start gap-2">
 				{viewer.isAuthenticated ? (
 					<>
-						<Button asChild variant="outline" size="lg">
+						<Button asChild size="lg" variant="outline">
 							<Link href={`/users/${viewer.db?.id}`}>
 								My page <UserIcon />
 							</Link>
@@ -38,13 +38,13 @@ export async function Header({ viewer }: THeader) {
 
 						{viewer.isAdmin && (
 							<>
-								<Button asChild variant="outline" size="icon-lg">
+								<Button asChild size="icon-lg" variant="outline">
 									<Link href="/admin">
 										<DatabaseZap />
 									</Link>
 								</Button>
 
-								<Button asChild variant="outline" size="icon-lg">
+								<Button asChild size="icon-lg" variant="outline">
 									<Link href="/admin/report">
 										<FlagIcon />
 									</Link>
@@ -53,14 +53,14 @@ export async function Header({ viewer }: THeader) {
 						)}
 					</>
 				) : (
-					<Button asChild variant="outline">
+					<Button asChild size="lg" variant="outline">
 						<a href="/auth/login">
 							Sign in <LogIn />
 						</a>
 					</Button>
 				)}
 
-				<HeaderNav viewerId={viewer.db?.id} />
+				<HeaderNav viewerId={viewer.db?.id} reminder={viewer.db?.reminder} />
 			</div>
 		</div>
 	)

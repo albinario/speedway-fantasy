@@ -26,7 +26,7 @@ export function NavFooter({ viewerId }: TNavFooter) {
 		<nav className="sticky bottom-0 z-50 border-t bg-black/65 p-4 backdrop-blur-sm">
 			<ul className="flex justify-center gap-4">
 				{items
-					.filter((item) => !item.hideOnMobile)
+					.filter((item) => !item.hideInFooter)
 					.map((item) => {
 						const isActive =
 							item.href === '/'

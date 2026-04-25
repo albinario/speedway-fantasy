@@ -10,20 +10,11 @@ import { PosBadge } from './PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
-function StandingRow({
-	row,
-	viewerId,
-	isViewer = false,
-	highlight = false
-}: {
-	row: TRow
-	viewerId?: number
-	isViewer?: boolean
-	highlight?: boolean
-}) {
+function StandingRow({ row, viewerId }: { row: TRow; viewerId?: number }) {
+	const isViewer = row.user_id === viewerId
 	return (
 		<div
-			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${highlight ? 'bg-orange-400/5' : ''}`}
+			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${isViewer ? 'bg-orange-400/5' : ''}`}
 		>
 			<PosBadge pos={row.pos} prevPos={row.prev_pos} size="lg" />
 
@@ -39,7 +30,7 @@ function StandingRow({
 						lastName={row.last_name}
 						stars={row.stars}
 						userId={row.user_id}
-						isViewer={isViewer || row.user_id === viewerId}
+						isViewer={isViewer}
 					/>
 					<div className="mt-1">
 						<MedalCounts
@@ -81,9 +72,7 @@ export async function UsersLimitedTable({
 				{data.map((row) => (
 					<StandingRow key={row.user_id} row={row} viewerId={viewerId} />
 				))}
-				{viewerRow && (
-					<StandingRow row={viewerRow} viewerId={viewerId} isViewer highlight />
-				)}
+				{viewerRow && <StandingRow row={viewerRow} viewerId={viewerId} />}
 			</Card>
 		</div>
 	)

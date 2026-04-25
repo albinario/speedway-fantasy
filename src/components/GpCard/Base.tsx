@@ -22,7 +22,7 @@ export function GpCardBase({
 	const href = linked ? `/gps/${gp.id}` : undefined
 
 	return (
-		<Card id={isUpNext ? 'up-next' : undefined} className="mx-auto w-full">
+		<Card>
 			<GpCardHeader
 				href={href}
 				cityId={gp.city_id}

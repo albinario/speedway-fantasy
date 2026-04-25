@@ -1,4 +1,13 @@
-import { ArrowDown, ArrowUp, Flame, Trophy } from 'lucide-react'
+import Link from 'next/link'
+
+import {
+	ArrowDown,
+	ArrowUp,
+	ChevronRight,
+	Flame,
+	ShieldOff,
+	Trophy
+} from 'lucide-react'
 
 import { getUserStars } from '@/app/users/[id]/data'
 import { MedalCounts } from '@/components/MedalCounts'
@@ -6,7 +15,7 @@ import { getUserStandingRow } from '@/components/UsersStandings/data'
 import { getMedalColorHex } from '@/lib/medals'
 import { type TParamValues } from '@/lib/params'
 
-import { getLeaderPoints, getUserStreak } from './data'
+import { getLeader, getUserStreak } from './data'
 
 type TUserHero = {
 	userId: number
@@ -14,9 +23,9 @@ type TUserHero = {
 }
 
 export async function UserHero({ userId, year }: TUserHero) {
-	const [standings, leaderPoints, streak, starRecords] = await Promise.all([
+	const [standings, leaderRecord, streak, starRecords] = await Promise.all([
 		getUserStandingRow(year, userId),
-		getLeaderPoints(year),
+		getLeader(year),
 		getUserStreak(userId),
 		getUserStars(userId)
 	])
@@ -24,7 +33,8 @@ export async function UserHero({ userId, year }: TUserHero) {
 	const pos = standings?.pos ?? null
 	const prevPos = standings?.prev_pos ?? null
 	const points = Number(standings?.points ?? 0)
-	const leader = Number(leaderPoints ?? points)
+	const leader = Number(leaderRecord?.points ?? points)
+	const leaderUserId = leaderRecord?.userId ?? null
 	const medals = {
 		gold: Number(standings?.medal_1 ?? 0),
 		silver: Number(standings?.medal_2 ?? 0),
@@ -90,9 +100,19 @@ export async function UserHero({ userId, year }: TUserHero) {
 
 							<span className="tracking-wide uppercase">
 								<span className="text-brand-red">{gap} pts</span>{' '}
-								<span className="text-muted-foreground text-xs">
-									behind leader
-								</span>
+								{leaderUserId != null && leaderUserId !== userId ? (
+									<Link
+										className="text-muted-foreground inline-flex items-center text-xs hover:underline"
+										href={`/users/${leaderUserId}${year !== 'all' ? `?year=${year}` : ''}`}
+									>
+										behind leader
+										<ChevronRight className="text-brand-red" size={16} />
+									</Link>
+								) : (
+									<span className="text-muted-foreground text-xs">
+										behind leader
+									</span>
+								)}
 							</span>
 						</div>
 
@@ -118,30 +138,40 @@ export async function UserHero({ userId, year }: TUserHero) {
 					</div>
 				)}
 
-				{/* Stars */}
-				{starRecords.length > 0 && (
-					<div className="flex justify-center gap-6 p-4">
-						{starRecords.map(({ year: starYear, type }) => {
-							const color = getMedalColorHex(type)
-							const label =
-								type === 1 ? 'Winner' : type === 2 ? 'Second' : 'Third'
-							return (
-								<div
-									key={starYear}
-									className="flex flex-col items-center gap-0.5"
-								>
-									<div className="flex items-center gap-1">
-										<Trophy size={14} stroke={color} fill="none" />
-										<span className="leading-none font-black">{label}</span>
+				{/* Trophy collection */}
+				<div className="flex flex-wrap items-start gap-x-6 gap-y-3 p-4">
+					<span className="text-muted-foreground shrink-0 text-xs font-black tracking-wide uppercase">
+						Trophy collection
+					</span>
+
+					{starRecords.length > 0 ? (
+						<div className="flex flex-1 justify-end gap-4">
+							{starRecords.map(({ year: starYear, type }) => {
+								const color = getMedalColorHex(type)
+								const label =
+									type === 1 ? 'Winner' : type === 2 ? 'Second' : 'Third'
+
+								return (
+									<div key={starYear} className="flex items-center gap-2">
+										<Trophy size={30} stroke={color} />
+
+										<div className="flex flex-col leading-none">
+											<span className="text-sm font-black">{label}</span>
+											<span className="text-muted-foreground text-xs">
+												{starYear}
+											</span>
+										</div>
 									</div>
-									<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
-										{starYear}
-									</span>
-								</div>
-							)
-						})}
-					</div>
-				)}
+								)
+							})}
+						</div>
+					) : (
+						<ShieldOff
+							size={15}
+							className="text-muted-foreground ml-auto opacity-50"
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	)

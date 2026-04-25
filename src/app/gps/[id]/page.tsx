@@ -9,10 +9,7 @@ import {
 	getGpRidersResults,
 	getGpUsersResults
 } from './data'
-import {
-	GpRidersPreviewTable,
-	GpRidersResultsTable
-} from './RidersResultsTable'
+import { GpRidersPreviewTable, GpRidersResultsTable } from './RidersTables'
 import { GpUsersResultsTable } from './UsersResultsTable'
 
 type TGpPage = {
@@ -33,13 +30,11 @@ export default async function GpPage({ params }: TGpPage) {
 		macroStage !== EMacroStage.Before
 			? getGpRidersResults(gp.id, viewerId)
 			: Promise.resolve([]),
-		macroStage !== EMacroStage.Before
-			? getGpUsersResults(gp.id)
-			: Promise.resolve([])
+		getGpUsersResults(gp.id)
 	])
 
 	const ridersPreview =
-		ridersResults.length === 0
+		ridersResults.length <= 0
 			? await getGpRidersPreview(gp.id, gp.wild_card_id, viewerId)
 			: []
 

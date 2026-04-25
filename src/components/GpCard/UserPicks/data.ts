@@ -1,15 +1,23 @@
+import { unstable_cache } from 'next/cache'
 import { sql } from 'kysely'
 
 import type { TRider } from '@/components/RiderTile'
+import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
+
+export const getGpRiders = unstable_cache(
+	(gpId: number) => _getGpRiders(gpId),
+	['gp-riders'],
+	{ tags: [cacheTags.gpResults] }
+)
 
 /**
  * Returns the riders for a GP.
  * If riders_results exist for the GP, returns those riders (covers historical/finished GPs).
  * Otherwise falls back to the 15 active seeded riders + wild card.
  */
-export async function getGpRiders(gpId: number): Promise<TRider[]> {
+async function _getGpRiders(gpId: number): Promise<TRider[]> {
 	const gp = await db
 		.selectFrom('gps')
 		.select('wild_card_id')
@@ -121,8 +129,14 @@ export type TUserPick = {
 	points: number | null
 }
 
+export const getUserPicksWithResults = unstable_cache(
+	(gpId: number, userId: number) => _getUserPicksWithResults(gpId, userId),
+	['user-picks-with-results'],
+	{ tags: [cacheTags.picks, cacheTags.gpResults] }
+)
+
 /** Returns a user's 3 picked riders with full details and results. */
-export async function getUserPicksWithResults(
+async function _getUserPicksWithResults(
 	gpId: number,
 	userId: number
 ): Promise<TUserPick[]> {
@@ -220,8 +234,14 @@ export async function getUserPicksWithResults(
 	)
 }
 
+export const getUserPicks = unstable_cache(
+	(gpId: number, userId: number) => _getUserPicks(gpId, userId),
+	['user-picks'],
+	{ tags: [cacheTags.picks] }
+)
+
 /** Returns the existing picks for a user/GP pair as a tuple, or null if none. */
-export async function getUserPicks(
+async function _getUserPicks(
 	gpId: number,
 	userId: number
 ): Promise<[number, number, number] | null> {

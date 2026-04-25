@@ -2,28 +2,29 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
+import { Flag } from '@/components/Flag'
 import { SegmentedControl } from '@/components/SegmentedControl'
 
-type TView = 'players' | 'riders'
+type TLang = 'sv' | 'en'
 
-export function StandingsToggle({ view }: { view: TView }) {
+export function LangToggle({ lang }: { lang: TLang }) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 
-	function setView(next: TView) {
+	function setLang(next: TLang) {
 		const params = new URLSearchParams(searchParams.toString())
-		params.set('view', next)
+		params.set('lang', next)
 		router.push(`?${params.toString()}`)
 	}
 
 	return (
 		<SegmentedControl
 			options={[
-				{ value: 'players', label: 'Players' },
-				{ value: 'riders', label: 'Riders' }
+				{ value: 'sv', label: <Flag countryCode="SE" /> },
+				{ value: 'en', label: <Flag countryCode="GB" /> }
 			]}
-			value={view}
-			onChange={setView}
+			value={lang}
+			onChange={setLang}
 		/>
 	)
 }

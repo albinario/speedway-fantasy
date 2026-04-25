@@ -1,8 +1,17 @@
+import { unstable_cache } from 'next/cache'
+
+import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
+export const getUserGpRow = unstable_cache(
+	(gpId: number, viewerId: number) => _getUserGpRow(gpId, viewerId),
+	['user-gp-row'],
+	{ tags: [cacheTags.gpResults] }
+)
+
 /** Returns the viewer's result row for a GP, including picks and position. */
-export function getUserGpRow(gpId: number, viewerId: number) {
+function _getUserGpRow(gpId: number, viewerId: number) {
 	return dataFetch(
 		() =>
 			db

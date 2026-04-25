@@ -40,7 +40,7 @@ function buildColumns({
 			id: 'pos',
 			header: '',
 			enableSorting: false,
-			cell: ({ row }) => <PosBadge pos={row.original.pos} />
+			cell: ({ row }) => row.original.pos != null ? <PosBadge pos={row.original.pos} /> : null
 		},
 		{
 			id: 'avatar',

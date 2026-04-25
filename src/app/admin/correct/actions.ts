@@ -1,6 +1,8 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { updateTag } from 'next/cache'
+
+import { cacheTags } from '@/lib/cache-tags'
 
 import { sql } from 'kysely'
 
@@ -122,9 +124,9 @@ export async function correctResultAction(
 		WHERE users_standings.id = ranking.id
 	`.execute(db)
 
-	revalidatePath('/')
-	revalidatePath('/gps/[id]', 'page')
-	revalidatePath('/standings')
+	updateTag(cacheTags.standings)
+	updateTag(cacheTags.ridersStandings)
+	updateTag(cacheTags.gpResults)
 
 	return {}
 }
