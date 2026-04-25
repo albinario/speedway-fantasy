@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { DatabaseZap, FlagIcon, LogIn, UserIcon } from 'lucide-react'
+import { Beer, DatabaseZap, FlagIcon, LogIn, UserIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { logo } from '@/config/brand'
@@ -59,6 +59,12 @@ export async function Header({ viewer }: THeader) {
 						</a>
 					</Button>
 				)}
+
+				<Button asChild size="icon-lg" variant="outline">
+					<Link href="/beer">
+						<Beer />
+					</Link>
+				</Button>
 
 				<HeaderNav viewerId={viewer.db?.id} reminder={viewer.db?.reminder} />
 			</div>
