@@ -1,5 +1,7 @@
 import { unstable_cache } from 'next/cache'
 
+import { sql, type SqlBool } from 'kysely'
+
 import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
@@ -28,6 +30,7 @@ function _getActivityFeed(gpId?: number, limit = 5) {
 				'cities_with_country.name as city_name',
 				'cities_with_country.country_code'
 			])
+			.where(sql<SqlBool>`activity_log.id IN (SELECT MAX(id) FROM activity_log GROUP BY user_id, gp_id, action)`)
 			.orderBy('activity_log.created_at', 'desc')
 			.limit(limit)
 
