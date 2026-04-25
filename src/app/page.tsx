@@ -29,17 +29,22 @@ export default async function Home() {
 	const viewerId = viewer?.db?.id
 	const latestHofYear = latestHallOfFame?.[0]?.year
 	const currentYear = new Date().getFullYear()
-	const latestGpYear = latestGp ? new Date(latestGp.start_date).getFullYear() : null
+	const latestGpYear = latestGp
+		? new Date(latestGp.start_date).getFullYear()
+		: null
 	const showHallOfFame = latestHofYear && latestGpYear !== currentYear
 
 	return (
 		<div className="columns-1 space-y-4 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
 			{showHallOfFame && (
-				<HallOfFameCard
-					entries={latestHallOfFame}
-					viewerId={viewerId}
-					year={latestHofYear}
-				/>
+				<div>
+					<SectionTitle href="/hall-of-fame">Hall of Fame</SectionTitle>
+					<HallOfFameCard
+						entries={latestHallOfFame}
+						viewerId={viewerId}
+						year={latestHofYear}
+					/>
+				</div>
 			)}
 
 			<Suspense fallback={<SectionFallback />}>
