@@ -260,7 +260,7 @@ export const getGpRidersResults = unstable_cache(
 							: eb.lit<number>(0).as('viewer_picked')
 					])
 					.where('riders_results.gp_id', '=', gpId)
-					.where('riders_results.pos', 'is not', null)
+					.orderBy(sql`riders_results.pos asc nulls last`)
 					.orderBy('riders_results.points', 'desc')
 					.execute(),
 			[]
