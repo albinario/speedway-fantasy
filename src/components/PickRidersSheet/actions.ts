@@ -70,13 +70,6 @@ export async function savePicksAction(
 	await db
 		.insertInto('activity_log')
 		.values({ user_id: userId, gp_id: gpId, action })
-		.onConflict((oc) =>
-			action === ActivityAction.PickUpdated
-				? oc
-						.columns(['user_id', 'gp_id', 'action'])
-						.doUpdateSet({ created_at: new Date() })
-				: oc.doNothing()
-		)
 		.execute()
 
 	updateTag(cacheTags.picks)
