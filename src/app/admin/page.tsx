@@ -7,6 +7,7 @@ import { AddCountry } from './AddCountry'
 import { AddGP } from './AddGP'
 import { AddRider } from './AddRider'
 import { AssignWildCard } from './AssignWildCard'
+import { RevalidateAll } from './RevalidateAll'
 import {
 	getCities,
 	getCountries,
@@ -30,6 +31,7 @@ const AdminPage = auth0.withPageAuthRequired(
 				<AddRider countries={countries} />
 				<AddCity countries={countries} />
 				<AddCountry />
+				<RevalidateAll />
 			</div>
 		)
 	},
