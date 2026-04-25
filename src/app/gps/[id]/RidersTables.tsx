@@ -33,13 +33,15 @@ export function GpRidersResultsTable({ data }: TGpRidersResultsTable) {
 
 type TGpRidersPreviewTable = {
 	data: Awaited<ReturnType<typeof getGpRidersPreview>>
+	isBefore?: boolean
 }
 
-export function GpRidersPreviewTable({ data }: TGpRidersPreviewTable) {
+export function GpRidersPreviewTable({ data, isBefore }: TGpRidersPreviewTable) {
 	return (
 		<div>
 			<SectionTitle>Riders</SectionTitle>
 			<RidersTable
+				hidePicked={isBefore}
 				data={data.map((r, i) => ({
 					riderId: r.rider_id,
 					name: r.name,

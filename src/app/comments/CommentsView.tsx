@@ -9,6 +9,7 @@ import { CornerDownLeft, Send, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { UserAvatar } from '@/components/UserAvatar'
+import { UserName } from '@/components/UserName'
 import { cn } from '@/lib/utils'
 
 import { postCommentAction } from './actions'
@@ -16,13 +17,14 @@ import { postCommentAction } from './actions'
 type CommentRow = {
 	id: number
 	comment: string
-	created_at: string
+	created_at: Date | string
 	reply_to_id: number | null
 	user_id: number
 	gp_id: number | null
 	first_name: string | null
 	last_name: string | null
-	gp_round: number | null
+	stars: number[] | null
+	gp_start_date: Date | string | null
 	city_name: string | null
 	country_code: string | null
 }
@@ -60,13 +62,15 @@ function countryFlag(code: string | null): string {
 		.join('')
 }
 
-function formatTime(iso: string): string {
+function formatTime(iso: Date | string): string {
 	const d = new Date(iso)
 	const now = new Date()
-	const sameDay = d.toDateString() === now.toDateString()
-	return sameDay
-		? d.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
-		: d.toLocaleDateString('sv-SE', { month: 'short', day: 'numeric' })
+	if (d.toDateString() === now.toDateString()) {
+		return d.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+	}
+	const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
+	if (d.getFullYear() !== now.getFullYear()) options.year = 'numeric'
+	return d.toLocaleDateString('sv-SE', options)
 }
 
 function displayName(first: string | null, last: string | null): string {
@@ -74,25 +78,28 @@ function displayName(first: string | null, last: string | null): string {
 }
 
 type GPBadgeProps = {
-	round: number
 	cityName: string
 	countryCode: string | null
+	startDate: Date | string
 }
 
-function GPBadge({ round, cityName, countryCode }: GPBadgeProps) {
+function GPBadge({ cityName, countryCode, startDate }: GPBadgeProps) {
+	const year = new Date(startDate).getFullYear()
+	const currentYear = new Date().getFullYear()
 	return (
 		<span className="border-border bg-muted inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs font-bold tracking-wide uppercase">
-			{countryFlag(countryCode)} R{round} · {cityName}
+			{countryFlag(countryCode)} {cityName}
+			{year !== currentYear ? ` ${year}` : ''}
 		</span>
 	)
 }
 
 type ReplyBubbleProps = {
 	reply: CommentRow
+	viewerId: number | undefined
 }
 
-function ReplyBubble({ reply }: ReplyBubbleProps) {
-	const name = displayName(reply.first_name, reply.last_name)
+function ReplyBubble({ reply, viewerId }: ReplyBubbleProps) {
 	return (
 		<div className="flex gap-2">
 			<UserAvatar
@@ -102,7 +109,14 @@ function ReplyBubble({ reply }: ReplyBubbleProps) {
 			/>
 			<div className="min-w-0 flex-1">
 				<div className="mb-1 flex items-baseline gap-2">
-					<span className="text-xs font-bold">{name}</span>
+					<UserName
+						firstName={reply.first_name}
+						lastName={reply.last_name}
+						userId={reply.user_id}
+						stars={reply.stars}
+						isViewer={reply.user_id === viewerId}
+						className="text-xs font-bold"
+					/>
 					<span className="text-muted-foreground ml-auto text-xs">
 						{formatTime(reply.created_at)}
 					</span>
@@ -133,12 +147,19 @@ function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
 			<div className="min-w-0 flex-1">
 				<div className="mb-1 flex items-center justify-between gap-2">
 					<div className="flex min-w-0 flex-wrap items-center gap-1.5">
-						<span className="text-sm leading-none font-bold">{name}</span>
-						{comment.gp_round != null && comment.city_name != null && (
+						<UserName
+							firstName={comment.first_name}
+							lastName={comment.last_name}
+							userId={comment.user_id}
+							stars={comment.stars}
+							isViewer={comment.user_id === viewerId}
+							className="text-sm leading-none font-bold"
+						/>
+						{comment.gp_start_date != null && comment.city_name != null && (
 							<GPBadge
-								round={comment.gp_round}
 								cityName={comment.city_name}
 								countryCode={comment.country_code}
+								startDate={comment.gp_start_date}
 							/>
 						)}
 					</div>
@@ -163,7 +184,7 @@ function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
 				{comment.replies.length > 0 && (
 					<div className="border-border mt-3 ml-2 space-y-3 border-l-2 pl-3">
 						{comment.replies.map((reply) => (
-							<ReplyBubble key={reply.id} reply={reply} />
+							<ReplyBubble key={reply.id} reply={reply} viewerId={viewerId} />
 						))}
 					</div>
 				)}
@@ -211,17 +232,8 @@ export function CommentsView({ comments, viewerId }: Props) {
 	}
 
 	return (
-		<>
-			<div className="flex items-center justify-between px-4 py-3">
-				<h4 className="text-xs font-black tracking-widest uppercase">
-					Comments
-				</h4>
-				<span className="text-muted-foreground text-xs tracking-widest uppercase">
-					Group Chat
-				</span>
-			</div>
-
-			<div className="space-y-5 px-4 pb-10">
+		<div className="mx-auto max-w-2xl">
+			<div className="space-y-5 pb-10">
 				{threaded.map((comment) => (
 					<CommentBubble
 						key={comment.id}
@@ -235,50 +247,54 @@ export function CommentsView({ comments, viewerId }: Props) {
 
 			{viewerId != null ? (
 				<div className="border-border bg-background fixed right-0 bottom-[70px] left-0 z-10 border-t px-4 py-3">
-					{replyingTo && (
-						<div className="text-muted-foreground mb-2 flex items-center justify-between text-xs">
-							<span className="flex items-center gap-1">
-								<CornerDownLeft size={11} />
-								Replying to {replyingTo.name}
-							</span>
+					<div className="mx-auto max-w-2xl">
+						{replyingTo && (
+							<div className="text-muted-foreground mb-2 flex items-center justify-between text-xs">
+								<span className="flex items-center gap-1">
+									<CornerDownLeft size={11} />
+									Replying to {replyingTo.name}
+								</span>
+								<Button
+									variant="ghost"
+									size="icon-xs"
+									onClick={() => setReplyingTo(null)}
+								>
+									<X />
+								</Button>
+							</div>
+						)}
+						<div className="flex items-center gap-2">
+							<Textarea
+								ref={inputRef}
+								value={message}
+								onChange={(e) => setMessage(e.target.value)}
+								onKeyDown={handleKeyDown}
+								placeholder={
+									replyingTo
+										? `Reply to ${replyingTo.name}…`
+										: 'Write a message…'
+								}
+								disabled={isPending}
+								rows={1}
+								className="flex-1 resize-none"
+							/>
 							<Button
-								variant="ghost"
-								size="icon-xs"
-								onClick={() => setReplyingTo(null)}
+								size="icon-lg"
+								onClick={handleSubmit}
+								disabled={!canSend || isPending}
+								className={cn(
+									canSend && !isPending
+										? 'bg-brand-red hover:bg-brand-red/90 border-transparent text-white'
+										: ''
+								)}
+								variant="outline"
 							>
-								<X />
+								<Send />
 							</Button>
 						</div>
-					)}
-					<div className="flex items-center gap-2">
-						<Textarea
-							ref={inputRef}
-							value={message}
-							onChange={(e) => setMessage(e.target.value)}
-							onKeyDown={handleKeyDown}
-							placeholder={
-								replyingTo ? `Reply to ${replyingTo.name}…` : 'Write a message…'
-							}
-							disabled={isPending}
-							rows={1}
-							className="flex-1 resize-none"
-						/>
-						<Button
-							size="icon-lg"
-							onClick={handleSubmit}
-							disabled={!canSend || isPending}
-							className={cn(
-								canSend && !isPending
-									? 'bg-brand-red hover:bg-brand-red/90 border-transparent text-white'
-									: ''
-							)}
-							variant="outline"
-						>
-							<Send />
-						</Button>
 					</div>
 				</div>
 			) : null}
-		</>
+		</div>
 	)
 }

@@ -29,18 +29,21 @@ export type TRiderRow = {
 type TRidersTable = {
 	data: TRiderRow[]
 	condensedMedals?: boolean
+	hidePicked?: boolean
 }
 
 function buildColumns({
 	condensedMedals,
-	showGps
+	showGps,
+	hidePicked
 }: Omit<TRidersTable, 'data'> & { showGps: boolean }): ColumnDef<TRiderRow>[] {
 	return [
 		{
 			id: 'pos',
 			header: '',
 			enableSorting: false,
-			cell: ({ row }) => row.original.pos != null ? <PosBadge pos={row.original.pos} /> : null
+			cell: ({ row }) =>
+				row.original.pos != null ? <PosBadge pos={row.original.pos} /> : null
 		},
 		{
 			id: 'avatar',
@@ -123,19 +126,28 @@ function buildColumns({
 					} satisfies ColumnDef<TRiderRow>
 				]
 			: []),
-		{
-			id: 'timesPicked',
-			header: () => 'Picked',
-			accessorKey: 'timesPicked',
-			cell: ({ getValue }: { getValue: () => unknown }) => getValue() as number,
-			meta: { className: 'hidden px-1 text-center sm:table-cell' }
-		}
+		...(!hidePicked
+			? [
+					{
+						id: 'timesPicked',
+						header: () => 'Picked',
+						accessorKey: 'timesPicked',
+						cell: ({ getValue }: { getValue: () => unknown }) =>
+							getValue() as number,
+						meta: { className: 'hidden px-1 text-center sm:table-cell' }
+					} satisfies ColumnDef<TRiderRow>
+				]
+			: [])
 	]
 }
 
-export function RidersTable({ data, condensedMedals }: TRidersTable) {
+export function RidersTable({
+	data,
+	condensedMedals,
+	hidePicked
+}: TRidersTable) {
 	const showGps = data.some((r) => r.gps != null)
-	const columns = buildColumns({ condensedMedals, showGps })
+	const columns = buildColumns({ condensedMedals, showGps, hidePicked })
 
 	return (
 		<Card>
