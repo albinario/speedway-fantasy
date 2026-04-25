@@ -40,6 +40,7 @@ async function _getUserStandingRow(year: number | TParamValues, userId: number) 
 						.select(sql<number>`count(*)`.as('c'))
 						.whereRef('users_results.user_id', '=', 'users_standings.user_id')
 						.where(sql`EXTRACT(YEAR FROM gps.start_date)`, '=', year)
+						.where('users_results.heats', '>', 0)
 						.as('gps')
 				])
 				.where('users_standings.year', '=', year)
@@ -67,6 +68,7 @@ async function _getUserStandingRow(year: number | TParamValues, userId: number) 
 					eb.selectFrom('users_results')
 						.select(sql<number>`count(*)`.as('c'))
 						.whereRef('users_results.user_id', '=', 'users_standings.user_id')
+						.where('users_results.heats', '>', 0)
 						.as('gps'),
 					sql<number | null>`null`.as('pos'),
 					sql<number | null>`null`.as('prev_pos'),
@@ -119,6 +121,7 @@ function _getUsersStandings(year: number | TParamValues, limit?: number) {
 						.select(sql<number>`count(*)`.as('c'))
 						.whereRef('users_results.user_id', '=', 'users_standings.user_id')
 						.where(sql`EXTRACT(YEAR FROM gps.start_date)`, '=', year)
+						.where('users_results.heats', '>', 0)
 						.as('gps')
 				])
 				.where('users_standings.year', '=', year)
@@ -154,6 +157,7 @@ function _getUsersStandings(year: number | TParamValues, limit?: number) {
 				eb.selectFrom('users_results')
 					.select(sql<number>`count(*)`.as('c'))
 					.whereRef('users_results.user_id', '=', 'users_standings.user_id')
+					.where('users_results.heats', '>', 0)
 					.as('gps'),
 				sql<number | null>`null`.as('pos'),
 				sql<number | null>`null`.as('prev_pos'),
