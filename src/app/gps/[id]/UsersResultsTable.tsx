@@ -44,7 +44,7 @@ function makeColumns(
 			cell: ({ row }) => {
 				const { user_id, first_name, last_name, stars } = row.original
 
-				const picks = sortedPicks(row.original)
+				const picks = isBefore ? [] : sortedPicks(row.original)
 
 				return (
 					<div className="flex items-center gap-2">

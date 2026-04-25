@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+
 import { sql } from 'kysely'
 
 import { cacheTags } from '@/lib/cache-tags'
@@ -65,6 +66,7 @@ export const getGpTopRiders = unstable_cache(
 					])
 					.where('riders_results.gp_id', '=', gpId)
 					.orderBy(sql`riders_results.pos asc nulls last`)
+					.orderBy(sql`riders_results.points desc`)
 					.limit(limit)
 					.execute(),
 			[]
@@ -348,7 +350,10 @@ export const getGpRidersPreview = unstable_cache(
 					'riders_results.rider_id',
 					eb.fn.sum<number>('riders_results.points').as('points'),
 					eb.fn.sum<number>('riders_results.heats').as('heats'),
-					eb.fn.count<number>('riders_results.gp_id').as('gps'),
+					eb.fn
+						.count<number>('riders_results.gp_id')
+						.filterWhere('riders_results.heats', '>', 0)
+						.as('gps'),
 					sql<
 						number[]
 					>`ARRAY_AGG(riders_results.medal ORDER BY riders_results.medal) FILTER (WHERE riders_results.medal IS NOT NULL)`.as(
@@ -396,6 +401,7 @@ export const getGpRidersPreview = unstable_cache(
 						: eb('riders.active', 'is not', null)
 				)
 				.orderBy(sql`COALESCE(ss.points, 0)`, 'desc')
+				.orderBy('riders.number', 'asc')
 				.execute()
 		}, []),
 	['gp-riders-preview'],

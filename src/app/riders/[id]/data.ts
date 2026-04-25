@@ -23,7 +23,10 @@ export function getRiderStats(riderId: number, year: number | TParamValues) {
 			.innerJoin('gps', 'gps.id', 'riders_results.gp_id')
 			.select((eb) => [
 				eb.fn.sum<number>('riders_results.points').as('points'),
-				eb.fn.count<number>('riders_results.gp_id').as('gps'),
+				eb.fn
+					.count<number>('riders_results.gp_id')
+					.filterWhere('riders_results.heats', '>', 0)
+					.as('gps'),
 				eb.fn.sum<number>('riders_results.heats').as('heats'),
 				eb.fn
 					.count<number>('riders_results.id')

@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+
 import { sql } from 'kysely'
 
 import type { TRider } from '@/components/RiderTile'
@@ -66,15 +67,13 @@ export async function getActiveRidersForGp(gpId: number): Promise<TRider[]> {
 }
 
 export const getRidersStandings = unstable_cache(
-	(year: number | TParamValues, limit?: number) => _getRidersStandings(year, limit),
+	(year: number | TParamValues, limit?: number) =>
+		_getRidersStandings(year, limit),
 	['riders-standings'],
 	{ tags: [cacheTags.ridersStandings] }
 )
 
-function _getRidersStandings(
-	year: number | TParamValues,
-	limit?: number
-) {
+function _getRidersStandings(year: number | TParamValues, limit?: number) {
 	return dataFetch(() => {
 		if (year !== paramValues.all) {
 			const timesPickedYearScoped = sql<number>`(
@@ -104,7 +103,10 @@ function _getRidersStandings(
 					'riders_with_country.number',
 					'riders_with_country.country_code',
 					eb.fn.sum<number>('riders_results.points').as('total_points'),
-					eb.fn.count<number>('riders_results.gp_id').as('gps'),
+					eb.fn
+						.count<number>('riders_results.gp_id')
+						.filterWhere('riders_results.heats', '>', 0)
+						.as('gps'),
 					eb.fn.sum<number>('riders_results.heats').as('heats'),
 					sql<
 						number[]
@@ -154,7 +156,10 @@ function _getRidersStandings(
 				'riders_with_country.number',
 				'riders_with_country.country_code',
 				eb.fn.sum<number>('riders_results.points').as('total_points'),
-				eb.fn.count<number>('riders_results.gp_id').as('gps'),
+				eb.fn
+					.count<number>('riders_results.gp_id')
+					.filterWhere('riders_results.heats', '>', 0)
+					.as('gps'),
 				eb.fn.sum<number>('riders_results.heats').as('heats'),
 				sql<
 					number[]

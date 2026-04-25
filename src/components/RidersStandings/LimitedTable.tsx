@@ -18,7 +18,7 @@ export function RidersLimitedTable({
 }) {
 	return (
 		<div>
-			<SectionTitle href="/riders">
+			<SectionTitle href="/standings?view=riders">
 				Top <span className="text-green-400">{limit}</span> riders
 			</SectionTitle>
 
