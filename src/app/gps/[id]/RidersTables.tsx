@@ -36,7 +36,10 @@ type TGpRidersPreviewTable = {
 	isBefore?: boolean
 }
 
-export function GpRidersPreviewTable({ data, isBefore }: TGpRidersPreviewTable) {
+export function GpRidersPreviewTable({
+	data,
+	isBefore
+}: TGpRidersPreviewTable) {
 	return (
 		<div>
 			<SectionTitle>Riders</SectionTitle>
@@ -52,7 +55,7 @@ export function GpRidersPreviewTable({ data, isBefore }: TGpRidersPreviewTable) 
 					heats: Number(r.heats),
 					gps: Number(r.gps),
 					pickedByViewer: (r.viewer_picked ?? 0) > 0,
-					pos: i + 1
+					pos: Number(r.gps) > 0 ? i + 1 : null
 				}))}
 			/>
 		</div>

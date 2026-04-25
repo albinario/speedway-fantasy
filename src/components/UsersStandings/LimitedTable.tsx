@@ -16,7 +16,9 @@ function StandingRow({ row, viewerId }: { row: TRow; viewerId?: number }) {
 		<div
 			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${isViewer ? 'bg-orange-400/5' : ''}`}
 		>
-			<PosBadge pos={row.pos} prevPos={row.prev_pos} size="lg" />
+			{row.pos != null && (
+				<PosBadge pos={row.pos} prevPos={row.prev_pos} size="lg" />
+			)}
 
 			<div className="flex min-w-0 items-center gap-2">
 				<UserAvatar
@@ -42,7 +44,7 @@ function StandingRow({ row, viewerId }: { row: TRow; viewerId?: number }) {
 				</div>
 			</div>
 
-			<span className="text-lg">{row.points}</span>
+			<span className="justify-self-end text-lg">{row.points}</span>
 		</div>
 	)
 }
