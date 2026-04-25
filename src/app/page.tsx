@@ -32,7 +32,8 @@ export default async function Home() {
 	const latestGpYear = latestGp
 		? new Date(latestGp.start_date).getFullYear()
 		: null
-	const showHallOfFame = latestHofYear && latestGpYear !== currentYear
+	// const showHallOfFame = latestHofYear && latestGpYear !== currentYear
+	const showHallOfFame = false
 
 	return (
 		<div className="columns-1 space-y-4 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">

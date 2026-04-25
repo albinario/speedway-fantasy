@@ -138,7 +138,7 @@ type CommentBubbleProps = {
 function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
 	const name = displayName(comment.first_name, comment.last_name)
 	return (
-		<div className="flex gap-3">
+		<div className="flex gap-3 px-2">
 			<UserAvatar
 				firstName={comment.first_name}
 				lastName={comment.last_name}
@@ -170,6 +170,13 @@ function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
 				<div className="border-border bg-card rounded-lg rounded-tl-none border px-3 py-2.5 text-sm leading-relaxed">
 					{comment.comment}
 				</div>
+				{comment.replies.length > 0 && (
+					<div className="border-border mt-3 ml-2 space-y-3 border-l-2 pl-3">
+						{comment.replies.map((reply) => (
+							<ReplyBubble key={reply.id} reply={reply} viewerId={viewerId} />
+						))}
+					</div>
+				)}
 				{viewerId != null && (
 					<Button
 						variant="ghost"
@@ -180,13 +187,6 @@ function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
 						<CornerDownLeft />
 						Reply
 					</Button>
-				)}
-				{comment.replies.length > 0 && (
-					<div className="border-border mt-3 ml-2 space-y-3 border-l-2 pl-3">
-						{comment.replies.map((reply) => (
-							<ReplyBubble key={reply.id} reply={reply} viewerId={viewerId} />
-						))}
-					</div>
 				)}
 			</div>
 		</div>
@@ -199,14 +199,17 @@ export function CommentsView({ comments, viewerId }: Props) {
 	const [isPending, startTransition] = useTransition()
 	const bottomRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLTextAreaElement>(null)
+	const isInitial = useRef(true)
 	const router = useRouter()
 
 	const threaded = threadComments(comments).slice(-10)
 	const canSend = message.trim().length > 0
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'instant' as ScrollBehavior })
-	}, [])
+		const behavior = isInitial.current ? ('instant' as ScrollBehavior) : 'smooth'
+		isInitial.current = false
+		bottomRef.current?.scrollIntoView({ behavior })
+	}, [comments])
 
 	function handleReply(target: ReplyTarget) {
 		setReplyingTo(target)

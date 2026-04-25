@@ -43,7 +43,9 @@ export function NavFooter({ viewerId }: TNavFooter) {
 									)}
 								>
 									{item.icon && <item.icon size={18} />}
-									{item.label}
+									<span className="w-full truncate text-center">
+										{item.label}
+									</span>
 								</Link>
 							</li>
 						)
