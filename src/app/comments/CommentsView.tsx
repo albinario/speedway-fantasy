@@ -1,10 +1,17 @@
 'use client'
 
-import { useEffect, useRef, useState, useTransition } from 'react'
+import {
+	useEffect,
+	useMemo,
+	useOptimistic,
+	useRef,
+	useState,
+	useTransition
+} from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { CornerDownLeft, LogIn, Send, X } from 'lucide-react'
+import { CornerDownLeft, LogIn, Send, SmilePlus, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,7 +19,12 @@ import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
 import { cn } from '@/lib/utils'
 
-import { postCommentAction } from './actions'
+import {
+	markCommentsReadAction,
+	postCommentAction,
+	toggleReactionAction
+} from './actions'
+import { type Reaction, REACTION_EMOJIS } from './constants'
 
 type CommentRow = {
 	id: number
@@ -27,6 +39,7 @@ type CommentRow = {
 	gp_start_date: Date | string | null
 	city_name: string | null
 	country_code: string | null
+	reactions: Reaction[]
 }
 
 type ThreadedComment = CommentRow & { replies: CommentRow[] }
@@ -36,6 +49,7 @@ type ReplyTarget = { id: number; name: string }
 type Props = {
 	comments: CommentRow[]
 	viewerId: number | undefined
+	lastReadAt: Date | null
 }
 
 function threadComments(flat: CommentRow[]): ThreadedComment[] {
@@ -97,9 +111,10 @@ function GPBadge({ cityName, countryCode, startDate }: GPBadgeProps) {
 type ReplyBubbleProps = {
 	reply: CommentRow
 	viewerId: number | undefined
+	onReaction: (commentId: number, emoji: string) => void
 }
 
-function ReplyBubble({ reply, viewerId }: ReplyBubbleProps) {
+function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 	return (
 		<div className="flex gap-2">
 			<UserAvatar
@@ -123,8 +138,65 @@ function ReplyBubble({ reply, viewerId }: ReplyBubbleProps) {
 				</div>
 				<div className="bg-muted/40 rounded-lg rounded-tl-none px-3 py-2 text-sm leading-relaxed">
 					{reply.comment}
+					{(reply.reactions.length > 0 || viewerId != null) && (
+						<div className="mt-2 flex flex-wrap items-center gap-1">
+							{viewerId != null && (
+								<EmojiPicker onSelect={(emoji) => onReaction(reply.id, emoji)} />
+							)}
+							{reply.reactions.map((r) => {
+								const reacted =
+									viewerId != null && r.user_ids.includes(viewerId)
+								return (
+									<button
+										key={r.emoji}
+										onClick={() => onReaction(reply.id, r.emoji)}
+										className={cn(
+											'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
+											reacted
+												? 'bg-brand-red/10 text-brand-red'
+												: 'hover:bg-muted/60'
+										)}
+									>
+										{r.emoji} <span className="tabular-nums">{r.count}</span>
+									</button>
+								)
+							})}
+						</div>
+					)}
 				</div>
 			</div>
+		</div>
+	)
+}
+
+function EmojiPicker({ onSelect }: { onSelect: (emoji: string) => void }) {
+	const [open, setOpen] = useState(false)
+	return (
+		<div className="relative">
+			<Button
+				variant="ghost"
+				size="icon-xs"
+				className="text-muted-foreground"
+				onClick={() => setOpen((o) => !o)}
+			>
+				<SmilePlus />
+			</Button>
+			{open && (
+				<div className="border-border bg-card absolute bottom-full left-0 mb-1 flex gap-1 rounded-lg border shadow-lg">
+					{REACTION_EMOJIS.map((emoji) => (
+						<button
+							key={emoji}
+							className="hover:bg-muted rounded p-1 text-base leading-none transition-colors"
+							onClick={() => {
+								onSelect(emoji)
+								setOpen(false)
+							}}
+						>
+							{emoji}
+						</button>
+					))}
+				</div>
+			)}
 		</div>
 	)
 }
@@ -132,10 +204,18 @@ function ReplyBubble({ reply, viewerId }: ReplyBubbleProps) {
 type CommentBubbleProps = {
 	comment: ThreadedComment
 	onReply: (target: ReplyTarget) => void
+	onReaction: (commentId: number, emoji: string) => void
 	viewerId: number | undefined
+	isUnread: boolean
 }
 
-function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
+function CommentBubble({
+	comment,
+	onReply,
+	onReaction,
+	viewerId,
+	isUnread
+}: CommentBubbleProps) {
 	const name = displayName(comment.first_name, comment.last_name)
 	return (
 		<div className="flex gap-3 px-2">
@@ -167,55 +247,197 @@ function CommentBubble({ comment, onReply, viewerId }: CommentBubbleProps) {
 						{formatTime(comment.created_at)}
 					</span>
 				</div>
-				<div className="border-border bg-card rounded-lg rounded-tl-none border px-3 py-2.5 text-sm leading-relaxed">
+				<div
+					className={cn(
+						'border-border bg-card rounded-lg rounded-tl-none border px-3 py-2.5 text-sm leading-relaxed',
+						isUnread && 'border-emerald-500'
+					)}
+				>
 					{comment.comment}
+					{(comment.reactions.length > 0 || viewerId != null) && (
+						<div className="mt-1 flex flex-wrap items-center gap-1">
+							{viewerId != null && (
+								<EmojiPicker onSelect={(emoji) => onReaction(comment.id, emoji)} />
+							)}
+							{comment.reactions.map((r) => {
+								const reacted =
+									viewerId != null && r.user_ids.includes(viewerId)
+								return (
+									<button
+										key={r.emoji}
+										onClick={() => onReaction(comment.id, r.emoji)}
+										className={cn(
+											'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
+											reacted
+												? 'bg-brand-red/10 text-brand-red'
+												: 'hover:bg-muted/60'
+										)}
+									>
+										{r.emoji} <span className="tabular-nums">{r.count}</span>
+									</button>
+								)
+							})}
+						</div>
+					)}
 				</div>
 				{comment.replies.length > 0 && (
 					<div className="border-border mt-3 ml-2 space-y-3 border-l-2 pl-3">
 						{comment.replies.map((reply) => (
-							<ReplyBubble key={reply.id} reply={reply} viewerId={viewerId} />
+							<ReplyBubble
+								key={reply.id}
+								reply={reply}
+								viewerId={viewerId}
+								onReaction={onReaction}
+							/>
 						))}
 					</div>
 				)}
-				{viewerId != null && (
-					<Button
-						variant="ghost"
-						size="xs"
-						onClick={() => onReply({ id: comment.id, name })}
-						className="text-muted-foreground mt-1"
-					>
-						<CornerDownLeft />
-						Reply
-					</Button>
-				)}
+				<div className="mt-1 flex items-center gap-0.5">
+					{viewerId != null && (
+						<Button
+							variant="ghost"
+							size="xs"
+							onClick={() => onReply({ id: comment.id, name })}
+							className="text-muted-foreground"
+						>
+							<CornerDownLeft />
+							Reply
+						</Button>
+					)}
+				</div>
 			</div>
 		</div>
 	)
 }
 
-export function CommentsView({ comments, viewerId }: Props) {
+const INITIAL_COUNT = 10
+const LOAD_MORE = 10
+
+type OptimisticAction = {
+	commentId: number
+	emoji: string
+	userId: number
+	toggle: 'add' | 'remove'
+}
+
+function applyOptimisticReaction(
+	comments: CommentRow[],
+	{ commentId, emoji, userId, toggle }: OptimisticAction
+): CommentRow[] {
+	return comments.map((c) => {
+		if (c.id !== commentId) return c
+		const existing = c.reactions.find((r) => r.emoji === emoji)
+		let reactions: Reaction[]
+		if (toggle === 'add') {
+			reactions = existing
+				? c.reactions.map((r) =>
+						r.emoji === emoji
+							? { ...r, count: r.count + 1, user_ids: [...r.user_ids, userId] }
+							: r
+					)
+				: [...c.reactions, { emoji, count: 1, user_ids: [userId] }]
+		} else {
+			reactions = c.reactions
+				.map((r) =>
+					r.emoji === emoji
+						? {
+								...r,
+								count: r.count - 1,
+								user_ids: r.user_ids.filter((id) => id !== userId)
+							}
+						: r
+				)
+				.filter((r) => r.count > 0)
+		}
+		return { ...c, reactions }
+	})
+}
+
+export function CommentsView({
+	comments,
+	viewerId,
+	lastReadAt: lastReadAtProp
+}: Props) {
+	const [lastReadAt] = useState(lastReadAtProp)
 	const [message, setMessage] = useState('')
 	const [replyingTo, setReplyingTo] = useState<ReplyTarget | null>(null)
 	const [isPending, startTransition] = useTransition()
+	const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT)
 	const bottomRef = useRef<HTMLDivElement>(null)
+	const topSentinelRef = useRef<HTMLDivElement>(null)
 	const inputRef = useRef<HTMLTextAreaElement>(null)
-	const isInitial = useRef(true)
+	const pendingScroll = useRef<ScrollBehavior | null>(null)
+	const isLoadingMore = useRef(false)
 	const router = useRouter()
 
-	const threaded = threadComments(comments).slice(-10)
+	const [optimisticComments, addOptimistic] = useOptimistic(
+		comments,
+		applyOptimisticReaction
+	)
+
+	const threaded = useMemo(
+		() => threadComments(optimisticComments),
+		[optimisticComments]
+	)
+	const visible = threaded.slice(-visibleCount)
+	const hasMore = visibleCount < threaded.length
 	const canSend = message.trim().length > 0
 
+	// 1. Initial scroll to bottom + mark as read
 	useEffect(() => {
-		const behavior = isInitial.current
-			? ('instant' as ScrollBehavior)
-			: 'smooth'
-		isInitial.current = false
+		bottomRef.current?.scrollIntoView({ behavior: 'instant' })
+		if (viewerId) {
+			markCommentsReadAction()
+		}
+		return () => {
+			router.refresh()
+		}
+	}, [])
+
+	// 2. Scroll after posting — only when explicitly flagged
+	useEffect(() => {
+		if (!pendingScroll.current) return
+		const behavior = pendingScroll.current
+		pendingScroll.current = null
 		bottomRef.current?.scrollIntoView({ behavior })
 	}, [comments])
+
+	// 3. Load more when scrolled to top, one batch at a time
+	useEffect(() => {
+		isLoadingMore.current = false
+	}, [visibleCount])
+
+	useEffect(() => {
+		if (!hasMore) return
+		const sentinel = topSentinelRef.current
+		if (!sentinel) return
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (!entry.isIntersecting || isLoadingMore.current) return
+				isLoadingMore.current = true
+				setVisibleCount((c) => Math.min(c + LOAD_MORE, threaded.length))
+			},
+			{ threshold: 1 }
+		)
+		observer.observe(sentinel)
+		return () => observer.disconnect()
+	}, [hasMore, threaded.length])
 
 	function handleReply(target: ReplyTarget) {
 		setReplyingTo(target)
 		inputRef.current?.focus()
+	}
+
+	function handleReaction(commentId: number, emoji: string) {
+		if (!viewerId) return
+		const comment = optimisticComments.find((c) => c.id === commentId)
+		const reaction = comment?.reactions.find((r) => r.emoji === emoji)
+		const toggle = reaction?.user_ids.includes(viewerId) ? 'remove' : 'add'
+		startTransition(async () => {
+			addOptimistic({ commentId, emoji, userId: viewerId, toggle })
+			await toggleReactionAction(commentId, emoji)
+			router.refresh()
+		})
 	}
 
 	function handleSubmit() {
@@ -225,6 +447,7 @@ export function CommentsView({ comments, viewerId }: Props) {
 			await postCommentAction(text, null, replyingTo?.id ?? null)
 			setMessage('')
 			setReplyingTo(null)
+			pendingScroll.current = 'smooth'
 			router.refresh()
 		})
 	}
@@ -239,13 +462,20 @@ export function CommentsView({ comments, viewerId }: Props) {
 	return (
 		<>
 			<div className="mx-auto max-w-2xl">
-				<div className="space-y-5 pb-10">
-					{threaded.map((comment) => (
+				<div className="space-y-5">
+					<div ref={topSentinelRef} />
+					{visible.map((comment) => (
 						<CommentBubble
 							key={comment.id}
 							comment={comment}
 							onReply={handleReply}
+							onReaction={handleReaction}
 							viewerId={viewerId}
+							isUnread={
+								lastReadAt != null &&
+								comment.user_id !== viewerId &&
+								new Date(comment.created_at) > new Date(lastReadAt)
+							}
 						/>
 					))}
 					<div ref={bottomRef} />

@@ -1,3 +1,4 @@
+import { getUnreadCommentsCount } from './data'
 import { NavFooter } from './Nav'
 
 type TFooter = {
@@ -5,5 +6,9 @@ type TFooter = {
 }
 
 export async function Footer({ viewerId }: TFooter) {
-	return <NavFooter viewerId={viewerId} />
+	const unreadComments = viewerId
+		? await getUnreadCommentsCount(viewerId)
+		: 0
+
+	return <NavFooter viewerId={viewerId} unreadComments={unreadComments} />
 }

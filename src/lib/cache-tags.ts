@@ -7,4 +7,6 @@ export const cacheTags = {
 	activity: 'activity',
 	hallOfFame: 'hall-of-fame',
 	comments: 'comments',
+	commentReads: 'comment-reads',
+	reactions: 'reactions',
 } as const
