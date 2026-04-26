@@ -11,5 +11,11 @@ export const metadata: Metadata = metaData
 export default async function CommentsPage() {
 	const [rawComments, viewer] = await Promise.all([getComments(), getViewer()])
 
-	return <CommentsView comments={rawComments} viewerId={viewer.db?.id} />
+	return (
+		<CommentsView
+			comments={rawComments}
+			viewerId={viewer.db?.id}
+			lastReadAt={viewer.db?.comments_last_read_at ?? null}
+		/>
+	)
 }

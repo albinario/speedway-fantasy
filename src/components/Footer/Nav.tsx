@@ -8,9 +8,10 @@ import { cn } from '@/lib/utils'
 
 type TNavFooter = {
 	viewerId?: number
+	unreadComments?: number
 }
 
-export function NavFooter({ viewerId }: TNavFooter) {
+export function NavFooter({ viewerId, unreadComments = 0 }: TNavFooter) {
 	const pathname = usePathname()
 
 	const items = navItems.map((item) => {
@@ -42,7 +43,18 @@ export function NavFooter({ viewerId }: TNavFooter) {
 										isActive ? 'text-brand-red' : 'text-muted-foreground'
 									)}
 								>
-									{item.icon && <item.icon size={18} />}
+									{item.icon && (
+								<span className="relative">
+									<item.icon size={18} />
+									{item.href === '/comments' &&
+										unreadComments > 0 &&
+										!isActive && (
+											<span className="bg-brand-red absolute -top-1 -right-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-0.5 text-[9px] leading-none text-white">
+												{unreadComments > 99 ? '99+' : unreadComments}
+											</span>
+										)}
+								</span>
+							)}
 									<span className="w-full truncate text-center">
 										{item.label}
 									</span>

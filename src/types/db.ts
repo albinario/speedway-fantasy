@@ -39,6 +39,14 @@ export interface CitiesWithCountry {
   time_zone: string | null;
 }
 
+export interface CommentReactions {
+  comment_id: number;
+  created_at: Generated<Timestamp | null>;
+  emoji: string;
+  id: Generated<number>;
+  user_id: number;
+}
+
 export interface Comments {
   comment: string;
   created_at: Generated<Timestamp>;
@@ -102,6 +110,7 @@ export interface RidersWithCountry {
 
 export interface Users {
   auth0_id: string;
+  comments_last_read_at: Timestamp | null;
   created_at: Generated<Timestamp>;
   email: string;
   first_name: string;
@@ -172,6 +181,7 @@ export interface DB {
   activity_log: ActivityLog;
   cities: Cities;
   cities_with_country: CitiesWithCountry;
+  comment_reactions: CommentReactions;
   comments: Comments;
   countries: Countries;
   gp_rounds_per_year: GpRoundsPerYear;

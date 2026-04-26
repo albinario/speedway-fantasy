@@ -1,8 +1,12 @@
 import { unstable_cache } from 'next/cache'
+import { sql } from 'kysely'
 
 import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
+import type { Reaction } from './constants'
+
+export type { Reaction }
 
 export const getComments = unstable_cache(
 	() =>
@@ -27,11 +31,28 @@ export const getComments = unstable_cache(
 						'gps.start_date as gp_start_date',
 						'cities.name as city_name',
 						'countries.code as country_code',
+						sql<Reaction[]>`
+							COALESCE(
+								(
+									SELECT json_agg(r ORDER BY r.count DESC)
+									FROM (
+										SELECT
+											emoji,
+											COUNT(*)::int AS count,
+											array_agg(user_id) AS user_ids
+										FROM comment_reactions
+										WHERE comment_id = comments.id
+										GROUP BY emoji
+									) r
+								),
+								'[]'::json
+							)
+						`.as('reactions'),
 					])
 					.orderBy('comments.created_at', 'asc')
 					.execute(),
 			[]
 		),
 	['comments'],
-	{ tags: [cacheTags.comments] }
+	{ tags: [cacheTags.comments, cacheTags.reactions] }
 )
