@@ -74,6 +74,7 @@ export async function savePicksAction(
 
 	updateTag(cacheTags.picks)
 	updateTag(cacheTags.activity)
+	updateTag(cacheTags.standings)
 
 	return {}
 }

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { CornerDownLeft, Send, X } from 'lucide-react'
+import { CornerDownLeft, LogIn, Send, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -206,7 +206,9 @@ export function CommentsView({ comments, viewerId }: Props) {
 	const canSend = message.trim().length > 0
 
 	useEffect(() => {
-		const behavior = isInitial.current ? ('instant' as ScrollBehavior) : 'smooth'
+		const behavior = isInitial.current
+			? ('instant' as ScrollBehavior)
+			: 'smooth'
 		isInitial.current = false
 		bottomRef.current?.scrollIntoView({ behavior })
 	}, [comments])
@@ -235,69 +237,79 @@ export function CommentsView({ comments, viewerId }: Props) {
 	}
 
 	return (
-		<div className="mx-auto max-w-2xl">
-			<div className="space-y-5 pb-10">
-				{threaded.map((comment) => (
-					<CommentBubble
-						key={comment.id}
-						comment={comment}
-						onReply={handleReply}
-						viewerId={viewerId}
-					/>
-				))}
-				<div ref={bottomRef} />
+		<>
+			<div className="mx-auto max-w-2xl">
+				<div className="space-y-5 pb-10">
+					{threaded.map((comment) => (
+						<CommentBubble
+							key={comment.id}
+							comment={comment}
+							onReply={handleReply}
+							viewerId={viewerId}
+						/>
+					))}
+					<div ref={bottomRef} />
+				</div>
 			</div>
 
-			{viewerId != null ? (
-				<div className="border-border bg-background fixed right-0 bottom-[70px] left-0 z-10 border-t px-4 py-3">
-					<div className="mx-auto max-w-2xl">
-						{replyingTo && (
-							<div className="text-muted-foreground mb-2 flex items-center justify-between text-xs">
-								<span className="flex items-center gap-1">
-									<CornerDownLeft size={11} />
-									Replying to {replyingTo.name}
-								</span>
+			<div className="border-border bg-background sticky bottom-[70px] z-10 border-t px-4 py-3">
+				<div className="mx-auto max-w-2xl">
+					{viewerId != null ? (
+						<>
+							{replyingTo && (
+								<div className="text-muted-foreground mb-2 flex items-center justify-between text-xs">
+									<span className="flex items-center gap-1">
+										<CornerDownLeft size={11} />
+										Replying to {replyingTo.name}
+									</span>
+									<Button
+										variant="ghost"
+										size="icon-xs"
+										onClick={() => setReplyingTo(null)}
+									>
+										<X />
+									</Button>
+								</div>
+							)}
+							<div className="flex items-center gap-2">
+								<Textarea
+									ref={inputRef}
+									value={message}
+									onChange={(e) => setMessage(e.target.value)}
+									onKeyDown={handleKeyDown}
+									placeholder={
+										replyingTo
+											? `Reply to ${replyingTo.name}…`
+											: 'Write a comment…'
+									}
+									disabled={isPending}
+									rows={1}
+									className="flex-1 resize-none"
+								/>
 								<Button
-									variant="ghost"
-									size="icon-xs"
-									onClick={() => setReplyingTo(null)}
+									size="icon-lg"
+									onClick={handleSubmit}
+									disabled={!canSend || isPending}
+									className={cn(
+										canSend && !isPending
+											? 'bg-brand-red hover:bg-brand-red/90 border-transparent text-white'
+											: ''
+									)}
+									variant="outline"
 								>
-									<X />
+									<Send />
 								</Button>
 							</div>
-						)}
-						<div className="flex items-center gap-2">
-							<Textarea
-								ref={inputRef}
-								value={message}
-								onChange={(e) => setMessage(e.target.value)}
-								onKeyDown={handleKeyDown}
-								placeholder={
-									replyingTo
-										? `Reply to ${replyingTo.name}…`
-										: 'Write a message…'
-								}
-								disabled={isPending}
-								rows={1}
-								className="flex-1 resize-none"
-							/>
-							<Button
-								size="icon-lg"
-								onClick={handleSubmit}
-								disabled={!canSend || isPending}
-								className={cn(
-									canSend && !isPending
-										? 'bg-brand-red hover:bg-brand-red/90 border-transparent text-white'
-										: ''
-								)}
-								variant="outline"
-							>
-								<Send />
-							</Button>
-						</div>
-					</div>
+						</>
+					) : (
+						<Button asChild className="w-full" variant="outline">
+							<a href="/auth/login">
+								Sign in to comment <LogIn />
+							</a>
+						</Button>
+					)}
 				</div>
-			) : null}
-		</div>
+			</div>
+		</>
 	)
 }

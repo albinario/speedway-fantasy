@@ -52,24 +52,24 @@ export default async function Home() {
 				<UsersStandings year={yearValues.activeYear} limit={5} />
 			</Suspense>
 
-			{nextGp && (
-				<div>
-					<SectionTitle href={`/gps/${nextGp.id}`} linkLabel="View GP">
-						Next <span className="text-green-400">GP</span>
-					</SectionTitle>
-					<Suspense fallback={<SectionFallback />}>
-						<GpCard gp={nextGp} isUpNext linked />
-					</Suspense>
-				</div>
-			)}
-
 			{latestGp && (
 				<div>
 					<SectionTitle href={`/gps/${latestGp.id}`} linkLabel="View GP">
 						Latest <span className="text-green-400">GP</span>
 					</SectionTitle>
 					<Suspense fallback={<SectionFallback />}>
-						<GpCard gp={latestGp} linked />
+						<GpCard gp={latestGp} linked imageLoading="eager" />
+					</Suspense>
+				</div>
+			)}
+
+			{nextGp && (
+				<div>
+					<SectionTitle href={`/gps/${nextGp.id}`} linkLabel="View GP">
+						Next <span className="text-green-400">GP</span>
+					</SectionTitle>
+					<Suspense fallback={<SectionFallback />}>
+						<GpCard gp={nextGp} isUpNext linked imageLoading="eager" />
 					</Suspense>
 				</div>
 			)}

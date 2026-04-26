@@ -7,12 +7,13 @@ import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
 export const getActivityFeed = unstable_cache(
-	(gpId?: number, limit = 5) => _getActivityFeed(gpId, limit),
+	(gpId?: number, limit = 5, offset = 0) =>
+		_getActivityFeed(gpId, limit, offset),
 	['activity-feed'],
 	{ tags: [cacheTags.activity] }
 )
 
-function _getActivityFeed(gpId?: number, limit = 5) {
+function _getActivityFeed(gpId?: number, limit = 5, offset = 0) {
 	return dataFetch(() => {
 		let query = db
 			.selectFrom('activity_log')
@@ -30,9 +31,12 @@ function _getActivityFeed(gpId?: number, limit = 5) {
 				'cities_with_country.name as city_name',
 				'cities_with_country.country_code'
 			])
-			.where(sql<SqlBool>`activity_log.id IN (SELECT MAX(id) FROM activity_log GROUP BY user_id, gp_id, action)`)
+			.where(
+				sql<SqlBool>`activity_log.id IN (SELECT MAX(id) FROM activity_log GROUP BY user_id, gp_id, action)`
+			)
 			.orderBy('activity_log.created_at', 'desc')
 			.limit(limit)
+			.offset(offset)
 
 		if (gpId !== undefined) {
 			query = query.where('activity_log.gp_id', '=', gpId)

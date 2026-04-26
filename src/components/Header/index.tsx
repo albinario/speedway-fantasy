@@ -60,12 +60,13 @@ export async function Header({ viewer }: THeader) {
 					</Button>
 				)}
 
-				<Button asChild size="icon-lg" variant="outline">
-					<Link href="/beer">
-						<Beer />
-					</Link>
-				</Button>
-
+				{!viewer.isAdmin && (
+					<Button asChild size="icon-lg" variant="outline">
+						<Link href="/beer">
+							<Beer />
+						</Link>
+					</Button>
+				)}
 				<HeaderNav viewerId={viewer.db?.id} reminder={viewer.db?.reminder} />
 			</div>
 		</div>

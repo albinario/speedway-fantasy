@@ -17,6 +17,7 @@ type TGpCard = {
 	linked?: boolean
 	macroStage?: EMacroStage
 	viewerId?: number
+	imageLoading?: 'eager' | 'lazy'
 }
 
 export async function GpCard({
@@ -24,7 +25,8 @@ export async function GpCard({
 	isUpNext = false,
 	linked = false,
 	macroStage: macroStageProp,
-	viewerId: viewerIdProp
+	viewerId: viewerIdProp,
+	imageLoading
 }: TGpCard) {
 	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
 	const viewerId = viewerIdProp ?? (await getViewer())?.db?.id
@@ -35,6 +37,7 @@ export async function GpCard({
 			isUpNext={isUpNext}
 			linked={linked}
 			macroStage={macroStage}
+			imageLoading={imageLoading}
 		>
 			{macroStage === EMacroStage.During && (
 				<HeatsCounter heatsFinished={gp.heats_finished ?? 0} />

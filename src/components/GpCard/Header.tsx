@@ -20,6 +20,7 @@ type TGpCardHeader = {
 	timeZone: string
 	macroStage: EMacroStage
 	showCountdown?: boolean
+	imageLoading?: 'eager' | 'lazy'
 }
 
 export function GpCardHeader({
@@ -31,22 +32,24 @@ export function GpCardHeader({
 	startDate,
 	timeZone,
 	macroStage,
-	showCountdown = false
+	showCountdown = false,
+	imageLoading
 }: TGpCardHeader) {
 	const header = (
 		<>
 			<Image
 				alt=""
-				src={`/cities/${cityId}.jpg`}
+				className="relative z-20 aspect-video w-full object-cover brightness-60"
 				width={600}
 				height={300}
-				className="relative z-20 aspect-video w-full object-cover brightness-60"
+				src={`/cities/${cityId}.jpg`}
+				loading={imageLoading}
 			/>
 
 			<div className="absolute top-3 left-3 z-40">
 				{macroStage === EMacroStage.During && <LiveBadge />}
 
-				{showCountdown && startDate && macroStage === EMacroStage.Before && (
+				{showCountdown && startDate && (
 					<Countdown startDate={new Date(startDate)} />
 				)}
 			</div>
