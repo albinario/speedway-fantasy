@@ -9,6 +9,8 @@ type TRiderGpCard = {
 }
 
 export async function RiderGpCard({ gp }: TRiderGpCard) {
+	if (new Date(gp.start_date) > new Date()) return null
+
 	return (
 		<GpCardBase gp={gp} linked macroStage={EMacroStage.After}>
 			<div className="flex items-center gap-4">

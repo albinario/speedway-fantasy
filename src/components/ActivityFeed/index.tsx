@@ -18,11 +18,16 @@ export const ActivityActionLabel: Record<number, string> = {
 type TActivityFeed = {
 	gpId?: number
 	limit?: number
+	offset?: number
 }
 
-export async function ActivityFeed({ gpId, limit = 5 }: TActivityFeed) {
+export async function ActivityFeed({
+	gpId,
+	limit = 5,
+	offset = 0
+}: TActivityFeed) {
 	const [entries, viewer] = await Promise.all([
-		getActivityFeed(gpId, limit),
+		getActivityFeed(gpId, limit, offset),
 		getViewer()
 	])
 	const viewerId = viewer?.db?.id

@@ -9,6 +9,7 @@ type TGpCardBase = {
 	isUpNext?: boolean
 	linked?: boolean
 	macroStage: EMacroStage
+	imageLoading?: 'eager' | 'lazy'
 	children?: React.ReactNode
 }
 
@@ -17,6 +18,7 @@ export function GpCardBase({
 	isUpNext = false,
 	linked = false,
 	macroStage,
+	imageLoading,
 	children
 }: TGpCardBase) {
 	const href = linked ? `/gps/${gp.id}` : undefined
@@ -33,6 +35,7 @@ export function GpCardBase({
 				timeZone={gp.time_zone}
 				macroStage={macroStage}
 				showCountdown={isUpNext}
+				imageLoading={imageLoading}
 			/>
 
 			<CardContent className="flex flex-col gap-6">{children}</CardContent>

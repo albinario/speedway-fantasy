@@ -22,14 +22,10 @@ const content = {
 			text: 'Men även om spelet är gratis kostar det en hel del att driva. Servrar, domäner, utvecklingsverktyg och många timmars arbete ligger bakom det du ser.'
 		},
 		{
-			text: 'Jag är inte här för att tjäna pengar, jag är här för att öka intresset för sporten.',
-			highlight: true
-		},
-		{
 			text: 'Om du tycker att spelet är kul och vill visa ditt stöd, så har du här möjligheten att "bjuda mig på en bärs". En liten gest som betyder mycket och hjälper mig att hålla spelet vid liv och fortsätta utveckla det!'
 		},
 		{
-			text: 'Självklart är detta helt frivilligt - spelet kommer alltid att finnas kvar oavsett. Men all uppskattning tas emot med ett stort tack!'
+			text: 'Självklart är detta helt frivilligt - spelet kommer alltid att finnas kvar oavsett. Målet är inte att tjäna pengar - det är att öka intresset för sporten. Men all support tas emot med ett stort tack!'
 		},
 		{
 			text: 'Tack för att du spelar,\nAlbin',
@@ -44,14 +40,10 @@ const content = {
 			text: 'But even though the game is free, it costs quite a bit to run. Servers, domains, development tools and many hours of work are behind what you see.'
 		},
 		{
-			text: "I'm not here to make money, I'm here to grow the sport.",
-			highlight: true
-		},
-		{
 			text: 'If you enjoy the game and want to show your support, you have the opportunity here to "buy me a beer". A small gesture that means a lot and helps me keep the game alive and continue developing it!'
 		},
 		{
-			text: 'Of course this is completely voluntary - the game will always be here regardless. But all appreciation is received with a big thank you!'
+			text: 'Of course this is completely voluntary - the game will always be here regardless. The goal is not to make money, it is to grow the sport. But all support is received with a big thank you!'
 		},
 		{
 			text: 'Thanks for playing,\nAlbin',
@@ -82,12 +74,11 @@ export default async function BeerPage({ searchParams }: TBeerPage) {
 
 			<Card>
 				<CardContent className="flex flex-col gap-4">
-					{paragraphs.map(({ text, highlight, muted }, i) => (
+					{paragraphs.map(({ text, muted }, i) => (
 						<p
 							key={i}
 							className={cn(
 								'leading-relaxed whitespace-pre-line',
-								highlight && 'text-brand-red',
 								muted && 'text-muted-foreground text-sm'
 							)}
 						>
