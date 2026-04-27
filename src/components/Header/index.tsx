@@ -1,3 +1,5 @@
+import { Suspense } from 'react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,11 +11,57 @@ import { getViewer } from '@/lib/auth/get-viewer'
 
 import { HeaderNav } from './Nav'
 
-type THeader = {
-	viewer: Awaited<ReturnType<typeof getViewer>>
+async function HeaderActions() {
+	const viewer = await getViewer()
+
+	return (
+		<>
+			{viewer.isAuthenticated ? (
+				<>
+					<Button asChild size="lg" variant="outline">
+						<Link href={`/users/${viewer.db?.id}`}>
+							My page <UserIcon />
+						</Link>
+					</Button>
+
+					{viewer.isAdmin && (
+						<>
+							<Button asChild size="icon-lg" variant="outline">
+								<Link href="/admin">
+									<DatabaseZap />
+								</Link>
+							</Button>
+
+							<Button asChild size="icon-lg" variant="outline">
+								<Link href="/admin/report">
+									<FlagIcon />
+								</Link>
+							</Button>
+						</>
+					)}
+				</>
+			) : (
+				<Button asChild size="lg" variant="outline">
+					<a href="/auth/login">
+						Sign in <LogIn />
+					</a>
+				</Button>
+			)}
+
+			{!viewer.isAdmin && (
+				<Button asChild size="icon-lg" variant="outline">
+					<Link href="/beer">
+						<Beer />
+					</Link>
+				</Button>
+			)}
+
+			<HeaderNav viewerId={viewer.db?.id} reminder={viewer.db?.reminder} />
+		</>
+	)
 }
 
-export async function Header({ viewer }: THeader) {
+export function HeaderShell({ children }: { children?: React.ReactNode }) {
 	return (
 		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-3 backdrop-blur-sm">
 			<Link href="/" className="w-32 sm:w-48 md:w-64">
@@ -27,48 +75,17 @@ export async function Header({ viewer }: THeader) {
 				/>
 			</Link>
 
-			<div className="flex items-start gap-2">
-				{viewer.isAuthenticated ? (
-					<>
-						<Button asChild size="lg" variant="outline">
-							<Link href={`/users/${viewer.db?.id}`}>
-								My page <UserIcon />
-							</Link>
-						</Button>
-
-						{viewer.isAdmin && (
-							<>
-								<Button asChild size="icon-lg" variant="outline">
-									<Link href="/admin">
-										<DatabaseZap />
-									</Link>
-								</Button>
-
-								<Button asChild size="icon-lg" variant="outline">
-									<Link href="/admin/report">
-										<FlagIcon />
-									</Link>
-								</Button>
-							</>
-						)}
-					</>
-				) : (
-					<Button asChild size="lg" variant="outline">
-						<a href="/auth/login">
-							Sign in <LogIn />
-						</a>
-					</Button>
-				)}
-
-				{!viewer.isAdmin && (
-					<Button asChild size="icon-lg" variant="outline">
-						<Link href="/beer">
-							<Beer />
-						</Link>
-					</Button>
-				)}
-				<HeaderNav viewerId={viewer.db?.id} reminder={viewer.db?.reminder} />
-			</div>
+			{children && <div className="flex items-start gap-2">{children}</div>}
 		</div>
+	)
+}
+
+export function Header() {
+	return (
+		<HeaderShell>
+			<Suspense fallback={<HeaderNav />}>
+				<HeaderActions />
+			</Suspense>
+		</HeaderShell>
 	)
 }

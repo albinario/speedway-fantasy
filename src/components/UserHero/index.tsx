@@ -20,9 +20,10 @@ import { getLeader, getUserStreak } from './data'
 type TUserHero = {
 	userId: number
 	year: number | TParamValues
+	createdAt: Date
 }
 
-export async function UserHero({ userId, year }: TUserHero) {
+export async function UserHero({ userId, year, createdAt }: TUserHero) {
 	const [standings, leaderRecord, streak, starRecords] = await Promise.all([
 		getUserStandingRow(year, userId),
 		getLeader(year),
@@ -46,11 +47,21 @@ export async function UserHero({ userId, year }: TUserHero) {
 	const progressPct =
 		leader > 0 ? Math.min(100, Math.round((points / leader) * 100)) : 100
 
+	const memberSince = new Date(createdAt).toLocaleDateString('en-GB', {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric'
+	})
+
 	return (
 		<div className="flex flex-col gap-1">
 			<div className="bg-card flex flex-col divide-y divide-white/5 rounded-xl">
 				{/* Row 1: Points + medals + streak */}
-				<div className="flex flex-wrap items-center gap-6 p-4">
+				<div className="relative flex flex-wrap items-end gap-6 p-4">
+					<span className="text-muted-foreground absolute top-3 right-4 text-xs">
+						Member since {memberSince}
+					</span>
+
 					<div className="flex flex-col items-center">
 						<span className="text-5xl leading-none font-black">{points}</span>
 						<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">

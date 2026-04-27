@@ -55,7 +55,7 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				</div>
 			</PageHeader>
 
-			<UserHero userId={userId} year={yearValues.activeYear} />
+			<UserHero userId={userId} year={yearValues.activeYear} createdAt={user.created_at} />
 
 			{showToggle && <ShowOlderToggle checked={showAll} />}
 

@@ -6,8 +6,9 @@ export function getUser(id: number) {
 		() =>
 			db
 				.selectFrom('users_with_stars')
-				.select(['id', 'first_name', 'last_name', 'stars'])
-				.where('id', '=', id)
+				.innerJoin('users', 'users.id', 'users_with_stars.id')
+				.select(['users_with_stars.id', 'users_with_stars.first_name', 'users_with_stars.last_name', 'stars', 'users.created_at'])
+				.where('users_with_stars.id', '=', id)
 				.executeTakeFirst(),
 		null
 	)
