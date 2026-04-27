@@ -1,32 +1,51 @@
+import { Suspense } from 'react'
+
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { Footer } from '@/components/Footer'
-import { Header } from '@/components/Header'
+import { Header, HeaderShell } from '@/components/Header'
 import { getViewer } from '@/lib/auth/get-viewer'
+
+async function OnboardingGuard() {
+	const viewer = await getViewer()
+	if (viewer.isAuthenticated && !viewer.db?.first_name) redirect('/onboarding')
+	return null
+}
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
 	const h = await headers()
 	const pathname = h.get('x-pathname') ?? ''
 
-	const isExempt =
-		pathname.startsWith('/onboarding') || pathname.startsWith('/auth')
+	if (pathname.startsWith('/onboarding')) {
+		return (
+			<>
+				<HeaderShell />
+				<main className="fluid-container flex-1 px-0 py-3 sm:px-3">
+					{children}
+				</main>
+			</>
+		)
+	}
 
-	const viewer = await getViewer()
-
-	if (!isExempt && viewer.isAuthenticated && !viewer.db?.first_name) {
-		redirect('/onboarding')
+	if (pathname.startsWith('/auth')) {
+		return <>{children}</>
 	}
 
 	return (
 		<>
-			<Header viewer={viewer} />
+			<Header />
 
 			<main className="fluid-container flex-1 px-0 py-3 sm:px-3">
+				<Suspense fallback={null}>
+					<OnboardingGuard />
+				</Suspense>
 				{children}
 			</main>
 
-			<Footer viewerId={viewer.db?.id} />
+			<Suspense fallback={null}>
+				<Footer />
+			</Suspense>
 		</>
 	)
 }
