@@ -1,5 +1,3 @@
-import { Suspense } from 'react'
-
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -11,11 +9,30 @@ import { getViewer } from '@/lib/auth/get-viewer'
 
 import { HeaderNav } from './Nav'
 
-async function HeaderActions() {
+export function HeaderShell({ children }: { children?: React.ReactNode }) {
+	return (
+		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-3 backdrop-blur-sm">
+			<Link href="/" className="w-32 sm:w-48 md:w-64">
+				<Image
+					alt={logo.alt}
+					height={logo.height}
+					width={logo.width}
+					priority
+					sizes={logo.widthContainer}
+					src={logo.src}
+				/>
+			</Link>
+
+			{children && <div className="flex items-start gap-2">{children}</div>}
+		</div>
+	)
+}
+
+export async function Header() {
 	const viewer = await getViewer()
 
 	return (
-		<>
+		<HeaderShell>
 			{viewer.isAuthenticated ? (
 				<>
 					<Button asChild size="lg" variant="outline">
@@ -57,35 +74,6 @@ async function HeaderActions() {
 			)}
 
 			<HeaderNav viewerId={viewer.db?.id} reminder={viewer.db?.reminder} />
-		</>
-	)
-}
-
-export function HeaderShell({ children }: { children?: React.ReactNode }) {
-	return (
-		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-3 backdrop-blur-sm">
-			<Link href="/" className="w-32 sm:w-48 md:w-64">
-				<Image
-					alt={logo.alt}
-					height={logo.height}
-					width={logo.width}
-					priority
-					sizes={logo.widthContainer}
-					src={logo.src}
-				/>
-			</Link>
-
-			{children && <div className="flex items-start gap-2">{children}</div>}
-		</div>
-	)
-}
-
-export function Header() {
-	return (
-		<HeaderShell>
-			<Suspense fallback={<HeaderNav />}>
-				<HeaderActions />
-			</Suspense>
 		</HeaderShell>
 	)
 }

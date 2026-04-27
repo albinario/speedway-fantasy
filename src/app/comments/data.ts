@@ -1,9 +1,11 @@
 import { unstable_cache } from 'next/cache'
+
 import { sql } from 'kysely'
 
 import { cacheTags } from '@/lib/cache-tags'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
+
 import type { Reaction } from './constants'
 
 export type { Reaction }
@@ -14,7 +16,11 @@ export const getComments = unstable_cache(
 			() =>
 				db
 					.selectFrom('comments')
-					.leftJoin('users_with_stars', 'comments.user_id', 'users_with_stars.id')
+					.leftJoin(
+						'users_with_stars',
+						'comments.user_id',
+						'users_with_stars.id'
+					)
 					.leftJoin('gps', 'comments.gp_id', 'gps.id')
 					.leftJoin('cities', 'gps.city_id', 'cities.id')
 					.leftJoin('countries', 'cities.country_id', 'countries.id')
@@ -39,15 +45,17 @@ export const getComments = unstable_cache(
 										SELECT
 											emoji,
 											COUNT(*)::int AS count,
-											array_agg(user_id) AS user_ids
-										FROM comment_reactions
-										WHERE comment_id = comments.id
+											array_agg(cr.user_id) AS user_ids,
+											array_agg(u.first_name || ' ' || u.last_name) AS user_names
+										FROM comment_reactions cr
+										JOIN users u ON u.id = cr.user_id
+										WHERE cr.comment_id = comments.id
 										GROUP BY emoji
 									) r
 								),
 								'[]'::json
 							)
-						`.as('reactions'),
+						`.as('reactions')
 					])
 					.orderBy('comments.created_at', 'asc')
 					.execute(),

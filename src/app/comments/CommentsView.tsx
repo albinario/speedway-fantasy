@@ -14,9 +14,15 @@ import { useRouter } from 'next/navigation'
 import { CornerDownLeft, LogIn, Send, SmilePlus, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import {
+	Popover,
+	PopoverAnchor,
+	PopoverContent
+} from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
+import { useLongPress } from '@/hooks/useLongPress'
 import { cn } from '@/lib/utils'
 
 import {
@@ -143,29 +149,61 @@ function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 							{viewerId != null && (
 								<EmojiPicker onSelect={(emoji) => onReaction(reply.id, emoji)} />
 							)}
-							{reply.reactions.map((r) => {
-								const reacted =
-									viewerId != null && r.user_ids.includes(viewerId)
-								return (
-									<button
-										key={r.emoji}
-										onClick={() => onReaction(reply.id, r.emoji)}
-										className={cn(
-											'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
-											reacted
-												? 'bg-brand-red/10 text-brand-red'
-												: 'hover:bg-muted/60'
-										)}
-									>
-										{r.emoji} <span className="tabular-nums">{r.count}</span>
-									</button>
-								)
-							})}
+							{reply.reactions.map((r) => (
+								<ReactionButton
+									key={r.emoji}
+									reaction={r}
+									reacted={viewerId != null && r.user_ids.includes(viewerId)}
+									onClick={() => onReaction(reply.id, r.emoji)}
+								/>
+							))}
 						</div>
 					)}
 				</div>
 			</div>
 		</div>
+	)
+}
+
+function ReactionButton({
+	reaction,
+	reacted,
+	onClick
+}: {
+	reaction: Reaction
+	reacted: boolean
+	onClick: () => void
+}) {
+	const [open, setOpen] = useState(false)
+	const names = reaction.user_names.join(', ')
+	const longPress = useLongPress(() => setOpen(true), onClick)
+
+	return (
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverAnchor asChild>
+				<button
+					{...longPress}
+					onMouseEnter={() => names && setOpen(true)}
+					onMouseLeave={() => setOpen(false)}
+					className={cn(
+						'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
+						reacted ? 'bg-brand-red/10 text-brand-red' : 'hover:bg-muted/60'
+					)}
+				>
+					{reaction.emoji}{' '}
+					<span className="tabular-nums">{reaction.count}</span>
+				</button>
+			</PopoverAnchor>
+			{names && (
+				<PopoverContent
+					side="top"
+					className="w-auto p-2 text-xs"
+					onOpenAutoFocus={(e) => e.preventDefault()}
+				>
+					{names}
+				</PopoverContent>
+			)}
+		</Popover>
 	)
 }
 
@@ -259,24 +297,14 @@ function CommentBubble({
 							{viewerId != null && (
 								<EmojiPicker onSelect={(emoji) => onReaction(comment.id, emoji)} />
 							)}
-							{comment.reactions.map((r) => {
-								const reacted =
-									viewerId != null && r.user_ids.includes(viewerId)
-								return (
-									<button
-										key={r.emoji}
-										onClick={() => onReaction(comment.id, r.emoji)}
-										className={cn(
-											'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
-											reacted
-												? 'bg-brand-red/10 text-brand-red'
-												: 'hover:bg-muted/60'
-										)}
-									>
-										{r.emoji} <span className="tabular-nums">{r.count}</span>
-									</button>
-								)
-							})}
+							{comment.reactions.map((r) => (
+								<ReactionButton
+									key={r.emoji}
+									reaction={r}
+									reacted={viewerId != null && r.user_ids.includes(viewerId)}
+									onClick={() => onReaction(comment.id, r.emoji)}
+								/>
+							))}
 						</div>
 					)}
 				</div>
@@ -335,18 +363,22 @@ function applyOptimisticReaction(
 							? { ...r, count: r.count + 1, user_ids: [...r.user_ids, userId] }
 							: r
 					)
-				: [...c.reactions, { emoji, count: 1, user_ids: [userId] }]
+				: [...c.reactions, { emoji, count: 1, user_ids: [userId], user_names: [] }]
 		} else {
 			reactions = c.reactions
-				.map((r) =>
-					r.emoji === emoji
-						? {
-								...r,
-								count: r.count - 1,
-								user_ids: r.user_ids.filter((id) => id !== userId)
-							}
-						: r
-				)
+				.map((r) => {
+					if (r.emoji !== emoji) return r
+					const idx = r.user_ids.indexOf(userId)
+					return {
+						...r,
+						count: r.count - 1,
+						user_ids: r.user_ids.filter((id) => id !== userId),
+						user_names:
+							idx >= 0
+								? r.user_names.filter((_, i) => i !== idx)
+								: r.user_names
+					}
+				})
 				.filter((r) => r.count > 0)
 		}
 		return { ...c, reactions }
