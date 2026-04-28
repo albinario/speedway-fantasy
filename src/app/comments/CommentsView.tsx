@@ -142,7 +142,7 @@ function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 						{formatTime(reply.created_at)}
 					</span>
 				</div>
-				<div className="bg-muted/40 rounded-lg rounded-tl-none px-3 py-2 text-sm leading-relaxed">
+				<div className="border-border bg-card rounded-lg rounded-tl-none border px-3 py-2 text-sm leading-relaxed">
 					{reply.comment}
 					{(reply.reactions.length > 0 || viewerId != null) && (
 						<div className="mt-2 flex flex-wrap items-center gap-1">
@@ -154,9 +154,9 @@ function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 									key={r.emoji}
 									reaction={r}
 									reacted={viewerId != null && r.user_ids.includes(viewerId)}
-									onClick={() => onReaction(reply.id, r.emoji)}
-								/>
-							))}
+								onClick={() => onReaction(reply.id, r.emoji)}
+							/>
+						))}
 						</div>
 					)}
 				</div>
@@ -187,7 +187,7 @@ function ReactionButton({
 					onMouseLeave={() => setOpen(false)}
 					className={cn(
 						'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
-						reacted ? 'bg-brand-red/10 text-brand-red' : 'hover:bg-muted/60'
+						reacted ? 'bg-muted/60' : 'hover:bg-muted/60'
 					)}
 				>
 					{reaction.emoji}{' '}
@@ -197,10 +197,14 @@ function ReactionButton({
 			{names && (
 				<PopoverContent
 					side="top"
-					className="w-auto p-2 text-xs"
+					className="w-auto p-2"
 					onOpenAutoFocus={(e) => e.preventDefault()}
 				>
-					{names}
+					<div className="flex flex-col gap-1">
+						{reaction.user_names.map((name) => (
+							<span key={name} className="text-xs">{name}</span>
+						))}
+					</div>
 				</PopoverContent>
 			)}
 		</Popover>
@@ -220,7 +224,7 @@ function EmojiPicker({ onSelect }: { onSelect: (emoji: string) => void }) {
 				<SmilePlus />
 			</Button>
 			{open && (
-				<div className="border-border bg-card absolute bottom-full left-0 mb-1 flex gap-1 rounded-lg border shadow-lg">
+				<div className="border-border bg-card absolute bottom-full left-0 mb-1 flex gap-1 rounded-lg border p-1.5 shadow-lg">
 					{REACTION_EMOJIS.map((emoji) => (
 						<button
 							key={emoji}
@@ -302,9 +306,9 @@ function CommentBubble({
 									key={r.emoji}
 									reaction={r}
 									reacted={viewerId != null && r.user_ids.includes(viewerId)}
-									onClick={() => onReaction(comment.id, r.emoji)}
-								/>
-							))}
+								onClick={() => onReaction(comment.id, r.emoji)}
+							/>
+						))}
 						</div>
 					)}
 				</div>

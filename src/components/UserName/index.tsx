@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { StarIcon } from 'lucide-react'
+import { Star } from 'lucide-react'
 
 import { getMedalColorHex } from '@/lib/medals'
 import { cn } from '@/lib/utils'
@@ -36,7 +36,7 @@ export function UserName({
 				<span className="mt-0.25 inline-flex gap-0.5 [&_svg]:size-2.5">
 					{stars.filter(Boolean).map((type, i) => {
 						const medalColor = getMedalColorHex(type)
-						return <StarIcon key={i} fill={medalColor} stroke={medalColor} />
+						return <Star key={i} fill={medalColor} stroke={medalColor} />
 					})}
 				</span>
 			)}

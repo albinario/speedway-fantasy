@@ -9,6 +9,10 @@ export function useLongPress(
 	const fired = useRef(false)
 
 	return {
+		style: {
+			userSelect: 'none',
+			WebkitTouchCallout: 'none'
+		} as React.CSSProperties,
 		onPointerDown(e: React.PointerEvent) {
 			if (e.pointerType === 'mouse') return
 			fired.current = false
