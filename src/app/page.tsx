@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { getLatestGp, getNextGp } from '@/app/gps/data'
 import { HallOfFameCard } from '@/app/hall-of-fame/Card'
 import { getLatestHallOfFame } from '@/app/hall-of-fame/data'
+import { HowItWorksCard } from '@/app/rules/HowItWorksCard'
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { GpCard } from '@/components/GpCard'
 import { RidersStandings } from '@/components/RidersStandings'
@@ -28,23 +29,20 @@ export default async function Home() {
 
 	const viewerId = viewer?.db?.id
 	const latestHofYear = latestHallOfFame?.[0]?.year
-	const currentYear = new Date().getFullYear()
-	const latestGpYear = latestGp
-		? new Date(latestGp.start_date).getFullYear()
-		: null
-	// const showHallOfFame = latestHofYear && latestGpYear !== currentYear
-	const showHallOfFame = false
 
 	return (
 		<div className="columns-1 space-y-4 sm:columns-2 lg:columns-3 xl:columns-4 [&>*]:break-inside-avoid">
-			{showHallOfFame && (
+			{nextGp?.round === 1 && latestHofYear && (
 				<div>
-					<SectionTitle href="/hall-of-fame">Hall of Fame</SectionTitle>
-					<HallOfFameCard
-						entries={latestHallOfFame}
-						viewerId={viewerId}
-						year={latestHofYear}
-					/>
+					<SectionTitle href="/hall-of-fame">{latestHofYear}</SectionTitle>
+					<HallOfFameCard entries={latestHallOfFame} viewerId={viewerId} />
+				</div>
+			)}
+
+			{nextGp?.round === 1 && (
+				<div>
+					<SectionTitle href="/rules">Rules</SectionTitle>
+					<HowItWorksCard hideTitle />
 				</div>
 			)}
 
@@ -86,6 +84,13 @@ export default async function Home() {
 					</Suspense>
 				</Card>
 			</div>
+
+			{nextGp?.round !== 1 && latestHofYear && (
+				<div>
+					<SectionTitle href="/hall-of-fame">{latestHofYear}</SectionTitle>
+					<HallOfFameCard entries={latestHallOfFame} viewerId={viewerId} />
+				</div>
+			)}
 		</div>
 	)
 }

@@ -22,7 +22,7 @@ export default async function HallOfFamePage() {
 		<div className="flex flex-col gap-4">
 			<PageHeader title={metaData.title} hideYearSelector />
 
-			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+			<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				{years.map((year) => {
 					const entries = byYear.get(year)!.sort((a, b) => a.type - b.type)
 					return (
