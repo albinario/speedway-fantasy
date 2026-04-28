@@ -6,7 +6,8 @@ import {
 	ChevronRight,
 	Flame,
 	ShieldOff,
-	Trophy
+	Star,
+	UserRoundCheck
 } from 'lucide-react'
 
 import { getUserStars } from '@/app/users/[id]/data'
@@ -57,11 +58,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 		<div className="flex flex-col gap-1">
 			<div className="bg-card flex flex-col divide-y divide-white/5 rounded-xl">
 				{/* Row 1: Points + medals + streak */}
-				<div className="relative flex flex-wrap items-end gap-6 p-4">
-					<span className="text-muted-foreground absolute top-3 right-4 text-xs">
-						Member since {memberSince}
-					</span>
-
+				<div className="flex flex-wrap items-center gap-4 p-4">
 					<div className="flex flex-col items-center">
 						<span className="text-5xl leading-none font-black">{points}</span>
 						<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
@@ -77,7 +74,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 					/>
 
 					{streak > 0 && (
-						<div className="ml-auto flex items-center gap-1.5">
+						<div className="ml-auto flex items-center gap-1">
 							<span className="text-xl font-black">{streak}</span>
 							<Flame size={25} className="text-brand-red" />
 							<span className="text-muted-foreground text-xs tracking-wide uppercase">
@@ -149,6 +146,13 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 					</div>
 				)}
 
+				{/* Member since */}
+				<div className="flex items-center gap-1.5 px-4 py-3 text-xs">
+					<UserRoundCheck className="size-3.5 text-green-400" />
+					<span className="text-muted-foreground">Member since</span>
+					<span>{memberSince}</span>
+				</div>
+
 				{/* Trophy collection */}
 				<div className="flex flex-wrap items-start gap-x-6 gap-y-3 p-4">
 					<span className="text-muted-foreground shrink-0 text-xs font-black tracking-wide uppercase">
@@ -164,7 +168,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 
 								return (
 									<div key={starYear} className="flex items-center gap-2">
-										<Trophy size={30} stroke={color} />
+										<Star fill={color} size={30} stroke={color} />
 
 										<div className="flex flex-col leading-none">
 											<span className="text-sm font-black">{label}</span>

@@ -1,4 +1,4 @@
-import { StarIcon } from 'lucide-react'
+import { Star } from 'lucide-react'
 
 import { getMedalColorHex } from '@/lib/medals'
 
@@ -26,7 +26,8 @@ export function UserStarsBar({ stars }: TUserStarsBar) {
 				const color = getMedalColorHex(type)
 				return (
 					<div key={year} className="flex items-center gap-2">
-						<StarIcon className="size-5 shrink-0" fill={color} stroke={color} />
+						<Star className="size-5 shrink-0" fill={color} stroke={color} />
+
 						<div className="flex flex-col leading-none">
 							<span className="text-sm font-black">{LABEL[type]}</span>
 							<span className="text-muted-foreground text-xs">{year}</span>

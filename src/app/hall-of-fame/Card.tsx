@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { StarIcon } from 'lucide-react'
+import { Star } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { colors } from '@/config/brand'
@@ -52,7 +52,7 @@ export function HallOfFameCard({ entries, viewerId, year }: Props) {
 									: { borderColor: `${medalColor}50` }
 							}
 						>
-							<StarIcon
+							<Star
 								className={cn('shrink-0', isWinner ? 'size-6' : 'size-4')}
 								fill={medalColor}
 								stroke={medalColor}
