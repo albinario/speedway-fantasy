@@ -20,11 +20,19 @@ export const auth0 = new Auth0Client({
 		const sub = session.user?.sub
 		const email = session.user?.email
 		if (sub && email) {
-			await db
-				.insertInto('users')
-				.values({ auth0_id: sub, email, first_name: '', last_name: '' })
-				.onConflict((oc) => oc.column('auth0_id').doNothing())
-				.execute()
+			const existing = await db
+				.selectFrom('users')
+				.select('id')
+				.where('auth0_id', '=', sub)
+				.executeTakeFirst()
+
+			if (!existing) {
+				await db
+					.insertInto('users')
+					.values({ auth0_id: sub, email, first_name: '', last_name: '' })
+					.onConflict((oc) => oc.column('auth0_id').doNothing())
+					.execute()
+			}
 		}
 
 		return {
