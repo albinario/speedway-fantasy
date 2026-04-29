@@ -338,10 +338,63 @@ export const getGpUsersResults = unstable_cache(
 	{ tags: [cacheTags.gpResults] }
 )
 
+export const getUsersNotInStandings = (year: number) =>
+	dataFetch(
+		() =>
+			db
+				.selectFrom('users')
+				.leftJoin('users_standings', (join) =>
+					join
+						.onRef('users_standings.user_id', '=', 'users.id')
+						.on('users_standings.year', '=', year)
+				)
+				.select(['users.id', 'users.first_name', 'users.last_name'])
+				.where('users_standings.user_id', 'is', null)
+				.orderBy('users.first_name', 'asc')
+				.execute(),
+		[]
+	)
+
+export const getUsersInStandingsWithoutGpResult = (
+	gpId: number,
+	year: number
+) =>
+	dataFetch(
+		() =>
+			db
+				.selectFrom('users_standings')
+				.innerJoin('users', 'users.id', 'users_standings.user_id')
+				.leftJoin('users_results', (join) =>
+					join
+						.onRef('users_results.user_id', '=', 'users_standings.user_id')
+						.on('users_results.gp_id', '=', gpId)
+				)
+				.select(['users.id', 'users.first_name', 'users.last_name'])
+				.where('users_standings.year', '=', year)
+				.where('users_results.user_id', 'is', null)
+				.orderBy('users.first_name', 'asc')
+				.execute(),
+		[]
+	)
+
 export const getGpRidersPreview = unstable_cache(
 	(gpId: number, wildCardId: number | null, viewerId?: number) =>
-		dataFetch(() => {
+		dataFetch(async () => {
 			const year = new Date().getFullYear()
+
+			const activeIds = await db
+				.selectFrom('riders')
+				.select('id')
+				.where('active', 'is not', null)
+				.execute()
+				.then((rows) => rows.map((r) => r.id))
+
+			const riderIds =
+				wildCardId != null
+					? [...new Set([...activeIds, wildCardId])]
+					: activeIds
+
+			if (riderIds.length === 0) return []
 
 			const seasonStats = db
 				.selectFrom('riders_results')
@@ -392,14 +445,7 @@ export const getGpRidersPreview = unstable_cache(
 								.as('viewer_picked')
 						: eb.lit<number>(0).as('viewer_picked')
 				])
-				.where((eb) =>
-					wildCardId != null
-						? eb.or([
-								eb('riders.active', 'is not', null),
-								eb('riders.id', '=', wildCardId)
-							])
-						: eb('riders.active', 'is not', null)
-				)
+				.where('riders.id', 'in', riderIds)
 				.orderBy(sql`COALESCE(ss.points, 0)`, 'desc')
 				.orderBy('riders.number', 'asc')
 				.execute()
