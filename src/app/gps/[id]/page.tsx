@@ -9,6 +9,7 @@ import {
 	getGpRidersResults,
 	getGpUsersResults
 } from './data'
+import { GpMissingStandingsCard } from './GpMissingStandingsCard'
 import { GpRidersPreviewTable, GpRidersResultsTable } from './RidersTables'
 import { GpUsersResultsTable } from './UsersResultsTable'
 
@@ -56,6 +57,14 @@ export default async function GpPage({ params }: TGpPage) {
 			) : ridersPreview.length > 0 ? (
 				<GpRidersPreviewTable data={ridersPreview} isBefore={isBefore} />
 			) : null}
+
+			{viewer.isAdmin && (
+				<GpMissingStandingsCard
+					gpId={gp.id}
+					year={new Date(gp.start_date).getFullYear()}
+					round={gp.round}
+				/>
+			)}
 		</div>
 	)
 }
