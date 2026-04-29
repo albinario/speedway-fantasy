@@ -39,13 +39,6 @@ export default async function Home() {
 				</div>
 			)}
 
-			{nextGp?.round === 1 && (
-				<div>
-					<SectionTitle href="/rules">Rules</SectionTitle>
-					<HowItWorksCard hideTitle />
-				</div>
-			)}
-
 			<Suspense fallback={<SectionFallback />}>
 				<UsersStandings year={yearValues.activeYear} limit={5} />
 			</Suspense>
