@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Star } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { colors } from '@/config/brand'
 import { getMedalColorHex } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
@@ -43,14 +42,10 @@ export function HallOfFameCard({ entries, viewerId, year }: Props) {
 						<div
 							key={entry.id}
 							className="flex flex-1 flex-col items-center gap-2 rounded-lg border p-3 text-center"
-							style={
-								isWinner
-									? {
-											borderColor: colors.gold,
-											boxShadow: `0 0 18px 2px ${colors.gold}40`
-										}
-									: { borderColor: `${medalColor}50` }
-							}
+							style={{
+								borderColor: medalColor,
+								boxShadow: `0 0 18px 2px ${medalColor}40`
+							}}
 						>
 							<Star
 								className={cn('shrink-0', isWinner ? 'size-6' : 'size-4')}
