@@ -13,16 +13,12 @@ import { useRouter } from 'next/navigation'
 
 import { CornerDownLeft, LogIn, Send, SmilePlus, X } from 'lucide-react'
 
+import { Flag } from '@/components/Flag'
 import { Button } from '@/components/ui/button'
-import {
-	Popover,
-	PopoverAnchor,
-	PopoverContent
-} from '@/components/ui/popover'
+import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
-import { useLongPress } from '@/hooks/useLongPress'
 import { cn } from '@/lib/utils'
 
 import {
@@ -75,22 +71,22 @@ function threadComments(flat: CommentRow[]): ThreadedComment[] {
 	return topLevel.map((c) => ({ ...c, replies: replyMap.get(c.id) ?? [] }))
 }
 
-function countryFlag(code: string | null): string {
-	if (!code) return '🏁'
-	return [...code.toUpperCase()]
-		.map((c) => String.fromCodePoint(c.charCodeAt(0) + 127397))
-		.join('')
-}
-
 function formatTime(iso: Date | string): string {
 	const d = new Date(iso)
 	const now = new Date()
 	if (d.toDateString() === now.toDateString()) {
 		return d.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
 	}
+	const sameYear = d.getFullYear() === now.getFullYear()
 	const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
-	if (d.getFullYear() !== now.getFullYear()) options.year = 'numeric'
-	return d.toLocaleDateString('sv-SE', options)
+	if (!sameYear) options.year = 'numeric'
+	const date = d.toLocaleDateString('sv-SE', options)
+	if (!sameYear) return date
+	const time = d.toLocaleTimeString('sv-SE', {
+		hour: '2-digit',
+		minute: '2-digit'
+	})
+	return `${date} ${time}`
 }
 
 function displayName(first: string | null, last: string | null): string {
@@ -108,7 +104,7 @@ function GPBadge({ cityName, countryCode, startDate }: GPBadgeProps) {
 	const currentYear = new Date().getFullYear()
 	return (
 		<span className="border-border bg-muted inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs font-bold tracking-wide uppercase">
-			{countryFlag(countryCode)} {cityName}
+			<Flag countryCode={countryCode} widthClass="w-3.5" /> {cityName}
 			{year !== currentYear ? ` ${year}` : ''}
 		</span>
 	)
@@ -147,16 +143,17 @@ function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 					{(reply.reactions.length > 0 || viewerId != null) && (
 						<div className="mt-2 flex flex-wrap items-center gap-1">
 							{viewerId != null && (
-								<EmojiPicker onSelect={(emoji) => onReaction(reply.id, emoji)} />
+								<EmojiPicker
+									onSelect={(emoji) => onReaction(reply.id, emoji)}
+								/>
 							)}
 							{reply.reactions.map((r) => (
 								<ReactionButton
 									key={r.emoji}
 									reaction={r}
 									reacted={viewerId != null && r.user_ids.includes(viewerId)}
-								onClick={() => onReaction(reply.id, r.emoji)}
-							/>
-						))}
+								/>
+							))}
 						</div>
 					)}
 				</div>
@@ -167,34 +164,31 @@ function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 
 function ReactionButton({
 	reaction,
-	reacted,
-	onClick
+	reacted
 }: {
 	reaction: Reaction
 	reacted: boolean
-	onClick: () => void
 }) {
 	const [open, setOpen] = useState(false)
-	const names = reaction.user_names.join(', ')
-	const longPress = useLongPress(() => setOpen(true), onClick)
+	const hasNames = reaction.user_names.length > 0
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverAnchor asChild>
 				<button
-					{...longPress}
-					onMouseEnter={() => names && setOpen(true)}
+					onMouseEnter={() => hasNames && setOpen(true)}
 					onMouseLeave={() => setOpen(false)}
+					onClick={() => hasNames && setOpen((o) => !o)}
 					className={cn(
-						'text-muted-foreground flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
-						reacted ? 'bg-muted/60' : 'hover:bg-muted/60'
+						'text-muted-foreground hover:bg-muted/60 flex items-center gap-0.5 rounded px-1 py-0.5 text-xs transition-colors',
+						reacted && 'border border-orange-400'
 					)}
 				>
 					{reaction.emoji}{' '}
 					<span className="tabular-nums">{reaction.count}</span>
 				</button>
 			</PopoverAnchor>
-			{names && (
+			{hasNames && (
 				<PopoverContent
 					side="top"
 					className="w-auto p-2"
@@ -202,7 +196,9 @@ function ReactionButton({
 				>
 					<div className="flex flex-col gap-1">
 						{reaction.user_names.map((name) => (
-							<span key={name} className="text-xs">{name}</span>
+							<span key={name} className="text-xs">
+								{name}
+							</span>
 						))}
 					</div>
 				</PopoverContent>
@@ -299,16 +295,17 @@ function CommentBubble({
 					{(comment.reactions.length > 0 || viewerId != null) && (
 						<div className="mt-1 flex flex-wrap items-center gap-1">
 							{viewerId != null && (
-								<EmojiPicker onSelect={(emoji) => onReaction(comment.id, emoji)} />
+								<EmojiPicker
+									onSelect={(emoji) => onReaction(comment.id, emoji)}
+								/>
 							)}
 							{comment.reactions.map((r) => (
 								<ReactionButton
 									key={r.emoji}
 									reaction={r}
 									reacted={viewerId != null && r.user_ids.includes(viewerId)}
-								onClick={() => onReaction(comment.id, r.emoji)}
-							/>
-						))}
+								/>
+							))}
 						</div>
 					)}
 				</div>
@@ -367,7 +364,10 @@ function applyOptimisticReaction(
 							? { ...r, count: r.count + 1, user_ids: [...r.user_ids, userId] }
 							: r
 					)
-				: [...c.reactions, { emoji, count: 1, user_ids: [userId], user_names: [] }]
+				: [
+						...c.reactions,
+						{ emoji, count: 1, user_ids: [userId], user_names: [] }
+					]
 		} else {
 			reactions = c.reactions
 				.map((r) => {
@@ -378,9 +378,7 @@ function applyOptimisticReaction(
 						count: r.count - 1,
 						user_ids: r.user_ids.filter((id) => id !== userId),
 						user_names:
-							idx >= 0
-								? r.user_names.filter((_, i) => i !== idx)
-								: r.user_names
+							idx >= 0 ? r.user_names.filter((_, i) => i !== idx) : r.user_names
 					}
 				})
 				.filter((r) => r.count > 0)
