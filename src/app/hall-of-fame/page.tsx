@@ -23,14 +23,16 @@ export default async function HallOfFamePage() {
 			<PageHeader title={metaData.title} hideYearSelector />
 
 			<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{years.map((year) => {
+				{years.map((year, i) => {
 					const entries = byYear.get(year)!.sort((a, b) => a.type - b.type)
+
 					return (
 						<HallOfFameCard
 							key={year}
 							year={year}
 							entries={entries}
 							viewerId={viewerId}
+							glow={i === 0}
 						/>
 					)
 				})}

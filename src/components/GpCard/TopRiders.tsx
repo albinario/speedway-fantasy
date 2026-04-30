@@ -45,6 +45,7 @@ export async function GpTopRiders({ gpId, limit = 3, viewerId }: TTopRiders) {
 						points={row.points}
 						pos={row.pos ?? null}
 						isPicked={pickedIds.has(row.id!)}
+						tiedPos={i < limit && row.pos !== i + 1}
 					/>
 				))}
 			</div>

@@ -43,7 +43,12 @@ function buildColumns({
 			header: '',
 			enableSorting: false,
 			cell: ({ row }) =>
-				row.original.pos != null ? <PosBadge pos={row.original.pos} /> : null
+				row.original.pos != null ? (
+					<PosBadge
+						pos={row.original.pos}
+						tiedPos={row.original.pos !== row.index + 1}
+					/>
+				) : null
 		},
 		{
 			id: 'avatar',

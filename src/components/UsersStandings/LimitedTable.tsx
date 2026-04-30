@@ -10,14 +10,26 @@ import { PosBadge } from './PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
-function StandingRow({ row, viewerId }: { row: TRow; viewerId?: number }) {
-	const isViewer = row.user_id === viewerId
+function StandingRow({
+	tiedPos,
+	isViewer,
+	row
+}: {
+	tiedPos?: boolean
+	isViewer?: boolean
+	row: TRow
+}) {
 	return (
 		<div
 			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${isViewer ? 'bg-orange-400/5' : ''}`}
 		>
 			{row.pos != null && (
-				<PosBadge pos={row.pos} prevPos={row.prev_pos} size="lg" />
+				<PosBadge
+					tiedPos={tiedPos}
+					pos={row.pos}
+					prevPos={row.prev_pos}
+					size="lg"
+				/>
 			)}
 
 			<div className="flex min-w-0 items-center gap-2">
@@ -54,7 +66,7 @@ export async function UsersLimitedTable({
 	limit
 }: {
 	data: TRow[]
-	limit?: number
+	limit: number
 }) {
 	const viewer = await getViewer()
 	const viewerId = viewer?.db?.id
@@ -71,10 +83,15 @@ export async function UsersLimitedTable({
 			</SectionTitle>
 
 			<Card className="divide-border divide-y overflow-hidden py-0">
-				{data.map((row) => (
-					<StandingRow key={row.user_id} row={row} viewerId={viewerId} />
+				{data.map((row, i) => (
+					<StandingRow
+						key={row.user_id}
+						tiedPos={row.pos !== i + 1}
+						isViewer={row.user_id === viewerId}
+						row={row}
+					/>
 				))}
-				{viewerRow && <StandingRow row={viewerRow} viewerId={viewerId} />}
+				{viewerRow && <StandingRow isViewer row={viewerRow} />}
 			</Card>
 		</div>
 	)

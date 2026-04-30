@@ -26,9 +26,15 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 				const index = row.index + 1
 
 				if (pos == null) return <PosBadge pos={index} />
-				if (pos !== index) return null
 
-				return <PosBadge pos={pos} prevPos={prev_pos} />
+				return (
+					<PosBadge
+						pos={pos}
+						prevPos={prev_pos}
+						tiedPos={pos !== index}
+						size="lg"
+					/>
+				)
 			}
 		},
 		{

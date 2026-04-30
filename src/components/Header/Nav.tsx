@@ -10,8 +10,6 @@ import {
 	Sheet,
 	SheetClose,
 	SheetContent,
-	SheetHeader,
-	SheetTitle,
 	SheetTrigger
 } from '@/components/ui/sheet'
 import { navItems } from '@/config/nav'
@@ -43,11 +41,7 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 				</Button>
 			</SheetTrigger>
 
-			<SheetContent side="right" className="flex w-56 flex-col">
-				<SheetHeader>
-					<SheetTitle>Menu</SheetTitle>
-				</SheetHeader>
-
+			<SheetContent side="right" className="flex w-56 flex-col pt-6">
 				<nav className="mt-4 flex flex-col gap-1">
 					{items.map((item) => {
 						const isActive =
@@ -88,8 +82,8 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 						</>
 					)}
 
-					<div className="text-muted-foreground flex flex-col gap-1 text-xs">
-						<p>© 2020-{new Date().getFullYear()} Speedway Fantasy.</p>
+					<div className="text-muted-foreground flex flex-col gap-1 text-xs opacity-50">
+						<p>© {new Date().getFullYear()} Speedway Fantasy.</p>
 						<p>
 							Developed by{' '}
 							<a
@@ -106,7 +100,7 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 							Designed by{' '}
 							<a
 								className="underline"
-								href="https://github.com/albinario"
+								href="https://www.linkedin.com/in/albinlindeborg/"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
@@ -124,7 +118,7 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 							and{' '}
 							<a
 								className="underline"
-								href="https://albin8v6.com"
+								href="https://www.alexaraducanu.com"
 								rel="noopener noreferrer"
 								target="_blank"
 							>

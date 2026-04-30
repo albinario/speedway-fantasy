@@ -13,6 +13,7 @@ type TRidersResultRow = {
 	points: number
 	pos: number | null
 	isPicked?: boolean
+	tiedPos?: boolean
 }
 
 export function RidersResultRow({
@@ -23,13 +24,14 @@ export function RidersResultRow({
 	medal,
 	points,
 	pos,
-	isPicked = false
+	isPicked = false,
+	tiedPos = false
 }: TRidersResultRow) {
 	return (
 		<div
 			className={`flex items-center gap-2 px-3 py-2 ${isPicked ? 'bg-orange-400/5' : ''}`}
 		>
-			<PosBadge pos={pos} />
+			<PosBadge pos={pos} tiedPos={tiedPos} />
 
 			<RiderImage className="size-8 shrink-0" name={name} riderId={riderId} />
 

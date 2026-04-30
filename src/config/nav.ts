@@ -14,51 +14,53 @@ export type TNavItem = {
 	label: string
 	href: string
 	icon?: LucideIcon
-	hideInFooter?: boolean
+	showOnMobile?: boolean
 }
 
 export const navItems: TNavItem[] = [
 	{
 		label: 'Home',
 		href: '/',
-		icon: House
+		icon: House,
+		showOnMobile: true
 	},
 	{
 		label: "GP's",
 		href: '/gps',
-		icon: Flag
+		icon: Flag,
+		showOnMobile: true
 	},
 	{
 		label: 'Standings',
 		href: '/standings',
-		icon: ListOrdered
+		icon: ListOrdered,
+		showOnMobile: true
 	},
 	{
 		label: 'Comments',
 		href: '/comments',
-		icon: MessagesSquare
+		icon: MessagesSquare,
+		showOnMobile: true
 	},
 	{
 		label: 'Hall of fame',
 		href: '/hall-of-fame',
-		icon: Trophy,
-		hideInFooter: true
+		icon: Trophy
 	},
 	{
 		label: 'Rules',
 		href: '/rules',
-		icon: BookOpen,
-		hideInFooter: true
+		icon: BookOpen
 	},
 	{
 		label: 'Beer',
 		href: '/beer',
-		icon: Beer,
-		hideInFooter: true
+		icon: Beer
 	},
 	{
 		label: 'My page',
 		href: '/users',
-		icon: UserIcon
+		icon: UserIcon,
+		showOnMobile: true
 	}
 ]

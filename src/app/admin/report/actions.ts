@@ -49,6 +49,12 @@ export async function reportHeatAction(
 			.values(riders.map((r) => ({ gp_id: gpId, rider_id: r.id })))
 			.onConflict((oc) => oc.columns(['gp_id', 'rider_id']).doNothing())
 			.execute()
+
+		await db
+			.updateTable('users_standings')
+			.set({ prev_pos: sql`pos` })
+			.where('year', '=', year)
+			.execute()
 	}
 
 	if (!noHeat || isFinal) {
@@ -160,7 +166,7 @@ export async function reportHeatAction(
 		UPDATE riders_results
 		SET pos = ranking.pos
 		FROM (
-			SELECT id, RANK() OVER (ORDER BY points DESC) AS pos
+			SELECT id, RANK() OVER (ORDER BY points DESC, heats DESC) AS pos
 			FROM riders_results
 			WHERE gp_id = ${gpId}
 		) AS ranking
@@ -188,6 +194,27 @@ export async function reportHeatAction(
 		) AS ranking
 		WHERE users_standings.id = ranking.id
 	`.execute(db)
+
+	if (isFinal) {
+		const standings = await db
+			.selectFrom('users_standings')
+			.select(['user_id', 'pos'])
+			.where('year', '=', year)
+			.where('pos', 'is not', null)
+			.execute()
+
+		for (const { user_id, pos } of standings) {
+			await db
+				.insertInto('users_progress')
+				.values({ user_id, year, positions: sql`ARRAY[${sql.val(pos)}]::int[]` })
+				.onConflict((oc) =>
+					oc.columns(['user_id', 'year']).doUpdateSet({
+						positions: sql`array_append(users_progress.positions, ${sql.val(pos)})`
+					})
+				)
+				.execute()
+		}
+	}
 
 	updateTag(cacheTags.gps)
 	updateTag(cacheTags.gpResults)
