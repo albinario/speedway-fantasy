@@ -38,7 +38,7 @@ export async function UserGpCard({
 			)}
 
 			{macroStage !== EMacroStage.Before && (
-				<>
+				<div className="flex flex-col gap-2">
 					{viewerId && viewerId !== userId && (
 						<UserResultRow gpId={gp.id} isViewer userId={viewerId} />
 					)}
@@ -48,7 +48,7 @@ export async function UserGpCard({
 						userId={userId}
 					/>
 					<UserPicksResults gpId={gp.id} userId={userId} />
-				</>
+				</div>
 			)}
 
 			<RegisteredPlayers

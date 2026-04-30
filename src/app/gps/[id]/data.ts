@@ -44,7 +44,7 @@ export const getGpViewerPickedRiders = unstable_cache(
 				.execute()
 		}, []),
 	['gp-viewer-picked-riders'],
-	{ tags: [cacheTags.picks] }
+	{ tags: [cacheTags.picks, cacheTags.gpResults] }
 )
 
 export const getGpTopRiders = unstable_cache(

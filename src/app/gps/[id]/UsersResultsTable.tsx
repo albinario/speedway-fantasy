@@ -32,8 +32,7 @@ function makeColumns(
 						meta: { className: 'pr-0' },
 						cell: ({ row }: { row: { original: TRow; index: number } }) => {
 							const { pos } = row.original
-							if (pos !== row.index + 1) return null
-							return <PosBadge pos={pos} size="lg" />
+							return <PosBadge pos={pos} size="lg" tiedPos={pos !== row.index + 1} />
 						}
 					} as ColumnDef<TRow>
 				]

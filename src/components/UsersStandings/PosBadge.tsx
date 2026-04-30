@@ -6,9 +6,10 @@ type TPosBadge = {
 	pos: number | null
 	prevPos?: number | null
 	size?: 'default' | 'lg'
+	tiedPos?: boolean
 }
 
-export function PosBadge({ pos, prevPos, size = 'default' }: TPosBadge) {
+export function PosBadge({ pos, prevPos, size = 'default', tiedPos }: TPosBadge) {
 	const moved = pos != null && prevPos != null ? pos - prevPos : null
 
 	return (
@@ -19,7 +20,7 @@ export function PosBadge({ pos, prevPos, size = 'default' }: TPosBadge) {
 					size === 'lg' ? 'size-8' : 'size-7'
 				)}
 			>
-				{pos}
+				<span className={tiedPos ? 'text-muted-foreground' : ''}>{pos}</span>
 			</span>
 
 			{moved !== null && moved < 0 && (

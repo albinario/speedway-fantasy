@@ -12,11 +12,17 @@ type Entry = Awaited<ReturnType<typeof getHallOfFame>>[number]
 
 type Props = {
 	entries: Entry[]
+	glow?: boolean
 	viewerId?: number | null
 	year?: number
 }
 
-export function HallOfFameCard({ entries, viewerId, year }: Props) {
+export function HallOfFameCard({
+	entries,
+	glow = false,
+	viewerId,
+	year
+}: Props) {
 	const byType = Object.fromEntries(entries.map((e) => [e.type, e]))
 	const podium = [byType[2], byType[1], byType[3]].filter(Boolean)
 
@@ -44,7 +50,7 @@ export function HallOfFameCard({ entries, viewerId, year }: Props) {
 							className="flex flex-1 flex-col items-center gap-2 rounded-lg border p-3 text-center"
 							style={{
 								borderColor: medalColor,
-								boxShadow: `0 0 18px 2px ${medalColor}40`
+								boxShadow: glow ? `0 0 18px 2px ${medalColor}40` : undefined
 							}}
 						>
 							<Star

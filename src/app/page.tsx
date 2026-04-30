@@ -35,12 +35,12 @@ export default async function Home() {
 			{nextGp?.round === 1 && latestHofYear && (
 				<div>
 					<SectionTitle href="/hall-of-fame">{latestHofYear}</SectionTitle>
-					<HallOfFameCard entries={latestHallOfFame} viewerId={viewerId} />
+					<HallOfFameCard entries={latestHallOfFame} glow viewerId={viewerId} />
 				</div>
 			)}
 
 			<Suspense fallback={<SectionFallback />}>
-				<UsersStandings year={yearValues.activeYear} limit={5} />
+				<UsersStandings year={yearValues.activeYear} limit={10} />
 			</Suspense>
 
 			{latestGp && (

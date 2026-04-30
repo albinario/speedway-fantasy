@@ -53,7 +53,10 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 							key={row.id}
 							className={`flex items-center gap-2 px-3 py-2 ${isViewer ? 'bg-orange-400/5' : ''}`}
 						>
-							<PosBadge pos={row.pos} />
+							<PosBadge
+								pos={row.pos}
+								tiedPos={i < limit && row.pos !== i + 1}
+							/>
 
 							<UserAvatar
 								firstName={row.first_name}
