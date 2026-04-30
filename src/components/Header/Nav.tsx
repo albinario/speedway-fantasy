@@ -72,20 +72,69 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 					})}
 				</nav>
 
-				{viewerId && (
-					<div className="mt-auto flex flex-col gap-4 p-4">
-						<ReminderToggle defaultChecked={reminder ?? false} />
+				<div className="mt-auto flex flex-col gap-4 p-4">
+					{!!viewerId && (
+						<>
+							<ReminderToggle defaultChecked={reminder ?? false} />
 
-						<SheetClose asChild>
-							<Button asChild variant="destructive">
-								<a href="/auth/logout">
-									Log out
-									<LogOut />
-								</a>
-							</Button>
-						</SheetClose>
+							<SheetClose asChild>
+								<Button asChild variant="destructive">
+									<a href="/auth/logout">
+										Log out
+										<LogOut />
+									</a>
+								</Button>
+							</SheetClose>
+						</>
+					)}
+
+					<div className="text-muted-foreground flex flex-col gap-1 text-xs">
+						<p>© 2020-{new Date().getFullYear()} Speedway Fantasy.</p>
+						<p>
+							Developed by{' '}
+							<a
+								className="underline"
+								href="https://github.com/albinario"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								Albin Lindeborg
+							</a>
+							.
+						</p>
+						<p>
+							Designed by{' '}
+							<a
+								className="underline"
+								href="https://github.com/albinario"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								Albin Lindeborg
+							</a>
+							,{' '}
+							<a
+								className="underline"
+								href="https://www.linkedin.com/in/pablosuzarte"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								Pablo Suzarte
+							</a>{' '}
+							and{' '}
+							<a
+								className="underline"
+								href="https://albin8v6.com"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								Alexa Raducanu
+							</a>
+							.
+						</p>
+						<p>All rights reserved.</p>
 					</div>
-				)}
+				</div>
 			</SheetContent>
 		</Sheet>
 	)
