@@ -17,3 +17,5 @@ export const colors = {
 	bronze: '#cd7f32',
 	brandRed: '#ff3b1f'
 }
+
+export const adminEmail = 'albin.lindeborg@gmail.com'
