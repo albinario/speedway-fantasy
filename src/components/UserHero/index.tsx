@@ -125,23 +125,12 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 						</div>
 
 						{leader > 0 && (
-							<>
-								<div className="bg-foreground/10 h-4 overflow-hidden rounded-full">
-									<div
-										className="from-brand-red/60 to-brand-red h-full rounded-full bg-gradient-to-r"
-										style={{ width: `${progressPct}%` }}
-									/>
-								</div>
-
-								<div className="flex justify-between">
-									<span className="text-xs font-black tracking-wide uppercase">
-										You · {points} pts
-									</span>
-									<span className="text-xs font-black tracking-wide uppercase">
-										#1 · {leader} pts
-									</span>
-								</div>
-							</>
+							<div className="bg-foreground/10 h-4 overflow-hidden rounded-full">
+								<div
+									className="from-brand-red/60 to-brand-red h-full rounded-full bg-gradient-to-r"
+									style={{ width: `${progressPct}%` }}
+								/>
+							</div>
 						)}
 					</div>
 				)}
