@@ -51,55 +51,49 @@ function buildColumns({
 				) : null
 		},
 		{
-			id: 'avatar',
-			header: '',
-			enableSorting: false,
-			meta: { className: 'px-0' },
-			cell: ({ row }) => (
-				<RiderImage
-					className="size-10"
-					name={row.original.name}
-					riderId={row.original.riderId}
-				/>
-			)
-		},
-		{
 			id: 'name',
 			header: '',
 			enableSorting: false,
-			meta: { className: 'pr-0' },
 			cell: ({ row }) => {
 				const { name, countryCode, number, medals, riderId, pickedByViewer } =
 					row.original
 
 				return (
-					<>
-						{name && (
-							<RiderName
-								highlight={pickedByViewer}
-								name={name}
-								riderId={riderId}
-							/>
-						)}
+					<div className="flex items-center gap-2">
+						<RiderImage
+							className="size-10 shrink-0"
+							name={name}
+							riderId={riderId}
+						/>
 
-						<div className="mt-1 flex w-fit items-center gap-1">
-							<FlagNumber countryCode={countryCode} number={number} />
-
-							{medals && medals.length > 0 && (
-								<div className="flex items-center gap-0.5 pl-1 sm:gap-1 sm:pl-2">
-									{condensedMedals ? (
-										<MedalCounts
-											medal_1={medals.filter((m) => m === 1).length}
-											medal_2={medals.filter((m) => m === 2).length}
-											medal_3={medals.filter((m) => m === 3).length}
-										/>
-									) : (
-										medals.map((medal, i) => <MedalIcon key={i} type={medal} />)
-									)}
-								</div>
+						<div>
+							{name && (
+								<RiderName
+									highlight={pickedByViewer}
+									name={name}
+									riderId={riderId}
+								/>
 							)}
+
+							<div className="mt-1 flex w-fit items-center gap-1">
+								<FlagNumber countryCode={countryCode} number={number} />
+
+								{medals && medals.length > 0 && (
+									<div className="flex items-center gap-0.5 pl-1 sm:gap-1 sm:pl-2">
+										{condensedMedals ? (
+											<MedalCounts
+												medal_1={medals.filter((m) => m === 1).length}
+												medal_2={medals.filter((m) => m === 2).length}
+												medal_3={medals.filter((m) => m === 3).length}
+											/>
+										) : (
+											medals.map((medal, i) => <MedalIcon key={i} type={medal} />)
+										)}
+									</div>
+								)}
+							</div>
 						</div>
-					</>
+					</div>
 				)
 			}
 		},

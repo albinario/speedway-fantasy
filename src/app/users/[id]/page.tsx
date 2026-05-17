@@ -10,7 +10,7 @@ import { filterGps } from '@/lib/filter-gps'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
-import { getUser } from './data'
+import { getUser, getUserResultGpIds } from './data'
 
 type TUserPage = {
 	params: Promise<{ id: string }>
@@ -22,10 +22,11 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 	const userId = Number(id)
 	const { show } = await searchParams
 
-	const [user, yearValues, viewer] = await Promise.all([
+	const [user, yearValues, viewer, resultGpIds] = await Promise.all([
 		getUser(userId),
 		getYearValues(searchParams),
-		getViewer()
+		getViewer(),
+		getUserResultGpIds(userId)
 	])
 
 	if (!user) return null
@@ -34,7 +35,12 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 
 	const showAll = show === 'all'
 	const isPastYear = Number(yearValues.activeYear) < new Date().getFullYear()
-	const { visible, showToggle, isUpNext } = filterGps(gps, showAll, isPastYear)
+	const { visible, showToggle, isUpNext } = filterGps(
+		gps,
+		showAll,
+		isPastYear,
+		new Set(resultGpIds.map((r) => r.gp_id))
+	)
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -55,7 +61,11 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				</div>
 			</PageHeader>
 
-			<UserHero userId={userId} year={yearValues.activeYear} createdAt={user.created_at} />
+			<UserHero
+				userId={userId}
+				year={yearValues.activeYear}
+				createdAt={user.created_at}
+			/>
 
 			{showToggle && <ShowOlderToggle checked={showAll} />}
 

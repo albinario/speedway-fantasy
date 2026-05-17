@@ -14,6 +14,18 @@ export function getUser(id: number) {
 	)
 }
 
+export function getUserResultGpIds(userId: number) {
+	return dataFetch(
+		() =>
+			db
+				.selectFrom('users_results')
+				.select('gp_id')
+				.where('user_id', '=', userId)
+				.execute(),
+		[]
+	)
+}
+
 export function getUserStars(userId: number) {
 	return dataFetch(
 		() =>
