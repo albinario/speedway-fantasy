@@ -46,8 +46,13 @@ export function PickRidersSheet({
 	onOpenChange,
 	onSaved
 }: TPickRidersSheet) {
+	const activeIds = new Set(riders.map((r) => r.id))
 	const [selected, setSelected] = useState<number[]>(
-		initialPicks ? [initialPicks[0], initialPicks[1], initialPicks[2]] : []
+		initialPicks
+			? [initialPicks[0], initialPicks[1], initialPicks[2]].filter((id) =>
+					activeIds.has(id)
+				)
+			: []
 	)
 	const [isPending, startTransition] = useTransition()
 
@@ -86,7 +91,11 @@ export function PickRidersSheet({
 	function handleOpenChange(nextOpen: boolean) {
 		if (nextOpen) {
 			setSelected(
-				initialPicks ? [initialPicks[0], initialPicks[1], initialPicks[2]] : []
+				initialPicks
+					? [initialPicks[0], initialPicks[1], initialPicks[2]].filter((id) =>
+							activeIds.has(id)
+						)
+					: []
 			)
 		}
 		onOpenChange(nextOpen)
