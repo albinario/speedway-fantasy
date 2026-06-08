@@ -1,5 +1,4 @@
 import { MedalIcon } from '@/components/MedalIcon'
-import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
 import { PosBadge } from '@/components/UsersStandings/PosBadge'
 import { buildMedals } from '@/lib/medals'
@@ -28,12 +27,6 @@ export async function UserResultRow({
 	return (
 		<div className="flex items-center gap-2">
 			<PosBadge pos={pos} size="lg" />
-
-			<UserAvatar
-				firstName={row.first_name}
-				lastName={row.last_name}
-				className="size-10 shrink-0 text-xs"
-			/>
 
 			<div className="min-w-0 flex-1">
 				<UserName

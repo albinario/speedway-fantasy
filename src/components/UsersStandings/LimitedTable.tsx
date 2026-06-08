@@ -1,6 +1,4 @@
-import { MedalCounts } from '@/components/MedalCounts'
 import { SectionTitle } from '@/components/SectionHeader'
-import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
 
@@ -24,20 +22,17 @@ function StandingRow({
 			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${isViewer ? 'bg-orange-400/5' : ''}`}
 		>
 			{row.pos != null && (
-				<PosBadge
-					tiedPos={tiedPos}
-					pos={row.pos}
-					prevPos={row.prev_pos}
-					size="lg"
-				/>
+				<div className="w-15">
+					<PosBadge
+						tiedPos={tiedPos}
+						pos={row.pos}
+						prevPos={row.prev_pos}
+						size="lg"
+					/>
+				</div>
 			)}
 
 			<div className="flex min-w-0 items-center gap-2">
-				<UserAvatar
-					firstName={row.first_name}
-					lastName={row.last_name}
-					className="size-10 shrink-0 text-xs"
-				/>
 				<div className="min-w-0">
 					<UserName
 						firstName={row.first_name}
@@ -46,13 +41,13 @@ function StandingRow({
 						userId={row.user_id}
 						isViewer={isViewer}
 					/>
-					<div className="mt-1">
+					{/* <div className="mt-1">
 						<MedalCounts
 							medal_1={Number(row.medal_1)}
 							medal_2={Number(row.medal_2)}
 							medal_3={Number(row.medal_3)}
 						/>
-					</div>
+					</div> */}
 				</div>
 			</div>
 

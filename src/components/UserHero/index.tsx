@@ -11,7 +11,6 @@ import {
 } from 'lucide-react'
 
 import { getUserStars } from '@/app/users/[id]/data'
-import { MedalCounts } from '@/components/MedalCounts'
 import { getUserStandingRow } from '@/components/UsersStandings/data'
 import { getMedalColorHex } from '@/lib/medals'
 import { type TParamValues } from '@/lib/params'
@@ -66,12 +65,12 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 						</span>
 					</div>
 
-					<MedalCounts
+					{/* <MedalCounts
 						medal_1={medals.gold}
 						medal_2={medals.silver}
 						medal_3={medals.bronze}
 						size="lg"
-					/>
+					/> */}
 
 					{streak > 0 && (
 						<div className="ml-auto flex items-center gap-1">

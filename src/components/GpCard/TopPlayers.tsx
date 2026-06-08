@@ -5,8 +5,6 @@ import { PosBadge } from '@/components/UsersStandings/PosBadge'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { buildMedals } from '@/lib/medals'
 
-import { UserAvatar } from '../UserAvatar'
-
 type TTopPlayers = {
 	gpId: number
 	limit?: number
@@ -56,12 +54,6 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 							<PosBadge
 								pos={row.pos}
 								tiedPos={i < limit && row.pos !== i + 1}
-							/>
-
-							<UserAvatar
-								firstName={row.first_name}
-								lastName={row.last_name}
-								className="size-8 text-xs"
 							/>
 
 							<div className="min-w-0 flex-1">
