@@ -48,7 +48,7 @@ function makeColumns(
 
 				return (
 					<div className="flex items-center gap-2">
-						<div className="w-15">
+						<div>
 							<UserName
 								userId={user_id}
 								firstName={first_name}
