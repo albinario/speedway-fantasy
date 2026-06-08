@@ -87,7 +87,9 @@ function buildColumns({
 												medal_3={medals.filter((m) => m === 3).length}
 											/>
 										) : (
-											medals.map((medal, i) => <MedalIcon key={i} type={medal} />)
+											medals.map((medal, i) => (
+												<MedalIcon key={i} type={medal} />
+											))
 										)}
 									</div>
 								)}

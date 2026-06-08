@@ -9,7 +9,6 @@ import { MedalIcon } from '@/components/MedalIcon'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
-import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
 import { PosBadge } from '@/components/UsersStandings/PosBadge'
 import { sortedPicks } from '@/lib/picks'
@@ -32,7 +31,9 @@ function makeColumns(
 						meta: { className: 'pr-0' },
 						cell: ({ row }: { row: { original: TRow; index: number } }) => {
 							const { pos } = row.original
-							return <PosBadge pos={pos} size="lg" tiedPos={pos !== row.index + 1} />
+							return (
+								<PosBadge pos={pos} size="lg" tiedPos={pos !== row.index + 1} />
+							)
 						}
 					} as ColumnDef<TRow>
 				]
@@ -47,12 +48,7 @@ function makeColumns(
 
 				return (
 					<div className="flex items-center gap-2">
-						<UserAvatar
-							firstName={first_name}
-							lastName={last_name}
-							className="size-8 shrink-0 text-xs"
-						/>
-						<div>
+						<div className="w-15">
 							<UserName
 								userId={user_id}
 								firstName={first_name}
