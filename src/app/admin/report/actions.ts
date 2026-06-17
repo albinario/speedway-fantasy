@@ -123,6 +123,17 @@ export async function reportHeatAction(
 				) as Partial<Record<'medal_1' | 'medal_2' | 'medal_3', number>>
 			: {}
 
+		const medalStandingsUpdates = isFinal
+			? Object.fromEntries(
+					Object.entries(medalCounts)
+						.filter(([, v]) => v > 0)
+						.map(([col, v]) => [
+							col,
+							sql`users_standings.${sql.ref(col)} + ${sql.val(v)}`
+						])
+				)
+			: {}
+
 		if (earnedHeats === 0) continue
 
 		await db
@@ -156,7 +167,7 @@ export async function reportHeatAction(
 				oc.columns(['user_id', 'year']).doUpdateSet((eb) => ({
 					points: sql`users_standings.points + ${eb.val(earnedPoints)}`,
 					heats: sql`users_standings.heats + ${eb.val(earnedHeats)}`,
-					...medalUpdates
+					...medalStandingsUpdates
 				}))
 			)
 			.execute()
