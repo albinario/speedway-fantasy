@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table'
 
+import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
@@ -50,13 +51,13 @@ function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
 							userId={row.original.user_id}
 							isViewer={row.original.user_id === viewerId}
 						/>
-						{/* <div className="mt-1">
+						<div className="mt-1">
 							<MedalCounts
 								medal_1={Number(row.original.medal_1)}
 								medal_2={Number(row.original.medal_2)}
 								medal_3={Number(row.original.medal_3)}
 							/>
-						</div> */}
+						</div>
 					</div>
 				</div>
 			)

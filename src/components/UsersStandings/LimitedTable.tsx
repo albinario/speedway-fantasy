@@ -1,3 +1,4 @@
+import { MedalCounts } from '@/components/MedalCounts'
 import { SectionTitle } from '@/components/SectionHeader'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
@@ -41,13 +42,13 @@ function StandingRow({
 						userId={row.user_id}
 						isViewer={isViewer}
 					/>
-					{/* <div className="mt-1">
+					<div className="mt-1">
 						<MedalCounts
 							medal_1={Number(row.medal_1)}
 							medal_2={Number(row.medal_2)}
 							medal_3={Number(row.medal_3)}
 						/>
-					</div> */}
+					</div>
 				</div>
 			</div>
 
