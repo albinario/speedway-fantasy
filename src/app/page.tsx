@@ -59,7 +59,7 @@ export default async function Home() {
 			)}
 
 			<Suspense fallback={<SectionFallback />}>
-				<UsersStandings year={yearValues.activeYear} limit={10} />
+				<UsersStandings year={yearValues.activeYear} limit={3} />
 			</Suspense>
 
 			{latestGp && !latestGpIsToday && (
@@ -84,9 +84,9 @@ export default async function Home() {
 				</div>
 			)}
 
-			<Suspense fallback={<SectionFallback />}>
+			{/* <Suspense fallback={<SectionFallback />}>
 				<RidersStandings year={yearValues.activeYear} limit={5} />
-			</Suspense>
+			</Suspense> */}
 
 			<div>
 				<SectionTitle href="/activity">Latest activity</SectionTitle>

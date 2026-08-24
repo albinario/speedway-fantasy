@@ -3,6 +3,7 @@ import {
 	BookOpen,
 	Flag,
 	House,
+	ListCheck,
 	ListOrdered,
 	MessagesSquare,
 	Trophy,
@@ -41,6 +42,11 @@ export const navItems: TNavItem[] = [
 		href: '/comments',
 		icon: MessagesSquare,
 		showOnMobile: true
+	},
+	{
+		label: 'Activity',
+		href: '/activity',
+		icon: ListCheck
 	},
 	{
 		label: 'Hall of fame',
