@@ -8,7 +8,7 @@ import { PickRidersSheet } from '@/components/PickRidersSheet'
 import { RiderTile, type TRider } from '@/components/RiderTile'
 import { Button } from '@/components/ui/button'
 
-import { RiderTilesEmpty } from '../../RiderTile/Empty'
+import { RiderTilesEmpty } from '@/components/RiderTilesEmpty'
 
 type TViewerPicks = {
 	gpId: number

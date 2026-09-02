@@ -1,3 +1,4 @@
+import { AutoRefresh } from '@/components/AutoRefresh'
 import { GpCard } from '@/components/GpCard'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
@@ -7,9 +8,11 @@ import {
 	getGp,
 	getGpRidersPreview,
 	getGpRidersResults,
-	getGpUsersResults
+	getGpUsersResults,
+	getGpUsersWithStandings
 } from './data'
 import { GpMissingStandingsCard } from './GpMissingStandingsCard'
+import { GpUsersStandingsTable } from './GpUsersStandingsTable'
 import { GpRidersPreviewTable, GpRidersResultsTable } from './RidersTables'
 import { GpUsersResultsTable } from './UsersResultsTable'
 
@@ -28,11 +31,16 @@ export default async function GpPage({ params }: TGpPage) {
 	const viewer = await getViewer()
 	const viewerId = viewer?.db?.id
 
-	const [ridersResults, usersResults] = await Promise.all([
+	const year = new Date(gp.start_date).getFullYear()
+
+	const [ridersResults, usersResults, usersWithStandings] = await Promise.all([
 		macroStage !== EMacroStage.Before
 			? getGpRidersResults(gp.id, viewerId)
 			: Promise.resolve([]),
-		getGpUsersResults(gp.id)
+		macroStage !== EMacroStage.Before
+			? getGpUsersResults(gp.id)
+			: Promise.resolve([]),
+		isBefore ? getGpUsersWithStandings(gp.id, year) : Promise.resolve([])
 	])
 
 	const ridersPreview =
@@ -41,16 +49,19 @@ export default async function GpPage({ params }: TGpPage) {
 			: []
 
 	return (
-		<div className="columns-1 space-y-4 lg:columns-2 xl:columns-3 [&>*]:break-inside-avoid">
+		<div className="columns-1 space-y-4 [&>*]:break-inside-avoid">
+			{macroStage === EMacroStage.During && <AutoRefresh />}
 			<GpCard gp={gp} macroStage={macroStage} />
 
-			{usersResults.length > 0 && (
+			{isBefore ? (
+				<GpUsersStandingsTable data={usersWithStandings} viewerId={viewerId} />
+			) : usersResults.length > 0 ? (
 				<GpUsersResultsTable
 					data={usersResults}
 					isBefore={isBefore}
 					viewerId={viewerId}
 				/>
-			)}
+			) : null}
 
 			{ridersResults.length > 0 ? (
 				<GpRidersResultsTable data={ridersResults} />

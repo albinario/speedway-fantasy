@@ -5,7 +5,7 @@ import { RiderName } from '@/components/RiderName'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 
-import { PosBadge } from '../UsersStandings/PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getRidersStandings>>[number]
 

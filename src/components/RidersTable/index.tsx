@@ -10,7 +10,7 @@ import { RiderName } from '@/components/RiderName'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 
-import { PosBadge } from '../UsersStandings/PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 
 export type TRiderRow = {
 	riderId: number

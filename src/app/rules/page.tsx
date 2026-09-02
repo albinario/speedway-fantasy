@@ -13,7 +13,7 @@ export default function RulesPage() {
 		<div className="flex flex-col gap-4">
 			<PageHeader title={metaData.title} hideYearSelector />
 
-			<div className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			<div className="grid items-start gap-4 sm:grid-cols-2">
 				<HowItWorksCard />
 
 				<Card>

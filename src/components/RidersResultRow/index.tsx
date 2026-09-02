@@ -2,7 +2,7 @@ import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
-import { PosBadge } from '@/components/UsersStandings/PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 
 type TRidersResultRow = {
 	riderId: number

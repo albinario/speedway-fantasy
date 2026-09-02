@@ -65,13 +65,14 @@ export async function GpCard({
 				showActivity={macroStage === EMacroStage.Before}
 			/>
 
-			{gp.wild_card_id && (
+			{macroStage === EMacroStage.Before && gp.wild_card_id && (
 				<WildCard
 					countryCode={gp.wild_card_country_code}
 					name={gp.wild_card_name}
 					riderId={gp.wild_card_id}
 				/>
 			)}
+
 		</GpCardBase>
 	)
 }

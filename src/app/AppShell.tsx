@@ -21,7 +21,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 		return (
 			<>
 				<HeaderShell />
-				<main className="fluid-container flex-1 px-0 py-3 sm:px-3">
+				<main className="mx-auto w-full max-w-screen-md flex-1 px-0 py-3 sm:px-3">
 					{children}
 				</main>
 			</>
@@ -36,7 +36,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 		<>
 			<Header />
 
-			<main className="fluid-container flex-1 px-0 py-3 sm:px-3">
+			<main className="mx-auto w-full max-w-screen-md flex-1 px-0 py-3 sm:px-3">
 				<Suspense fallback={null}>
 					<OnboardingGuard />
 				</Suspense>

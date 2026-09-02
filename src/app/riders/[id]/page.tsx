@@ -60,7 +60,7 @@ export default async function RiderPage({ params, searchParams }: TRiderPage) {
 
 			{showToggle && <ShowOlderToggle checked={showAll} />}
 
-			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
 				{visible.map(({ gp }) => (
 					<RiderGpCard key={gp.id} gp={gp} />
 				))}
