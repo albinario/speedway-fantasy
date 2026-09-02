@@ -6,6 +6,7 @@ import {
 	ListCheck,
 	ListOrdered,
 	MessagesSquare,
+	SquarePlus,
 	Trophy,
 	UserIcon
 } from 'lucide-react'
@@ -57,6 +58,11 @@ export const navItems: TNavItem[] = [
 		label: 'Rules',
 		href: '/rules',
 		icon: BookOpen
+	},
+	{
+		label: 'Install app',
+		href: '/install',
+		icon: SquarePlus
 	},
 	{
 		label: 'Beer',

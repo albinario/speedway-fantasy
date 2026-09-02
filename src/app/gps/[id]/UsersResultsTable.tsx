@@ -57,14 +57,8 @@ function makeColumns(
 								isViewer={user_id === viewerId}
 							/>
 							<div className="mt-1 flex items-center gap-2">
-								{picks.map((pick, i) => (
-									<Link
-										key={i}
-										href={`/riders/${pick.riderId}`}
-										className={
-											pick.riderId == null ? 'pointer-events-none' : ''
-										}
-									>
+								{picks.map((pick, i) => {
+									const flag = (
 										<FlagNumber
 											countryCode={pick.countryCode}
 											number={pick.number}
@@ -74,8 +68,18 @@ function makeColumns(
 											}
 											size="xs"
 										/>
-									</Link>
-								))}
+									)
+
+									if (pick.riderId == null) {
+										return <div key={i}>{flag}</div>
+									}
+
+									return (
+										<Link key={i} href={`/riders/${pick.riderId}`}>
+											{flag}
+										</Link>
+									)
+								})}
 							</div>
 						</div>
 					</div>

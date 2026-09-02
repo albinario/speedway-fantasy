@@ -35,11 +35,13 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className="dark"
+			translate="no"
+			className="dark notranslate"
 			style={{ colorScheme: 'dark' }}
 			data-scroll-behavior="smooth"
 		>
 			<head>
+				<meta name="google" content="notranslate" />
 				<AppleTouchLinks />
 			</head>
 

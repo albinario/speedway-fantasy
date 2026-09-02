@@ -4,18 +4,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { LogOut, Menu } from 'lucide-react'
+import { VisuallyHidden } from 'radix-ui'
 
+import { ReminderToggle } from '@/components/ReminderToggle'
 import { Button } from '@/components/ui/button'
 import {
 	Sheet,
 	SheetClose,
 	SheetContent,
+	SheetDescription,
+	SheetTitle,
 	SheetTrigger
 } from '@/components/ui/sheet'
 import { navItems } from '@/config/nav'
 import { cn } from '@/lib/utils'
-
-import { ReminderToggle } from '@/components/ReminderToggle'
 
 type THeaderNav = {
 	viewerId?: number
@@ -42,6 +44,15 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 			</SheetTrigger>
 
 			<SheetContent side="right" className="flex w-56 flex-col pt-6">
+				<VisuallyHidden.Root asChild>
+					<SheetTitle>Navigation menu</SheetTitle>
+				</VisuallyHidden.Root>
+				<VisuallyHidden.Root asChild>
+					<SheetDescription>
+						Links to the main sections of Speedway Fantasy
+					</SheetDescription>
+				</VisuallyHidden.Root>
+
 				<nav className="mt-4 flex flex-col gap-1">
 					{items.map((item) => {
 						const isActive =
