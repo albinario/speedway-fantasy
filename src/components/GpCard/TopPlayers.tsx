@@ -1,7 +1,7 @@
 import { getGpTopUsers, getGpUserResult } from '@/app/gps/[id]/data'
 import { MedalIcon } from '@/components/MedalIcon'
 import { UserName } from '@/components/UserName'
-import { PosBadge } from '@/components/UsersStandings/PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { buildMedals } from '@/lib/medals'
 

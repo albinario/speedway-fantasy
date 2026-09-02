@@ -9,7 +9,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
 
 import type { getUsersStandings } from './data'
-import { PosBadge } from './PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 

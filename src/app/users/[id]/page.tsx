@@ -69,7 +69,7 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 
 			{showToggle && <ShowOlderToggle checked={showAll} />}
 
-			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
 				{visible.map(({ gp, stage }, i) => (
 					<UserGpCard
 						key={gp.id}

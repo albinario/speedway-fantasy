@@ -3,7 +3,7 @@ import { MedalIcon as MedalIconComponent } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { getMedalColorHex } from '@/lib/medals'
 import type { getUserStandingRow } from '@/components/UsersStandings/data'
-import { PosBadge } from '@/components/UsersStandings/PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 
 type TUserProfileCard = {
 	standings: Awaited<ReturnType<typeof getUserStandingRow>>

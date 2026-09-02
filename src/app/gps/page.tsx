@@ -34,7 +34,7 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 
 			{showToggle && <ShowOlderToggle checked={showAll} />}
 
-			<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+			<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
 				{visible.map(({ gp, stage }, i) => (
 					<GpCard
 						key={gp.id}

@@ -338,6 +338,39 @@ export const getGpUsersResults = unstable_cache(
 	{ tags: [cacheTags.gpResults] }
 )
 
+export const getGpUsersWithStandings = unstable_cache(
+	(gpId: number, year: number) =>
+		dataFetch(
+			() =>
+				db
+					.selectFrom('users_picks')
+					.innerJoin(
+						'users_with_stars',
+						'users_with_stars.id',
+						'users_picks.user_id'
+					)
+					.leftJoin('users_standings', (join) =>
+						join
+							.onRef('users_standings.user_id', '=', 'users_picks.user_id')
+							.on('users_standings.year', '=', year)
+					)
+					.select([
+						'users_picks.user_id',
+						'users_with_stars.first_name',
+						'users_with_stars.last_name',
+						'users_with_stars.stars',
+						'users_standings.pos',
+						'users_standings.points as season_points'
+					])
+					.where('users_picks.gp_id', '=', gpId)
+					.orderBy(sql`users_standings.pos asc nulls last`)
+					.execute(),
+			[]
+		),
+	['gp-users-with-standings'],
+	{ tags: [cacheTags.picks, cacheTags.standings] }
+)
+
 export const getUsersNotInStandings = (year: number) =>
 	dataFetch(
 		() =>

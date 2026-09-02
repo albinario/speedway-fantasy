@@ -6,11 +6,11 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
+import { PosBadge } from '@/components/PosBadge'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { DataTable } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
-import { PosBadge } from '@/components/UsersStandings/PosBadge'
 import { sortedPicks } from '@/lib/picks'
 
 import type { getGpUsersResults } from './data'
@@ -120,7 +120,7 @@ function makeColumns(
 		{
 			accessorKey: 'season_points',
 			header: 'Total',
-			meta: { className: 'hidden px-1 text-center sm:table-cell' }
+			meta: { className: 'px-1 text-center' }
 		}
 	]
 }

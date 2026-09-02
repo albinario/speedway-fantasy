@@ -11,19 +11,21 @@ import { HeaderNav } from './Nav'
 
 export function HeaderShell({ children }: { children?: React.ReactNode }) {
 	return (
-		<div className="sticky top-0 z-50 flex justify-between border-b bg-black/65 p-3 backdrop-blur-sm">
-			<Link href="/" className="w-32 sm:w-48 md:w-64">
-				<Image
-					alt={logo.alt}
-					height={logo.height}
-					width={logo.width}
-					priority
-					sizes={logo.widthContainer}
-					src={logo.src}
-				/>
-			</Link>
+		<div className="sticky top-0 z-50 border-b bg-black/65 p-3 backdrop-blur-sm">
+			<div className="mx-auto flex w-full max-w-screen-md items-center justify-between">
+				<Link href="/" className="w-32 sm:w-48 md:w-64">
+					<Image
+						alt={logo.alt}
+						height={logo.height}
+						width={logo.width}
+						priority
+						sizes={logo.widthContainer}
+						src={logo.src}
+					/>
+				</Link>
 
-			{children && <div className="flex items-start gap-2">{children}</div>}
+				{children && <div className="flex items-start gap-2">{children}</div>}
+			</div>
 		</div>
 	)
 }

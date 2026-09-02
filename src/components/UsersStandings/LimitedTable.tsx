@@ -5,7 +5,7 @@ import { getViewer } from '@/lib/auth/get-viewer'
 
 import { Card } from '../ui/card'
 import { type getUsersStandings, getUserStandingRow } from './data'
-import { PosBadge } from './PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 

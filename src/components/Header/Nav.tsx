@@ -15,7 +15,7 @@ import {
 import { navItems } from '@/config/nav'
 import { cn } from '@/lib/utils'
 
-import { ReminderToggle } from '../UserHero/ReminderToggle'
+import { ReminderToggle } from '@/components/ReminderToggle'
 
 type THeaderNav = {
 	viewerId?: number

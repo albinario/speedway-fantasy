@@ -1,6 +1,6 @@
 import { MedalIcon } from '@/components/MedalIcon'
 import { UserName } from '@/components/UserName'
-import { PosBadge } from '@/components/UsersStandings/PosBadge'
+import { PosBadge } from '@/components/PosBadge'
 import { buildMedals } from '@/lib/medals'
 
 import { getUserGpRow } from './data'
