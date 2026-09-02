@@ -10,6 +10,7 @@ import { HomeLeaderPodium } from '@/components/HomeLeaderPodium'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { getViewer } from '@/lib/auth/get-viewer'
+import { cn } from '@/lib/utils'
 import { getYearValues } from '@/lib/year'
 
 function SectionFallback() {
@@ -50,12 +51,12 @@ export default async function Home() {
 			</Suspense>
 
 			<Suspense fallback={<SectionFallback />}>
-				<HomeLeaderPodium year={yearValues.activeYear} />
+				<HomeLeaderPodium year={yearValues.activeYear} viewerId={viewerId} />
 			</Suspense>
 
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
 				{upNextGp && (
-					<div>
+					<div className={cn(nextGpIsToday ? 'order-1' : 'order-2')}>
 						<SectionTitle href={`/gps/${upNextGp.id}`} linkLabel="View GP">
 							{todayGp ? 'Today&apos;s' : 'Next'}{' '}
 							<span className="text-green-400">GP</span>
@@ -67,7 +68,7 @@ export default async function Home() {
 				)}
 
 				{prevGp && (
-					<div>
+					<div className={cn(nextGpIsToday ? 'order-2' : 'order-1')}>
 						<SectionTitle href={`/gps/${prevGp.id}`} linkLabel="View GP">
 							Previous <span className="text-green-400">GP</span>
 						</SectionTitle>

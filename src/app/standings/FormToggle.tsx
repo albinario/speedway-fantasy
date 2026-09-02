@@ -6,22 +6,21 @@ import { useRouter, useSearchParams } from 'next/navigation'
 
 import { LoadingFallback } from '@/components/LoadingFallback'
 import { SegmentedControl } from '@/components/SegmentedControl'
+import type { TUsersForm } from '@/components/UsersStandings'
 
-type TView = 'players' | 'riders'
-
-type TStandingsToggle = {
-	view: TView
+type TFormToggle = {
+	form: TUsersForm
 	children: React.ReactNode
 }
 
-export function StandingsToggle({ view, children }: TStandingsToggle) {
+export function FormToggle({ form, children }: TFormToggle) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const [isPending, startTransition] = useTransition()
 
-	function setView(next: TView) {
+	function setForm(next: TUsersForm) {
 		const params = new URLSearchParams(searchParams.toString())
-		params.set('view', next)
+		params.set('form', next)
 		startTransition(() => {
 			router.push(`?${params.toString()}`)
 		})
@@ -31,11 +30,12 @@ export function StandingsToggle({ view, children }: TStandingsToggle) {
 		<>
 			<SegmentedControl
 				options={[
-					{ value: 'players', label: 'Players' },
-					{ value: 'riders', label: 'Riders' }
+					{ value: 'total', label: 'Total' },
+					{ value: 'last2', label: 'Last 2' },
+					{ value: 'last4', label: 'Last 4' }
 				]}
-				value={view}
-				onChange={setView}
+				value={form}
+				onChange={setForm}
 			/>
 
 			{isPending ? <LoadingFallback /> : children}

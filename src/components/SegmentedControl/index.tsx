@@ -10,7 +10,7 @@ type TOption<T extends string> = {
 }
 
 type TSegmentedControl<T extends string> = {
-	options: [TOption<T>, TOption<T>]
+	options: TOption<T>[]
 	value: T
 	onChange: (value: T) => void
 	className?: string
@@ -22,12 +22,20 @@ export function SegmentedControl<T extends string>({
 	onChange,
 	className
 }: TSegmentedControl<T>) {
-	const isSecond = value === options[1].value
+	const activeIndex = Math.max(
+		0,
+		options.findIndex((opt) => opt.value === value)
+	)
+	const count = options.length
 
 	return (
 		<div className={cn('bg-muted relative flex rounded-lg p-1', className)}>
 			<div
-				className={`bg-background absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-md shadow-sm transition-transform duration-200 ${isSecond ? 'translate-x-full' : 'translate-x-0'}`}
+				className="bg-background absolute inset-y-1 rounded-md shadow-sm transition-all duration-200"
+				style={{
+					width: `calc((100% - 8px) / ${count})`,
+					left: `calc(4px + (100% - 8px) / ${count} * ${activeIndex})`
+				}}
 			/>
 			{options.map((opt) => (
 				<button
