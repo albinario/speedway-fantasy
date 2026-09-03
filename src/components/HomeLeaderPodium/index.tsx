@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { PosBadge } from '@/components/PosBadge'
 import { SectionTitle } from '@/components/SectionHeader'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardGlow } from '@/components/ui/card'
 import { UserName } from '@/components/UserName'
 import {
 	getUsersStandings,
@@ -37,7 +37,10 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 			<SectionTitle href="/standings" linkLabel="View all">
 				Current <span className="text-green-400">podium</span>
 			</SectionTitle>
-			<Card>
+
+			<Card className="relative isolate">
+				<CardGlow color="gold" position="top" />
+
 				<CardContent className="flex flex-col gap-3">
 					<div className="flex items-end gap-2">
 						{podium.map((entry, idx) => {
@@ -76,6 +79,7 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 										>
 											{entry.first_name} {entry.last_name}
 										</Link>
+
 										<span className={isWinner ? 'text-sm' : 'text-xs'}>
 											<span className="font-bold tabular-nums">
 												{Number(entry.points)}
@@ -95,6 +99,7 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 									pos={viewerRow.pos ?? standings.length + 1}
 									prevPos={viewerRow.prev_pos}
 								/>
+
 								<UserName
 									firstName={viewerRow.first_name}
 									lastName={viewerRow.last_name}
@@ -103,6 +108,7 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 									isViewer
 								/>
 							</div>
+
 							<span className="text-sm">
 								<span className="font-bold tabular-nums">
 									{Number(viewerRow.points)}

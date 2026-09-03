@@ -1,24 +1,31 @@
 import Link from 'next/link'
 
-import { LogIn, Trophy, TrendingUp, Users } from 'lucide-react'
+import { LogIn, TrendingUp, Trophy, Users } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardGlow } from '@/components/ui/card'
 
 const features = [
 	{ icon: Users, label: 'Pick 3 riders' },
 	{ icon: Trophy, label: 'Earn points' },
-	{ icon: TrendingUp, label: 'Climb standings' },
+	{ icon: TrendingUp, label: 'Climb standings' }
 ]
 
 type Props = { isAuthenticated: boolean }
 
 export function HomeIntro({ isAuthenticated }: Props) {
 	return (
-		<Card className="relative">
-			<Link href="/rules" className="absolute inset-0 z-0" aria-label="View rules" />
+		<Card className="relative isolate">
+			<CardGlow color="green" position="top" />
+
+			<Link
+				href="/rules"
+				className="absolute inset-0 z-0"
+				aria-label="View rules"
+			/>
+
 			<CardContent className="flex flex-col gap-4 pt-4">
-			<div className="grid grid-cols-3 gap-2">
+				<div className="grid grid-cols-3 gap-2">
 					{features.map(({ icon: Icon, label }) => (
 						<div
 							key={label}
@@ -30,9 +37,15 @@ export function HomeIntro({ isAuthenticated }: Props) {
 					))}
 				</div>
 			</CardContent>
+
 			{!isAuthenticated && (
 				<CardFooter>
-					<Button asChild size="lg" className="relative z-10 w-full" variant="outline">
+					<Button
+						asChild
+						size="lg"
+						className="relative z-10 w-full"
+						variant="outline"
+					>
 						<a href="/auth/login">
 							<LogIn className="mr-2 size-4" />
 							Sign in to play

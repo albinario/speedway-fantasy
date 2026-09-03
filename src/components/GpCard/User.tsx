@@ -42,6 +42,9 @@ export async function UserGpCard({
 					{viewerId && viewerId !== userId && (
 						<UserResultRow gpId={gp.id} isViewer userId={viewerId} />
 					)}
+
+					<hr />
+
 					<UserResultRow
 						gpId={gp.id}
 						isViewer={viewerId === userId}

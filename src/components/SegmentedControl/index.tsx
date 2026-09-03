@@ -37,11 +37,12 @@ export function SegmentedControl<T extends string>({
 					left: `calc(4px + (100% - 8px) / ${count} * ${activeIndex})`
 				}}
 			/>
+
 			{options.map((opt) => (
 				<button
 					key={opt.value}
 					onClick={() => onChange(opt.value)}
-					className={`relative z-10 flex flex-1 items-center justify-center py-2 text-sm font-black uppercase transition-colors duration-200 ${
+					className={`relative z-10 flex flex-1 items-center justify-center py-2 text-sm font-black transition-colors duration-200 ${
 						value === opt.value
 							? 'text-foreground'
 							: 'text-muted-foreground hover:text-foreground'

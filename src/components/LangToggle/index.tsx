@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Flag } from '@/components/Flag'
 import { SegmentedControl } from '@/components/SegmentedControl'
 
-type TLang = 'sv' | 'en'
+export type TLang = 'sv' | 'en'
 
 export function LangToggle({ lang }: { lang: TLang }) {
 	const router = useRouter()
@@ -19,12 +19,12 @@ export function LangToggle({ lang }: { lang: TLang }) {
 
 	return (
 		<SegmentedControl
+			onChange={setLang}
 			options={[
 				{ value: 'sv', label: <Flag countryCode="SE" /> },
 				{ value: 'en', label: <Flag countryCode="GB" /> }
 			]}
 			value={lang}
-			onChange={setLang}
 		/>
 	)
 }

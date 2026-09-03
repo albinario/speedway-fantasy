@@ -66,7 +66,7 @@ export function ReportForm({
 	}
 
 	return (
-		<div className="mx-auto flex max-w-sm flex-col gap-6 p-3">
+		<div className="mx-auto flex max-w-sm flex-col gap-4 p-3">
 			<div className="flex items-center justify-between">
 				<h1 className="text-2xl font-black uppercase">{cityName}</h1>
 
@@ -95,7 +95,7 @@ export function ReportForm({
 
 			<HeatsCounter heatsFinished={heatsFinished} />
 
-			<div className="grid grid-cols-4 gap-2">
+			<div className="grid grid-cols-4 gap-1.5">
 				{riders.map((rider) => {
 					const selectionIdx = selected.indexOf(rider.id)
 					const isSelected = selectionIdx !== -1
@@ -104,11 +104,13 @@ export function ReportForm({
 					return (
 						<div key={rider.id} className="relative">
 							<RiderTile
-								rider={rider}
+								compact
 								hideFirstName
-								isSelected={isSelected}
+								hideFlagNumber
 								isDimmed={isComplete && !isSelected}
+								isSelected={isSelected}
 								onClick={() => handleTileClick(rider.id)}
+								rider={rider}
 							/>
 							{isSelected && (
 								<div className="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-yellow-400 text-xs font-black text-black">

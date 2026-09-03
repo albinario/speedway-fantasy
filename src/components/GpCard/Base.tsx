@@ -1,5 +1,5 @@
 import type { getGps } from '@/app/gps/data'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardGlow } from '@/components/ui/card'
 import { EMacroStage } from '@/enums'
 
 import { GpCardHeader } from './Header'
@@ -24,7 +24,9 @@ export function GpCardBase({
 	const href = linked ? `/gps/${gp.id}` : undefined
 
 	return (
-		<Card>
+		<Card className="relative isolate">
+			<CardGlow color="silver" position="bottom" />
+
 			<GpCardHeader
 				href={href}
 				cityId={gp.city_id}

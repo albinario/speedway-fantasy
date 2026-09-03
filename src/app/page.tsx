@@ -17,9 +17,9 @@ function SectionFallback() {
 	return <Card className="h-48 animate-pulse" />
 }
 
-function isToday(date: Date | string | null | undefined): boolean {
-	if (!date) return false
-	return new Date(date).toDateString() === new Date().toDateString()
+function msFromNow(date: Date | string | null | undefined): number {
+	if (!date) return Infinity
+	return Math.abs(new Date(date).getTime() - Date.now())
 }
 
 export default async function Home() {
@@ -35,12 +35,11 @@ export default async function Home() {
 	const viewerId = viewer?.db?.id
 	const latestHofYear = latestHallOfFame?.[0]?.year
 
-	const latestGpIsToday = isToday(latestGp?.start_date)
-	const nextGpIsToday = isToday(nextGp?.start_date)
-	const todayGp = latestGpIsToday ? latestGp : nextGpIsToday ? nextGp : null
+	const nextGpIsCloser =
+		msFromNow(nextGp?.start_date) <= msFromNow(latestGp?.start_date)
 
-	const upNextGp = todayGp ?? nextGp
-	const prevGp = latestGpIsToday ? null : latestGp
+	const upNextGp = nextGp
+	const prevGp = latestGp
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -56,10 +55,9 @@ export default async function Home() {
 
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
 				{upNextGp && (
-					<div className={cn(nextGpIsToday ? 'order-1' : 'order-2')}>
+					<div className={cn(nextGpIsCloser ? 'order-1' : 'order-2')}>
 						<SectionTitle href={`/gps/${upNextGp.id}`} linkLabel="View GP">
-							{todayGp ? 'Today&apos;s' : 'Next'}{' '}
-							<span className="text-green-400">GP</span>
+							Next <span className="text-green-400">GP</span>
 						</SectionTitle>
 						<Suspense fallback={<SectionFallback />}>
 							<GpCard gp={upNextGp} isUpNext linked imageLoading="eager" />
@@ -68,7 +66,7 @@ export default async function Home() {
 				)}
 
 				{prevGp && (
-					<div className={cn(nextGpIsToday ? 'order-2' : 'order-1')}>
+					<div className={cn(nextGpIsCloser ? 'order-2' : 'order-1')}>
 						<SectionTitle href={`/gps/${prevGp.id}`} linkLabel="View GP">
 							Previous <span className="text-green-400">GP</span>
 						</SectionTitle>

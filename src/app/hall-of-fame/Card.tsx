@@ -2,7 +2,13 @@ import Link from 'next/link'
 
 import { Star } from 'lucide-react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+	Card,
+	CardContent,
+	CardGlow,
+	CardHeader,
+	CardTitle
+} from '@/components/ui/card'
 import { getMedalColorHex } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
@@ -27,7 +33,9 @@ export function HallOfFameCard({
 	const podium = [byType[2], byType[1], byType[3]].filter(Boolean)
 
 	return (
-		<Card>
+		<Card className="relative isolate">
+			<CardGlow color="gold" position="top" />
+
 			{year && (
 				<CardHeader className="pb-0">
 					<CardTitle className="text-xl font-black">{year}</CardTitle>

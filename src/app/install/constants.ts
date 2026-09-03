@@ -1,4 +1,4 @@
 export const metaData = {
-	title: 'Add to home screen',
+	title: 'Install app on home screen',
 	description: 'Install Speedway Fantasy on your phone'
 }

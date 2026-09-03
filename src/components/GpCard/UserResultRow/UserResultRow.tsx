@@ -1,7 +1,8 @@
 import { MedalIcon } from '@/components/MedalIcon'
-import { UserName } from '@/components/UserName'
 import { PosBadge } from '@/components/PosBadge'
+import { UserName } from '@/components/UserName'
 import { buildMedals } from '@/lib/medals'
+import { cn } from '@/lib/utils'
 
 import { getUserGpRow } from './data'
 
@@ -25,7 +26,12 @@ export async function UserResultRow({
 	const medals = buildMedals(row)
 
 	return (
-		<div className="flex items-center gap-2">
+		<div
+			className={cn(
+				'flex items-center gap-2',
+				isViewer && 'bg-orange-400/5 py-1'
+			)}
+		>
 			<PosBadge pos={pos} size="lg" />
 
 			<div className="min-w-0 flex-1">
