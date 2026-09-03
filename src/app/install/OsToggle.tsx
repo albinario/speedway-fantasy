@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
-import { Apple, Smartphone } from 'lucide-react'
+import { Smartphone } from 'lucide-react'
 
 import { SegmentedControl } from '@/components/SegmentedControl'
 
@@ -20,12 +20,13 @@ export function OsToggle({ os }: { os: TOs }) {
 
 	return (
 		<SegmentedControl
+			onChange={setOs}
 			options={[
 				{
 					value: 'ios',
 					label: (
 						<span className="flex items-center gap-1.5">
-							<Apple className="size-4" /> iPhone
+							<Smartphone className="size-4" /> iPhone
 						</span>
 					)
 				},
@@ -39,7 +40,6 @@ export function OsToggle({ os }: { os: TOs }) {
 				}
 			]}
 			value={os}
-			onChange={setOs}
 		/>
 	)
 }

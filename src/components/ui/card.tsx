@@ -88,6 +88,65 @@ function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
 	)
 }
 
+type TCardGlowColor =
+	| 'green'
+	| 'orange'
+	| 'yellow'
+	| 'blue'
+	| 'gold'
+	| 'silver'
+	| 'bronze'
+	| 'red'
+
+const cardGlowColorClasses: Record<TCardGlowColor, string> = {
+	green: 'bg-green-400/10',
+	orange: 'bg-orange-400/25',
+	yellow: 'bg-yellow-400/20',
+	blue: 'bg-blue-400/20',
+	gold: 'bg-gold/20',
+	silver: 'bg-silver/20',
+	bronze: 'bg-bronze/20',
+	red: 'bg-brand-red/20'
+}
+
+type TCardGlowPosition = 'center' | 'top' | 'bottom'
+
+const cardGlowPositionClasses: Record<TCardGlowPosition, string> = {
+	center: 'top-1/2 -translate-y-1/2',
+	top: 'top-0 -translate-y-1/2',
+	bottom: 'bottom-0 translate-y-1/2'
+}
+
+/**
+ * Soft, blurred accent blob meant to sit behind a Card's content (`-z-10`) so
+ * the tint reads as ambient light rather than an overlay. The parent Card
+ * must have both `relative` and `isolate` — without `isolate`, Card has no
+ * stacking context of its own, so this element's negative z-index escapes to
+ * an ancestor context and gets painted behind Card's own opaque background,
+ * making the glow invisible.
+ */
+function CardGlow({
+	color = 'green',
+	position = 'center',
+	className
+}: {
+	color?: TCardGlowColor
+	position?: TCardGlowPosition
+	className?: string
+}) {
+	return (
+		<div
+			aria-hidden
+			className={cn(
+				'pointer-events-none absolute left-1/2 -z-10 size-40 -translate-x-1/2 rounded-full blur-3xl',
+				cardGlowPositionClasses[position],
+				cardGlowColorClasses[color],
+				className
+			)}
+		/>
+	)
+}
+
 export {
 	Card,
 	CardHeader,
@@ -95,5 +154,6 @@ export {
 	CardTitle,
 	CardAction,
 	CardDescription,
-	CardContent
+	CardContent,
+	CardGlow
 }

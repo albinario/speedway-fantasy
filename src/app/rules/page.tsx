@@ -1,7 +1,13 @@
 import type { Metadata } from 'next'
 
 import { PageHeader } from '@/components/PageHeader'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+	Card,
+	CardContent,
+	CardGlow,
+	CardHeader,
+	CardTitle
+} from '@/components/ui/card'
 import { getMedalColorStr } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
@@ -33,7 +39,9 @@ export default function RulesPage() {
 			<div className="grid items-start gap-4 sm:grid-cols-2">
 				<HowItWorksCard />
 
-				<Card>
+				<Card className="relative isolate">
+					<CardGlow color="green" position="top" />
+
 					<CardHeader>
 						<CardTitle>Heat points</CardTitle>
 					</CardHeader>
@@ -75,7 +83,9 @@ export default function RulesPage() {
 					</CardContent>
 				</Card>
 
-				<Card>
+				<Card className="relative isolate">
+					<CardGlow color="green" position="top" />
+
 					<CardHeader>
 						<CardTitle>Standings sorting order</CardTitle>
 					</CardHeader>

@@ -1,6 +1,12 @@
 import { Calculator, RefreshCw, Trophy, Users, Zap } from 'lucide-react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+	Card,
+	CardContent,
+	CardGlow,
+	CardHeader,
+	CardTitle
+} from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 type THowItWorksCard = {
@@ -32,7 +38,9 @@ const rules = [
 
 export function HowItWorksCard({ hideTitle = false }: THowItWorksCard) {
 	return (
-		<Card>
+		<Card className="relative isolate">
+			<CardGlow color="green" position="top" />
+
 			{!hideTitle && (
 				<CardHeader>
 					<CardTitle>How it works</CardTitle>

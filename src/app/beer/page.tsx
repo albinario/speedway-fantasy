@@ -3,13 +3,13 @@ import Image from 'next/image'
 
 import { Beer, CreditCard } from 'lucide-react'
 
+import { LangToggle } from '@/components/LangToggle'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 import { metaData } from './constants'
-import { LangToggle } from './LangToggle'
 
 export const metadata: Metadata = metaData
 

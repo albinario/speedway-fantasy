@@ -12,6 +12,7 @@ import {
 
 import { getUserStars } from '@/app/users/[id]/data'
 import { MedalCounts } from '@/components/MedalCounts'
+import { CardGlow } from '@/components/ui/card'
 import { getUserStandingRow } from '@/components/UsersStandings/data'
 import { getMedalColorHex } from '@/lib/medals'
 import { type TParamValues } from '@/lib/params'
@@ -56,7 +57,9 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 
 	return (
 		<div className="flex flex-col gap-1">
-			<div className="bg-card flex flex-col divide-y divide-white/5 rounded-xl">
+			<div className="bg-card relative isolate flex flex-col divide-y divide-white/5 overflow-hidden rounded-xl">
+				<CardGlow color="orange" position="top" />
+
 				{/* Row 1: Points + medals + streak */}
 				<div className="flex flex-wrap items-center gap-4 p-4">
 					<div className="flex flex-col items-center">
@@ -88,7 +91,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 				{pos != null && (
 					<div className="flex flex-col gap-2 p-4">
 						<div className="flex items-baseline justify-between">
-							<div className="flex items-center gap-2">
+							<div className="flex items-baseline gap-2">
 								<span className="text-2xl font-black">
 									#<span className="text-4xl">{pos}</span>
 								</span>
@@ -127,7 +130,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 						{leader > 0 && (
 							<div className="bg-foreground/10 h-4 overflow-hidden rounded-full">
 								<div
-									className="from-brand-red/60 to-brand-red h-full rounded-full bg-gradient-to-r"
+									className="h-full rounded-full bg-gradient-to-r from-orange-400/40 to-orange-400/90"
 									style={{ width: `${progressPct}%` }}
 								/>
 							</div>
