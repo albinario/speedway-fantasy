@@ -42,6 +42,21 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 		new Set(resultGpIds.map((r) => r.gp_id))
 	)
 
+	const gpGrid = (
+		<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
+			{visible.map(({ gp, stage }, i) => (
+				<UserGpCard
+					key={gp.id}
+					gp={gp}
+					isUpNext={i === isUpNext}
+					macroStage={stage}
+					userId={userId}
+					viewerId={viewer.db?.id}
+				/>
+			))}
+		</div>
+	)
+
 	return (
 		<div className="flex flex-col gap-4">
 			<PageHeader>
@@ -67,20 +82,11 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				createdAt={user.created_at}
 			/>
 
-			{showToggle && <ShowOlderToggle checked={showAll} />}
-
-			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
-				{visible.map(({ gp, stage }, i) => (
-					<UserGpCard
-						key={gp.id}
-						gp={gp}
-						isUpNext={i === isUpNext}
-						macroStage={stage}
-						userId={userId}
-						viewerId={viewer.db?.id}
-					/>
-				))}
-			</div>
+			{showToggle ? (
+				<ShowOlderToggle checked={showAll}>{gpGrid}</ShowOlderToggle>
+			) : (
+				gpGrid
+			)}
 		</div>
 	)
 }

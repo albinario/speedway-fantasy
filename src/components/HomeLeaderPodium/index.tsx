@@ -8,7 +8,7 @@ import {
 	getUsersStandings,
 	getUserStandingRow
 } from '@/components/UsersStandings/data'
-import { getMedalColorHex } from '@/lib/medals'
+import { getMedalColorHex, getPodiumTier } from '@/lib/medals'
 import type { TParamValues } from '@/lib/params'
 import { cn } from '@/lib/utils'
 
@@ -34,7 +34,7 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 
 	return (
 		<div>
-			<SectionTitle href="/standings" linkLabel="View all">
+			<SectionTitle href="/standings" linkLabel="View standings">
 				Current <span className="text-green-400">podium</span>
 			</SectionTitle>
 
@@ -45,8 +45,8 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 					<div className="flex items-end gap-2">
 						{podium.map((entry, idx) => {
 							const pos = idx === 0 ? 2 : idx === 1 ? 1 : 3
-							const isWinner = pos === 1
 							const medalColor = getMedalColorHex(pos)
+							const tier = getPodiumTier(pos)
 							const initials = [entry.first_name, entry.last_name]
 								.filter(Boolean)
 								.map((n) => n![0])
@@ -56,13 +56,16 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 							return (
 								<div
 									key={entry.user_id}
-									className="flex flex-1 flex-col items-center gap-2 rounded-lg border p-3 text-center"
+									className={cn(
+										'flex flex-1 flex-col items-center gap-2 rounded-lg border text-center',
+										tier.box
+									)}
 									style={{ borderColor: medalColor }}
 								>
 									<div
 										className={cn(
 											'flex items-center justify-center rounded-full border-2 bg-white/10 font-bold',
-											isWinner ? 'size-16 text-base' : 'size-12 text-sm'
+											tier.avatar
 										)}
 										style={{ borderColor: medalColor, color: medalColor }}
 									>
@@ -72,15 +75,12 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 									<div className="flex flex-col items-center gap-0.5">
 										<Link
 											href={`/users/${entry.user_id}`}
-											className={cn(
-												'leading-tight font-bold',
-												isWinner ? 'text-sm' : 'text-xs'
-											)}
+											className={cn('leading-tight font-bold', tier.name)}
 										>
 											{entry.first_name} {entry.last_name}
 										</Link>
 
-										<span className={isWinner ? 'text-sm' : 'text-xs'}>
+										<span className={tier.points}>
 											<span className="font-bold tabular-nums">
 												{Number(entry.points)}
 											</span>{' '}
@@ -105,7 +105,6 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 									lastName={viewerRow.last_name}
 									stars={viewerRow.stars}
 									userId={viewerRow.user_id}
-									isViewer
 								/>
 							</div>
 

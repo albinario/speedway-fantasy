@@ -45,12 +45,12 @@ export default async function Home() {
 		<div className="flex flex-col gap-4">
 			<HomeIntro isAuthenticated={viewer.isAuthenticated} />
 
-			<Suspense fallback={<Card className="h-14 animate-pulse" />}>
-				<GpSeasonProgress year={yearValues.activeYear} />
-			</Suspense>
-
 			<Suspense fallback={<SectionFallback />}>
 				<HomeLeaderPodium year={yearValues.activeYear} viewerId={viewerId} />
+			</Suspense>
+
+			<Suspense fallback={<Card className="h-14 animate-pulse" />}>
+				<GpSeasonProgress year={yearValues.activeYear} />
 			</Suspense>
 
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
@@ -75,25 +75,15 @@ export default async function Home() {
 						</Suspense>
 					</div>
 				)}
-
-				{nextGp?.round === 1 && latestHofYear && (
-					<div>
-						<SectionTitle href="/hall-of-fame">{latestHofYear}</SectionTitle>
-						<HallOfFameCard
-							entries={latestHallOfFame}
-							glow
-							viewerId={viewerId}
-						/>
-					</div>
-				)}
 			</div>
 
 			{nextGp?.round !== 1 && latestHofYear && (
 				<div>
-					<SectionTitle href="/hall-of-fame">
+					<SectionTitle href="/hall-of-fame" linkLabel="Hall of fame">
 						Previous <span className="text-green-400">season</span>
 					</SectionTitle>
-					<HallOfFameCard entries={latestHallOfFame} viewerId={viewerId} />
+
+					<HallOfFameCard entries={latestHallOfFame} glow viewerId={viewerId} />
 				</div>
 			)}
 		</div>

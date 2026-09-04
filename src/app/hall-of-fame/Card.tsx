@@ -9,7 +9,7 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card'
-import { getMedalColorHex } from '@/lib/medals'
+import { getMedalColorHex, getPodiumTier } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
 import type { getHallOfFame } from './data'
@@ -46,6 +46,7 @@ export function HallOfFameCard({
 				{podium.map((entry) => {
 					const isWinner = entry.type === 1
 					const medalColor = getMedalColorHex(entry.type)
+					const tier = getPodiumTier(entry.type as 1 | 2 | 3)
 					const initials = [entry.first_name, entry.last_name]
 						.filter(Boolean)
 						.map((n) => n![0])
@@ -55,7 +56,10 @@ export function HallOfFameCard({
 					return (
 						<div
 							key={entry.id}
-							className="flex flex-1 flex-col items-center gap-2 rounded-lg border p-3 text-center"
+							className={cn(
+								'flex flex-1 flex-col items-center gap-2 rounded-lg border text-center',
+								tier.box
+							)}
 							style={{
 								borderColor: medalColor,
 								boxShadow: glow ? `0 0 18px 2px ${medalColor}40` : undefined
@@ -70,7 +74,7 @@ export function HallOfFameCard({
 							<div
 								className={cn(
 									'flex items-center justify-center rounded-full border-2 bg-white/10 font-bold',
-									isWinner ? 'size-16 text-base' : 'size-12 text-sm'
+									tier.avatar
 								)}
 								style={{ borderColor: medalColor, color: medalColor }}
 							>
@@ -82,16 +86,14 @@ export function HallOfFameCard({
 									href={`/users/${entry.user_id}`}
 									className={cn(
 										'leading-tight font-bold',
-										isWinner ? 'text-sm' : 'text-xs',
+										tier.name,
 										entry.user_id === viewerId && 'text-orange-400'
 									)}
 								>
 									{entry.first_name} {entry.last_name}
 								</Link>
 
-								<span
-									className={cn('mt-auto', isWinner ? 'text-sm' : 'text-xs')}
-								>
+								<span className={cn('mt-auto', tier.points)}>
 									<span className="font-bold tabular-nums">{entry.points}</span>{' '}
 									<span className="text-muted-foreground text-xs">pts</span>
 								</span>
