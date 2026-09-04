@@ -28,23 +28,29 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 	const isPastYear = Number(yearValues.activeYear) < new Date().getFullYear()
 	const { visible, showToggle, isUpNext } = filterGps(gps, showAll, isPastYear)
 
+	const gpGrid = (
+		<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
+			{visible.map(({ gp, stage }, i) => (
+				<GpCard
+					key={gp.id}
+					gp={gp}
+					isUpNext={i === isUpNext}
+					linked
+					macroStage={stage}
+				/>
+			))}
+		</div>
+	)
+
 	return (
 		<div className="flex flex-col gap-4">
 			<PageHeader title={metaData.title} />
 
-			{showToggle && <ShowOlderToggle checked={showAll} />}
-
-			<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
-				{visible.map(({ gp, stage }, i) => (
-					<GpCard
-						key={gp.id}
-						gp={gp}
-						isUpNext={i === isUpNext}
-						linked
-						macroStage={stage}
-					/>
-				))}
-			</div>
+			{showToggle ? (
+				<ShowOlderToggle checked={showAll}>{gpGrid}</ShowOlderToggle>
+			) : (
+				gpGrid
+			)}
 		</div>
 	)
 }

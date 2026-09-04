@@ -53,12 +53,14 @@ export async function ActivityFeed({
 									i === 0 && 'opacity-0'
 								)}
 							/>
+
 							<div
 								className={cn(
 									'z-10 size-2 shrink-0 rounded-full',
 									isCreated ? 'bg-green-400' : 'bg-yellow-400'
 								)}
 							/>
+
 							<div
 								className={cn('w-px flex-1 bg-white/20', isLast && 'opacity-0')}
 							/>
@@ -79,14 +81,7 @@ export async function ActivityFeed({
 								)}
 
 								<span className="truncate text-xs">
-									{entry.city_name} ·{' '}
-									<span
-										className={cn(
-											isCreated ? 'text-green-400' : 'text-yellow-400'
-										)}
-									>
-										{ActivityActionLabel[entry.action]}
-									</span>
+									{entry.city_name} · {ActivityActionLabel[entry.action]}
 								</span>
 							</div>
 						</div>

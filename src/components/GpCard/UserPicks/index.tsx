@@ -1,7 +1,6 @@
-import { RiderTile } from '@/components/RiderTile'
+import { RiderTilesEmpty } from '@/components/RiderTilesEmpty'
 import { getViewer } from '@/lib/auth/get-viewer'
 
-import { RiderTilesEmpty } from '@/components/RiderTilesEmpty'
 import { getGpRiders, getUserPicks, getUserPicksWithResults } from './data'
 import { ViewerPicks } from './ViewerPicks'
 

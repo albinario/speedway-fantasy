@@ -25,3 +25,28 @@ export function getMedalColorStr(position: number, prefix?: 'bg' | 'text') {
 	const color = position === 1 ? 'gold' : position === 2 ? 'silver' : 'bronze'
 	return prefix ? `${prefix}-${color}` : color
 }
+
+const podiumTiers = {
+	1: {
+		avatar: 'size-16 text-base',
+		name: 'text-sm',
+		points: 'text-sm',
+		box: 'p-3'
+	},
+	2: {
+		avatar: 'size-12 text-sm',
+		name: 'text-xs',
+		points: 'text-xs',
+		box: 'p-3'
+	},
+	3: {
+		avatar: 'size-10 text-xs',
+		name: 'text-xs',
+		points: 'text-xs',
+		box: 'p-2'
+	}
+} as const
+
+export function getPodiumTier(position: 1 | 2 | 3) {
+	return podiumTiers[position]
+}
