@@ -33,13 +33,15 @@ type TDataTable<TData> = {
 	data: TData[]
 	hideHeader?: boolean
 	getRowClassName?: (row: TData) => string | undefined
+	getRowRef?: (row: TData) => React.Ref<HTMLTableRowElement> | undefined
 }
 
 export function DataTable<TData>({
 	columns,
 	data,
 	hideHeader,
-	getRowClassName
+	getRowClassName,
+	getRowRef
 }: TDataTable<TData>) {
 	const [sorting, setSorting] = useState<SortingState>([])
 
@@ -105,7 +107,11 @@ export function DataTable<TData>({
 			<TableBody>
 				{table.getRowModel().rows.length ? (
 					table.getRowModel().rows.map((row) => (
-						<TableRow key={row.id} className={getRowClassName?.(row.original)}>
+						<TableRow
+							key={row.id}
+							ref={getRowRef?.(row.original)}
+							className={getRowClassName?.(row.original)}
+						>
 							{row.getVisibleCells().map((cell) => (
 								<TableCell
 									key={cell.id}
