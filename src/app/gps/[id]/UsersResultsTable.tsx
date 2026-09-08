@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useLayoutEffect, useRef } from 'react'
 
 import type { ColumnDef } from '@tanstack/react-table'
 
@@ -149,18 +150,35 @@ export function GpUsersResultsTable({
 		}
 	})
 
+	const containerRef = useRef<HTMLDivElement>(null)
+	const viewerRowRef = useRef<HTMLTableRowElement>(null)
+
+	useLayoutEffect(() => {
+		const container = containerRef.current
+		const row = viewerRowRef.current
+		if (!container || !row) return
+
+		container.scrollTop =
+			row.offsetTop - container.clientHeight / 2 + row.clientHeight / 2
+	}, [])
+
 	return (
 		<div>
 			<SectionTitle>Players</SectionTitle>
 
 			<Card>
-				<DataTable
-					columns={makeColumns(viewerId, firstOccurrenceByRider, isBefore)}
-					data={data}
-					getRowClassName={(row) =>
-						row.user_id === viewerId ? 'bg-orange-400/5' : undefined
-					}
-				/>
+				<div ref={containerRef} className="max-h-[420px] overflow-y-auto">
+					<DataTable
+						columns={makeColumns(viewerId, firstOccurrenceByRider, isBefore)}
+						data={data}
+						getRowClassName={(row) =>
+							row.user_id === viewerId ? 'bg-orange-400/5' : undefined
+						}
+						getRowRef={(row) =>
+							row.user_id === viewerId ? viewerRowRef : undefined
+						}
+					/>
+				</div>
 			</Card>
 		</div>
 	)
