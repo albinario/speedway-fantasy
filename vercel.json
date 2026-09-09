@@ -5,8 +5,8 @@
 			"schedule": "0 10 * * *"
 		},
 		{
-			"path": "/api/test-reminder",
-			"schedule": "50 20 30 4 *"
+			"path": "/api/news/refresh",
+			"schedule": "0 9 * * *"
 		}
 	]
 }

@@ -14,6 +14,7 @@
 		"db:types": "dotenv -e .env.local -- kysely-codegen --dialect postgres --out-file src/types/db.ts"
 	},
 	"dependencies": {
+		"@anthropic-ai/sdk": "^0.124.0",
 		"@auth0/nextjs-auth0": "^4.16.0",
 		"@neondatabase/serverless": "^1.0.2",
 		"@tanstack/react-table": "^8.21.3",
@@ -33,6 +34,7 @@
 		"react": "19.2.7",
 		"react-dom": "19.2.7",
 		"resend": "^6.9.3",
+		"rss-parser": "^3.13.0",
 		"shadcn": "^4.0.5",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.5.0",

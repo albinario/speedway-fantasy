@@ -69,14 +69,16 @@ src/
 
 ### Environment variables
 
-| Variable | Purpose |
-|---|---|
-| `APP_BASE_URL` | Base URL for Auth0 callbacks |
-| `AUTH0_DOMAIN` | Auth0 tenant |
-| `AUTH0_CLIENT_ID` | Auth0 app client ID |
-| `AUTH0_CLIENT_SECRET` | Auth0 app secret |
-| `AUTH0_SECRET` | 32-byte hex for session encryption |
-| `DATABASE_URL` | Neon Postgres connection string |
-| `RESEND_API_KEY` | Resend transactional email |
+| Variable              | Purpose                                                                                      |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| `APP_BASE_URL`        | Base URL for Auth0 callbacks                                                                 |
+| `AUTH0_DOMAIN`        | Auth0 tenant                                                                                 |
+| `AUTH0_CLIENT_ID`     | Auth0 app client ID                                                                          |
+| `AUTH0_CLIENT_SECRET` | Auth0 app secret                                                                             |
+| `AUTH0_SECRET`        | 32-byte hex for session encryption                                                           |
+| `DATABASE_URL`        | Neon Postgres connection string                                                              |
+| `RESEND_API_KEY`      | Resend transactional email                                                                   |
+| `CRON_SECRET`         | Bearer token gating Vercel cron-triggered API routes (`/api/reminders`, `/api/news/refresh`) |
+| `ANTHROPIC_API_KEY`   | Claude API key used to classify/summarize scraped news items                                 |
 
 Copy `.env.example` to `.env.local`.

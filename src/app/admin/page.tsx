@@ -7,14 +7,15 @@ import { AddCountry } from './AddCountry'
 import { AddGP } from './AddGP'
 import { AddRider } from './AddRider'
 import { AssignWildCard } from './AssignWildCard'
-import { RevalidateAll } from './RevalidateAll'
-import { SendReminders } from './SendReminders'
 import {
 	getCities,
 	getCountries,
 	getGPsWildCard,
 	getRidersWildCard
 } from './data'
+import { NewsQueueCard } from './NewsQueueCard'
+import { RevalidateAll } from './RevalidateAll'
+import { SendReminders } from './SendReminders'
 
 const AdminPage = auth0.withPageAuthRequired(
 	async function AdminPage() {
@@ -32,6 +33,7 @@ const AdminPage = auth0.withPageAuthRequired(
 				<AddRider countries={countries} />
 				<AddCity countries={countries} />
 				<AddCountry />
+				<NewsQueueCard />
 				<RevalidateAll />
 				<SendReminders />
 			</div>

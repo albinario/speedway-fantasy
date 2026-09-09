@@ -9,4 +9,5 @@ export const cacheTags = {
 	comments: 'comments',
 	commentReads: 'comment-reads',
 	reactions: 'reactions',
+	news: 'news',
 } as const

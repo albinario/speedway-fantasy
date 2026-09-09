@@ -6,6 +6,7 @@ import {
 	ListCheck,
 	ListOrdered,
 	MessagesSquare,
+	Newspaper,
 	SquarePlus,
 	Trophy,
 	UserIcon
@@ -36,6 +37,12 @@ export const navItems: TNavItem[] = [
 		label: 'Standings',
 		href: '/standings',
 		icon: ListOrdered,
+		showOnMobile: true
+	},
+	{
+		label: 'News',
+		href: '/news',
+		icon: Newspaper,
 		showOnMobile: true
 	},
 	{

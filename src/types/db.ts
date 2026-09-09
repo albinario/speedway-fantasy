@@ -77,8 +77,60 @@ export interface Gps {
   wild_card_id: number | null;
 }
 
+export interface NewsItems {
+  blurb: string;
+  created_at: Generated<Timestamp>;
+  headline: string;
+  id: Generated<number>;
+  rejected_reason: string | null;
+  reviewed_at: Timestamp | null;
+  reviewed_by_user_id: number | null;
+  source_guid: string;
+  source_published_at: Timestamp;
+  source_title: string;
+  source_url: string;
+  status: Generated<number>;
+  updated_at: Generated<Timestamp>;
+}
+
 export interface PicksRecord {
   record: Int8 | null;
+}
+
+export interface PowerRankingPoints {
+  id: Generated<number>;
+  points: Numeric;
+  rider_id: number;
+  source_id: number;
+  updated_at: Generated<Timestamp>;
+}
+
+export interface PowerRankingResults {
+  average_points: Numeric | null;
+  coin_value: number;
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  rider_id: number;
+  run_id: number;
+}
+
+export interface PowerRankingRuns {
+  applied_at: Timestamp | null;
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  label: string;
+  source_gp_id: number | null;
+}
+
+export interface PowerRankingSources {
+  computation_key: string | null;
+  created_at: Generated<Timestamp>;
+  decay_years: Numeric | null;
+  id: Generated<number>;
+  name: string;
+  run_id: number;
+  type: string;
+  weight: Generated<Numeric>;
 }
 
 export interface Riders {
@@ -87,6 +139,7 @@ export interface Riders {
   id: Generated<number>;
   name: string;
   number: number;
+  ordinary: number | null;
   retired: boolean | null;
 }
 
@@ -110,7 +163,7 @@ export interface RidersWithCountry {
 
 export interface Users {
   auth0_id: string;
-  comments_last_read_at: Timestamp | null;
+  comments_last_read_at: Generated<Timestamp | null>;
   created_at: Generated<Timestamp>;
   email: string;
   first_name: string;
@@ -186,7 +239,12 @@ export interface DB {
   countries: Countries;
   gp_rounds_per_year: GpRoundsPerYear;
   gps: Gps;
+  news_items: NewsItems;
   picks_record: PicksRecord;
+  power_ranking_points: PowerRankingPoints;
+  power_ranking_results: PowerRankingResults;
+  power_ranking_runs: PowerRankingRuns;
+  power_ranking_sources: PowerRankingSources;
   riders: Riders;
   riders_results: RidersResults;
   riders_with_country: RidersWithCountry;
