@@ -7,6 +7,7 @@ import { GpCard } from '@/components/GpCard'
 import { GpSeasonProgress } from '@/components/GpSeasonProgress'
 import { HomeIntro } from '@/components/HomeIntro'
 import { HomeLeaderPodium } from '@/components/HomeLeaderPodium'
+import { Season2027AnnouncementCard } from '@/components/Season2027AnnouncementCard'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { getViewer } from '@/lib/auth/get-viewer'
@@ -38,15 +39,19 @@ export default async function Home() {
 	const nextGpIsCloser =
 		msFromNow(nextGp?.start_date) <= msFromNow(latestGp?.start_date)
 
-	const upNextGp = nextGp
-	const prevGp = latestGp
+	const isSeasonFinished =
+		latestGp?.finished === true && (!nextGp || nextGp.round === 1)
 
 	return (
 		<div className="flex flex-col gap-4">
 			<HomeIntro isAuthenticated={viewer.isAuthenticated} />
 
 			<Suspense fallback={<SectionFallback />}>
-				<HomeLeaderPodium year={yearValues.activeYear} viewerId={viewerId} />
+				<HomeLeaderPodium
+					isFinal={isSeasonFinished}
+					viewerId={viewerId}
+					year={yearValues.activeYear}
+				/>
 			</Suspense>
 
 			<Suspense fallback={<Card className="h-14 animate-pulse" />}>
@@ -54,30 +59,32 @@ export default async function Home() {
 			</Suspense>
 
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
-				{upNextGp && (
+				{nextGp && (
 					<div className={cn(nextGpIsCloser ? 'order-1' : 'order-2')}>
-						<SectionTitle href={`/gps/${upNextGp.id}`} linkLabel="View GP">
+						<SectionTitle href={`/gps/${nextGp.id}`} linkLabel="View GP">
 							Next <span className="text-green-400">GP</span>
 						</SectionTitle>
 						<Suspense fallback={<SectionFallback />}>
-							<GpCard gp={upNextGp} isUpNext linked imageLoading="eager" />
+							<GpCard gp={nextGp} isUpNext linked imageLoading="eager" />
 						</Suspense>
 					</div>
 				)}
 
-				{prevGp && (
+				{latestGp && (
 					<div className={cn(nextGpIsCloser ? 'order-2' : 'order-1')}>
-						<SectionTitle href={`/gps/${prevGp.id}`} linkLabel="View GP">
+						<SectionTitle href={`/gps/${latestGp.id}`} linkLabel="View GP">
 							Previous <span className="text-green-400">GP</span>
 						</SectionTitle>
 						<Suspense fallback={<SectionFallback />}>
-							<GpCard gp={prevGp} linked imageLoading="eager" />
+							<GpCard gp={latestGp} linked imageLoading="eager" />
 						</Suspense>
 					</div>
 				)}
 			</div>
 
-			{nextGp?.round !== 1 && latestHofYear && (
+			<Season2027AnnouncementCard />
+
+			{!isSeasonFinished && nextGp?.round !== 1 && latestHofYear && (
 				<div>
 					<SectionTitle href="/hall-of-fame" linkLabel="Hall of fame">
 						Previous <span className="text-green-400">season</span>
