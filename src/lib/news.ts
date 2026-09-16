@@ -12,6 +12,11 @@ const FEED_URLS = [
 ]
 const MAX_ITEMS_PER_FEED = 20
 
+const FIM_SPEEDWAY_NEWS_URL = 'https://fimspeedway.com/en/sgp/news/1'
+// fimspeedway.com's Cloudflare WAF blocks requests without a browser-like User-Agent.
+const BROWSER_USER_AGENT =
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+
 type FeedItem = {
 	title?: string
 	link?: string
@@ -22,9 +27,60 @@ type FeedItem = {
 	'content:encoded'?: string
 }
 
+type FimStory = {
+	id: number
+	title: string
+	slug: string
+	excerpt: string
+	content: string
+	publishedAt: string
+}
+
 const parser = new Parser<object, FeedItem>({
 	customFields: { item: ['content:encoded'] }
 })
+
+async function fetchRssFeed(url: string): Promise<FeedItem[]> {
+	const feed = await parser.parseURL(url)
+	return feed.items.slice(0, MAX_ITEMS_PER_FEED)
+}
+
+// fimspeedway.com has no public API; this scrapes the __NEXT_DATA__ payload
+// their news page hydrates from. The build ID in their _next/data/* URLs
+// rotates on every deploy, so we fetch the rendered page instead, which
+// always carries a matching build ID for whatever JSON it embeds.
+async function fetchFimSpeedwayItems(): Promise<FeedItem[]> {
+	const res = await fetch(FIM_SPEEDWAY_NEWS_URL, {
+		headers: { 'User-Agent': BROWSER_USER_AGENT }
+	})
+
+	if (!res.ok) {
+		throw new Error(`FIM Speedway news page returned ${res.status}`)
+	}
+
+	const html = await res.text()
+	const match = html.match(
+		/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/
+	)
+
+	if (!match) {
+		throw new Error('Could not find __NEXT_DATA__ on FIM Speedway news page')
+	}
+
+	const data = JSON.parse(match[1])
+	const stories: FimStory[] = data?.props?.pageProps?.stories ?? []
+
+	return stories.slice(0, MAX_ITEMS_PER_FEED).map((story) => ({
+		title: story.title,
+		link: `https://fimspeedway.com/news/${story.slug}`,
+		guid: `fimspeedway-${story.id}`,
+		// publishedAt has no timezone; treat as UTC rather than relying on
+		// the runtime's implementation-defined parsing of a bare date string.
+		isoDate: new Date(`${story.publishedAt.replace(' ', 'T')}Z`).toISOString(),
+		contentSnippet: story.excerpt,
+		'content:encoded': story.content
+	}))
+}
 
 const anthropic = new Anthropic()
 
@@ -86,20 +142,22 @@ async function classifyArticle(
 }
 
 export async function refreshNews() {
-	const feedResults = await Promise.allSettled(
-		FEED_URLS.map((url) => parser.parseURL(url))
-	)
+	const sourceNames = [...FEED_URLS, FIM_SPEEDWAY_NEWS_URL]
+	const sourceResults = await Promise.allSettled([
+		...FEED_URLS.map((url) => fetchRssFeed(url)),
+		fetchFimSpeedwayItems()
+	])
 
 	let feedErrors = 0
 	const items: FeedItem[] = []
 
-	feedResults.forEach((result, i) => {
+	sourceResults.forEach((result, i) => {
 		if (result.status === 'rejected') {
-			console.error('Failed to fetch feed', FEED_URLS[i], result.reason)
+			console.error('Failed to fetch news source', sourceNames[i], result.reason)
 			feedErrors++
 			return
 		}
-		items.push(...result.value.items.slice(0, MAX_ITEMS_PER_FEED))
+		items.push(...result.value)
 	})
 
 	const guids = items

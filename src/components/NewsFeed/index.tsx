@@ -7,6 +7,20 @@ type TNewsFeed = {
 	offset?: number
 }
 
+// Some sources (e.g. fimspeedway.com) publish titles in all caps. Convert
+// those to title case for display, leaving already-mixed-case titles as-is.
+// Short/numeric tokens (acronyms like "GP", "FIM") are left uppercase.
+function displayTitle(title: string) {
+	const isShouting = title === title.toUpperCase() && title !== title.toLowerCase()
+	if (!isShouting) return title
+
+	return title
+		.toLowerCase()
+		.replace(/[a-z0-9]+(?:'[a-z0-9]+)?/g, (word) =>
+			word.length <= 3 ? word.toUpperCase() : word[0].toUpperCase() + word.slice(1)
+		)
+}
+
 export async function NewsFeed({ limit = 20, offset = 0 }: TNewsFeed) {
 	const items = await getPublishedNews(limit, offset)
 
@@ -41,7 +55,7 @@ export async function NewsFeed({ limit = 20, offset = 0 }: TNewsFeed) {
 						rel="noopener noreferrer"
 						target="_blank"
 					>
-						{item.source_title}
+						{displayTitle(item.source_title)}
 						<ExternalLink className="size-3" />
 					</a>
 				</div>
