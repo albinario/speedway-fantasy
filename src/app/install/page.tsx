@@ -6,7 +6,7 @@ import type { LucideIcon } from 'lucide-react'
 
 import { LangToggle, type TLang } from '@/components/LangToggle'
 import { PageHeader } from '@/components/PageHeader'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardGlow } from '@/components/ui/card'
 
 import { metaData } from './constants'
 import { OsToggle } from './OsToggle'
@@ -89,10 +89,14 @@ export default async function InstallPage({ searchParams }: TInstallPage) {
 				</span>
 			</PageHeader>
 
-			<OsToggle os={activeOs} />
-			<LangToggle lang={activeLang} />
+			<Card className="relative isolate">
+				<div className="flex flex-col gap-2 p-2">
+					<OsToggle os={activeOs} />
+					<LangToggle lang={activeLang} />
+				</div>
 
-			<Card>
+				<CardGlow color="blue" position="bottom" />
+
 				<CardContent className="flex flex-col gap-4">
 					<p className="text-muted-foreground text-sm leading-relaxed">
 						{intro[activeLang]}
@@ -105,7 +109,7 @@ export default async function InstallPage({ searchParams }: TInstallPage) {
 								className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex gap-3 duration-500"
 								style={{ animationDelay: `${i * 75}ms` }}
 							>
-								<span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-400/10 text-orange-400">
+								<span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-blue-400/10 text-blue-400">
 									<Icon className="size-3.5" />
 								</span>
 								<span className="pt-1 text-sm">{text}</span>

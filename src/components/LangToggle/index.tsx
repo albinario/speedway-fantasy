@@ -14,7 +14,7 @@ export function LangToggle({ lang }: { lang: TLang }) {
 	function setLang(next: TLang) {
 		const params = new URLSearchParams(searchParams.toString())
 		params.set('lang', next)
-		router.push(`?${params.toString()}`)
+		router.push(`?${params.toString()}`, { scroll: false })
 	}
 
 	return (

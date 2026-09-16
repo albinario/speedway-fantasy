@@ -12,9 +12,17 @@ import { getMedalColorHex, getPodiumTier } from '@/lib/medals'
 import type { TParamValues } from '@/lib/params'
 import { cn } from '@/lib/utils'
 
-type Props = { year: number | TParamValues; viewerId?: number }
+type THomeLeaderPodium = {
+	isFinal?: boolean
+	viewerId?: number
+	year: number | TParamValues
+}
 
-export async function HomeLeaderPodium({ year, viewerId }: Props) {
+export async function HomeLeaderPodium({
+	isFinal = false,
+	viewerId,
+	year
+}: THomeLeaderPodium) {
 	const [standings, viewerRow] = await Promise.all([
 		getUsersStandings(year, 3),
 		viewerId ? getUserStandingRow(year, viewerId) : Promise.resolve(null)
@@ -35,7 +43,8 @@ export async function HomeLeaderPodium({ year, viewerId }: Props) {
 	return (
 		<div>
 			<SectionTitle href="/standings" linkLabel="View standings">
-				Current <span className="text-green-400">podium</span>
+				{isFinal ? 'Final' : 'Current'}{' '}
+				<span className="text-green-400">podium</span>
 			</SectionTitle>
 
 			<Card className="relative isolate">
