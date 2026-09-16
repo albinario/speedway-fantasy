@@ -7,6 +7,7 @@ import {
 	EyeOff,
 	Layers,
 	Lock,
+	type LucideIcon,
 	RefreshCw,
 	Repeat,
 	Users
@@ -18,73 +19,83 @@ import {
 	CardContent,
 	CardDescription,
 	CardGlow,
-	CardHeader,
-	CardTitle
+	CardHeader
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 import { SectionTitle } from '../SectionHeader'
 
 const title: Record<TLang, string> = {
-	en: "It's time for Speedway Fantasy to be brought to a whole new level, introducing a budget system for picking your riders.",
-	sv: 'Det är dags för Speedway Fantasy att ta klivet till nästa nivå — ett budgetsystem införs för att välja dina förare.'
+	en: 'Speedway Fantasy takes the next step — a budget system for building your team.',
+	sv: 'Nu tar Speedway Fantasy nästa steg — ett budgetsystem för att sätta ditt lag.'
 }
 
-const highlights = [
+const highlights: {
+	icon: LucideIcon
+	label?: Partial<Record<TLang, string>>
+	text: Record<TLang, string>
+}[] = [
 	{
 		icon: Coins,
+		label: { en: 'Budget', sv: 'Budget' },
 		text: {
-			en: "Each Grand Prix, you'll have a 10-coin budget to spend.",
-			sv: 'Inför varje GP har du en budget på 10 coins att spendera.'
+			en: "You'll have 10 coins to spend before each GP.",
+			sv: 'Inför varje GP har du 10 coins att spendera.'
 		}
 	},
 	{
 		icon: Users,
+		label: { en: 'Rider picks', sv: 'Val av förare' },
 		text: {
-			en: "You'll still pick three (3) riders — but now their combined cost must fit your budget.",
-			sv: 'Du väljer fortfarande tre (3) förare — men nu måste deras sammanlagda kostnad rymmas inom din budget.'
+			en: "You'll still pick three riders, but their combined cost must fit within your budget.",
+			sv: 'Du väljer fortfarande tre förare, men deras sammanlagda kostnad måste rymmas inom budgeten.'
 		}
 	},
 	{
 		icon: Layers,
+		label: { en: 'Price tiers', sv: 'Prisnivåer' },
 		text: {
-			en: 'Riders are split into five price tiers: 5, 4, 3, 2, 1 coins. The three highest-ranked riders cost 5 coins, the next three cost 4, and so on. The four lowest-ranked riders cost 1 coin.',
-			sv: 'Förarna delas in i fem prisnivåer: 5, 4, 3, 2, 1 coins. De tre högst rankade förarna kostar 5 coins, nästföljande tre kostar 4, osv. De fyra lägst rankade förarna kostar 1 coin.'
+			en: 'Riders are split into five tiers — 5, 4, 3, 2 and 1 coin. The three highest-ranked riders cost 5 coins, the next three cost 4, and so on. The four lowest-ranked riders cost 1 coin.',
+			sv: 'Förarna delas in i fem nivåer — 5, 4, 3, 2 och 1 coin. De tre högst rankade kostar 5 coins, nästa tre kostar 4, och så vidare. De fyra lägst rankade kostar 1 coin.'
 		}
 	},
 	{
 		icon: Repeat,
+		label: { en: 'Keep your team', sv: 'Behåll ditt lag' },
 		text: {
-			en: "You get to keep your riders from the previous GP — if you don't make any changes, your picks simply carries over.",
-			sv: 'Du får behålla dina förare från föregående GP — gör du inga ändringar följer dina förare helt enkelt med till nästa omgång.'
+			en: "If you don't make any changes, your riders automatically carry over to the next GP.",
+			sv: 'Gör du inga ändringar följer dina förare automatiskt med till nästa GP.'
 		}
 	},
 	{
 		icon: RefreshCw,
+		label: { en: 'Transfer window', sv: 'Transferfönster' },
 		text: {
-			en: 'After each GP, prices update and a transfer window opens — trade as much as you like until the next GP starts, just like your picks work today.',
-			sv: 'Efter varje GP uppdateras priserna och ett transferfönster öppnas — byt så mycket du vill fram tills nästa GP startar, precis som dina val fungerar idag.'
+			en: 'After each GP, prices update and a new transfer window opens. Trade as much as you like until the next GP starts — just like today.',
+			sv: 'Efter varje GP uppdateras priserna och ett nytt transferfönster öppnas. Byt så mycket du vill fram tills nästa GP startar — precis som idag.'
 		}
 	},
 	{
 		icon: Lock,
+		label: { en: 'Locked price', sv: 'Låst pris' },
 		text: {
-			en: "Whatever you pay for a rider is locked in — their value can change later, but you'll keep the rider at the same price.",
-			sv: 'Det pris du betalar för en förare låses fast — deras värde kan ändras senare, men du behåller föraren till samma pris.'
+			en: "The price you pay for a rider is locked in. Even if the rider's value changes later, you'll keep them at the same price.",
+			sv: 'Priset du betalar för en förare låses fast. Även om förarens värde ändras senare behåller du föraren till samma pris.'
 		}
 	},
 	{
 		icon: EyeOff,
+		label: { en: 'Private trades', sv: 'Hemliga byten' },
 		text: {
-			en: 'Your trades stay private, just like your picks today — nobody sees a move until picks lock when the GP starts.',
-			sv: 'Dina byten hålls privata, precis som dina val idag — ingen ser ett drag förrän valen låses när GP:t startar.'
+			en: 'Your trades are private until picks lock when the GP starts — just like today.',
+			sv: 'Dina byten är privata tills valen låses när GP:t startar — precis som idag.'
 		}
 	}
 ]
 
 const tbdNote: Record<TLang, string> = {
-	en: 'The exact calculation of which riders land in which price tier is still being worked on. This will be clarified and announced before the 2027 season begins.',
-	sv: 'Exakt hur beräkningen av vilka förare som hamnar i vilken pris-nivå går till är fortfarande under arbete. Detta kommer att förtydligas och meddelas innan 2027 års säsong drar igång.'
+	en: 'Exactly how the price tiers are calculated is still being worked on and will be clarified before the 2027 season begins.',
+	sv: 'Exakt hur beräkningen av prisnivåerna går till är fortfarande under arbete och kommer att förtydligas innan säsongen 2027 drar igång.'
 }
 
 export function Season2027AnnouncementCard() {
@@ -107,9 +118,10 @@ export function Season2027AnnouncementCard() {
 				<CardHeader>
 					<CardDescription>{title[lang]}</CardDescription>
 				</CardHeader>
+
 				<CardContent>
 					<ol className="flex flex-col gap-3">
-						{highlights.map(({ icon: Icon, text }, i) => (
+						{highlights.map(({ icon: Icon, label, text }, i) => (
 							<li
 								key={i}
 								className={cn(
@@ -120,7 +132,11 @@ export function Season2027AnnouncementCard() {
 								<span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-blue-400/10 text-blue-400">
 									<Icon className="size-3.5" />
 								</span>
-								<span className="pt-1 text-sm">{text[lang]}</span>
+
+								<span className="pt-1 text-sm">
+									{label?.[lang] && <strong>{label[lang]}: </strong>}
+									{text[lang]}
+								</span>
 							</li>
 						))}
 					</ol>
