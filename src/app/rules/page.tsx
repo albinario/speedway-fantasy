@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { PageHeader } from '@/components/PageHeader'
+import { Season2027AnnouncementCard } from '@/components/Season2027AnnouncementCard'
 import {
 	Card,
 	CardContent,
@@ -113,6 +114,8 @@ export default function RulesPage() {
 						</div>
 					</CardContent>
 				</Card>
+
+				<Season2027AnnouncementCard />
 			</div>
 		</div>
 	)
