@@ -25,7 +25,7 @@ export function NavFooter({ viewerId, unreadComments = 0 }: TNavFooter) {
 
 	return (
 		<nav className="sticky bottom-0 z-50 border-t bg-black/65 p-4 backdrop-blur-sm">
-			<ul className="mx-auto flex max-w-screen-md justify-center gap-4">
+			<ul className="mx-auto flex max-w-screen-md gap-2 sm:justify-center sm:gap-4">
 				{items.map((item) => {
 					const isActive =
 						item.href === '/'
@@ -35,12 +35,14 @@ export function NavFooter({ viewerId, unreadComments = 0 }: TNavFooter) {
 					return (
 						<li
 							key={item.href}
-							className={item.showOnMobile ? undefined : 'hidden sm:block'}
+							className={
+								item.showOnMobile ? 'flex-1 sm:flex-none' : 'hidden sm:block'
+							}
 						>
 							<Link
 								href={item.href}
 								className={cn(
-									'hover:text-foreground flex flex-col items-center gap-1 text-sm leading-tight transition-colors',
+									'hover:text-foreground flex flex-col items-center gap-1 text-xs leading-tight transition-colors',
 									isActive ? 'text-brand-red' : 'text-muted-foreground'
 								)}
 							>

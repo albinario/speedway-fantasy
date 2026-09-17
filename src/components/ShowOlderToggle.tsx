@@ -37,7 +37,7 @@ export function ShowOlderToggle({ checked, children }: TShowOlderToggle) {
 				onChange={setShow}
 				options={[
 					{ value: 'recent', label: 'Recent' },
-					{ value: 'all', label: 'All GPs' }
+					{ value: 'all', label: "All GP's" }
 				]}
 				value={checked ? 'all' : 'recent'}
 			/>
