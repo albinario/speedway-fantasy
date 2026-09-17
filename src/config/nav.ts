@@ -27,15 +27,15 @@ export const navItems: TNavItem[] = [
 		showOnMobile: true
 	},
 	{
-		label: "GP's",
-		href: '/gps',
-		icon: Flag,
-		showOnMobile: true
-	},
-	{
 		label: 'Standings',
 		href: '/standings',
 		icon: ListOrdered,
+		showOnMobile: true
+	},
+	{
+		label: "GP's",
+		href: '/gps',
+		icon: Flag,
 		showOnMobile: true
 	},
 	{
