@@ -13,7 +13,7 @@ type Props = { year: number | TParamValues }
 export async function GpSeasonProgress({ year }: Props) {
 	if (typeof year !== 'number') return null
 
-	const gps = await getGps(year)
+	const gps = await getGps(new Date().getFullYear())
 	if (!gps.length) return null
 
 	return (
