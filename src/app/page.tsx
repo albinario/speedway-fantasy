@@ -55,7 +55,7 @@ export default async function Home() {
 			</Suspense>
 
 			<Suspense fallback={<Card className="h-14 animate-pulse" />}>
-				<GpSeasonProgress year={yearValues.activeYear} />
+				<GpSeasonProgress />
 			</Suspense>
 
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
@@ -64,6 +64,7 @@ export default async function Home() {
 						<SectionTitle href={`/gps/${nextGp.id}`} linkLabel="View GP">
 							Next <span className="text-green-400">GP</span>
 						</SectionTitle>
+
 						<Suspense fallback={<SectionFallback />}>
 							<GpCard gp={nextGp} isUpNext linked imageLoading="eager" />
 						</Suspense>
@@ -75,6 +76,7 @@ export default async function Home() {
 						<SectionTitle href={`/gps/${latestGp.id}`} linkLabel="View GP">
 							Previous <span className="text-green-400">GP</span>
 						</SectionTitle>
+
 						<Suspense fallback={<SectionFallback />}>
 							<GpCard gp={latestGp} linked imageLoading="eager" />
 						</Suspense>
