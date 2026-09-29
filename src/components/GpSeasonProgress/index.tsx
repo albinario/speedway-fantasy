@@ -5,15 +5,10 @@ import { Flag } from '@/components/Flag'
 import { Card, CardContent, CardGlow } from '@/components/ui/card'
 import { EMacroStage } from '@/enums'
 import { getMacroStage } from '@/lib/dates'
-import type { TParamValues } from '@/lib/params'
 import { cn } from '@/lib/utils'
 
-type Props = { year: number | TParamValues }
-
-export async function GpSeasonProgress({ year }: Props) {
-	if (typeof year !== 'number') return null
-
-	const gps = await getGps(year)
+export async function GpSeasonProgress() {
+	const gps = await getGps(new Date().getFullYear())
 	if (!gps.length) return null
 
 	return (
