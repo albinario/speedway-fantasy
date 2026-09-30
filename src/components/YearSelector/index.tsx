@@ -17,15 +17,16 @@ import type { TYears } from '@/data/year'
 import { paramKeys, paramValues, type TParamValues } from '@/lib/params'
 
 type TYearSelectorProps = {
+	defaultYear?: number | null
 	years: TYears
 }
 
-export function YearSelector({ years }: TYearSelectorProps) {
+export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 	const router = useRouter()
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
 
-	const latestYear = years[0]?.value
+	const latestYear = defaultYear ?? years[0]?.value
 	const yearParam = searchParams.get(paramKeys.year)
 	const activeYear: number | TParamValues =
 		yearParam === paramValues.all

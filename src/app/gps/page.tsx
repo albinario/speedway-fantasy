@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 
 import { GpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
-import { ShowOlderToggle } from '@/components/ShowOlderToggle'
-import { filterGps } from '@/lib/filter-gps'
+import { SectionTitle } from '@/components/SectionHeader'
+import { groupGps } from '@/lib/group-gps'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
@@ -13,43 +13,43 @@ import { getGps } from './data'
 type TGpsPage = {
 	searchParams: Promise<{
 		year?: string | TParamValues
-		show?: string
 	}>
 }
 
 export const metadata: Metadata = metaData
 
 export default async function GpsPage({ searchParams }: TGpsPage) {
-	const { show } = await searchParams
-	const yearValues = await getYearValues(searchParams)
+	const currentYear = new Date().getFullYear()
+	const yearValues = await getYearValues(searchParams, currentYear)
 	const gps = await getGps(yearValues.activeYear)
-
-	const showAll = show === 'all'
-	const isPastYear = Number(yearValues.activeYear) < new Date().getFullYear()
-	const { visible, showToggle, isUpNext } = filterGps(gps, showAll, isPastYear)
-
-	const gpGrid = (
-		<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
-			{visible.map(({ gp, stage }, i) => (
-				<GpCard
-					key={gp.id}
-					gp={gp}
-					isUpNext={i === isUpNext}
-					linked
-					macroStage={stage}
-				/>
-			))}
-		</div>
-	)
+	const { upcoming, finished, upNextId } = groupGps(gps)
 
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader title={metaData.title} />
+			<PageHeader title={metaData.title} defaultYear={currentYear} />
 
-			{showToggle ? (
-				<ShowOlderToggle checked={showAll}>{gpGrid}</ShowOlderToggle>
-			) : (
-				gpGrid
+			{[
+				{ title: 'Upcoming', items: upcoming },
+				{ title: 'Results', items: finished }
+			].map(
+				({ title, items }) =>
+					items.length > 0 && (
+						<section key={title} className="flex flex-col gap-1">
+							<SectionTitle>{title}</SectionTitle>
+
+							<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
+								{items.map(({ gp, stage }) => (
+									<GpCard
+										key={gp.id}
+										gp={gp}
+										isUpNext={gp.id === upNextId}
+										linked
+										macroStage={stage}
+									/>
+								))}
+							</div>
+						</section>
+					)
 			)}
 		</div>
 	)
