@@ -3,12 +3,14 @@ import { getYears } from '@/data/year'
 
 type TPageHeader = {
 	children?: React.ReactNode
+	defaultYear?: number | null
 	hideYearSelector?: boolean
 	title?: string | null
 }
 
 export async function PageHeader({
 	children,
+	defaultYear,
 	hideYearSelector = false,
 	title
 }: TPageHeader) {
@@ -22,7 +24,7 @@ export async function PageHeader({
 
 			{years && (
 				<div className="ml-auto">
-					<YearSelector years={years} />
+					<YearSelector defaultYear={defaultYear} years={years} />
 				</div>
 			)}
 		</div>

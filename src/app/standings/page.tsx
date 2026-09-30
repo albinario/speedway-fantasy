@@ -5,6 +5,7 @@ import { RidersStandings } from '@/components/RidersStandings'
 import { UsersStandings } from '@/components/UsersStandings'
 import type { TUsersForm } from '@/components/UsersStandings'
 import type { TParamValues } from '@/lib/params'
+import { getLatestStandingsYear } from '@/data/year'
 import { getYearValues } from '@/lib/year'
 
 import { metaData } from './constants'
@@ -25,9 +26,10 @@ const formValues: TUsersForm[] = ['total', 'last2', 'last4']
 
 export default async function StandingsPage({ searchParams }: TStandingsPage) {
 	const resolved = await searchParams
-	const yearValues = await getYearValues(searchParams)
+	const latestStandingsYear = await getLatestStandingsYear()
+	const yearValues = await getYearValues(searchParams, latestStandingsYear)
 	const view = resolved.view === 'riders' ? 'riders' : 'players'
-	const isCurrentYear = yearValues.activeYear === yearValues.years?.[0]?.value
+	const isCurrentYear = yearValues.activeYear === yearValues.latestYear
 	const form =
 		isCurrentYear && formValues.includes(resolved.form as TUsersForm)
 			? (resolved.form as TUsersForm)
@@ -35,7 +37,7 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader title={metaData.title} />
+			<PageHeader title={metaData.title} defaultYear={latestStandingsYear} />
 
 			<StandingsToggle view={view}>
 				{view === 'players' ? (
