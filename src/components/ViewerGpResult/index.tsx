@@ -8,6 +8,7 @@ type TGpViewerResult = {
 	viewerId: number
 }
 
+// TODO: is this still use?
 export async function ViewerGpResult({
 	gpId,
 	label = 'My result',
