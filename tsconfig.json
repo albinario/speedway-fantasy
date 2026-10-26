@@ -13,8 +13,8 @@
 		"isolatedModules": true,
 		"jsx": "react-jsx",
 		"incremental": true,
-		// "noUnusedLocals": true, TODO: re-enable this
-		// "noUnusedParameters": true, TODO: re-enable this
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
 		"plugins": [
 			{
 				"name": "next"
