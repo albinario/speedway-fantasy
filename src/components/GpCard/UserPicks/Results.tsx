@@ -16,7 +16,7 @@ export async function UserPicksResults({ gpId, userId }: TUserPicksResults) {
 
 	return (
 		<div className="divide-border -mx-3 divide-y">
-			{validRows.map((row, i) => (
+			{validRows.map((row) => (
 				<RidersResultRow
 					key={row.id}
 					riderId={row.id}
