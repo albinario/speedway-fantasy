@@ -1,7 +1,6 @@
 import { Users } from 'lucide-react'
 
 import { ActivityFeed } from '@/components/ActivityFeed'
-import { InfoBox } from '@/components/InfoBox'
 
 import { getPicksCount } from './data'
 
