@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { Footer } from '@/components/Footer'
 import { Header, HeaderShell } from '@/components/Header'
+import { LayoutOffsets } from '@/components/LayoutOffsets'
 import { getViewer } from '@/lib/auth/get-viewer'
 
 async function OnboardingGuard() {
@@ -46,6 +47,8 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 			<Suspense fallback={null}>
 				<Footer />
 			</Suspense>
+
+			<LayoutOffsets />
 		</>
 	)
 }

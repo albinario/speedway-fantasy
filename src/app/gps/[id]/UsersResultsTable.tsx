@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { useLayoutEffect, useRef } from 'react'
 
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
@@ -148,33 +147,22 @@ export function GpUsersResultsTable({
 		}
 	})
 
-	const containerRef = useRef<HTMLDivElement>(null)
-	const viewerRowRef = useRef<HTMLTableRowElement>(null)
-
-	useLayoutEffect(() => {
-		const container = containerRef.current
-		const row = viewerRowRef.current
-		if (!container || !row) return
-
-		container.scrollTop =
-			row.offsetTop - container.clientHeight / 2 + row.clientHeight / 2
-	}, [])
-
 	return (
 		<div>
 			<SectionTitle>Players</SectionTitle>
 
 			<Card>
-				<div ref={containerRef} className="max-h-[420px] overflow-y-auto">
+				<div className="max-h-[420px] overflow-y-auto">
 					<DataTable
 						columns={makeColumns(viewerId, firstOccurrenceByRider, isBefore)}
 						data={data}
 						getRowClassName={(row) =>
-							row.user_id === viewerId ? 'bg-orange-400/5' : undefined
+							row.user_id === viewerId
+								? 'bg-[color-mix(in_oklab,var(--color-orange-400)_5%,var(--card))]'
+								: undefined
 						}
-						getRowRef={(row) =>
-							row.user_id === viewerId ? viewerRowRef : undefined
-						}
+						getRowSticky={(row) => row.user_id === viewerId}
+						stickyScope="container"
 					/>
 				</div>
 			</Card>

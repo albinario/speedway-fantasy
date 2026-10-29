@@ -11,7 +11,10 @@ import { HeaderNav } from './Nav'
 
 export function HeaderShell({ children }: { children?: React.ReactNode }) {
 	return (
-		<div className="sticky top-0 z-50 border-b bg-black/65 p-3 backdrop-blur-sm">
+		<div
+			data-slot="app-header"
+			className="sticky top-0 z-50 border-b bg-black/65 p-3 backdrop-blur-sm"
+		>
 			<div className="mx-auto flex w-full max-w-screen-md items-center justify-between">
 				<Link href="/" className="w-32 sm:w-48 md:w-64">
 					<Image
