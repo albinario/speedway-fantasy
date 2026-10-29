@@ -1,11 +1,9 @@
 'use client'
 
-import type { ColumnDef } from '@tanstack/react-table'
-
 import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { Card } from '@/components/ui/card'
-import { DataTable } from '@/components/ui/data-table'
+import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
 
 import type { getUsersStandings } from './data'
@@ -13,7 +11,7 @@ import { PosBadge } from '@/components/PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
-function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
+function makeColumns(viewerId?: number): TColumnDef<TRow>[] {
 	return [
 		{
 			id: 'pos',
