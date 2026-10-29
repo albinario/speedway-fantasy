@@ -24,7 +24,10 @@ export function NavFooter({ viewerId, unreadComments = 0 }: TNavFooter) {
 	})
 
 	return (
-		<nav className="sticky bottom-0 z-50 border-t bg-black/65 p-4 backdrop-blur-sm">
+		<nav
+			data-slot="app-footer"
+			className="sticky bottom-0 z-50 border-t bg-black/65 p-4 backdrop-blur-sm"
+		>
 			<ul className="mx-auto flex max-w-screen-md gap-2 sm:justify-center sm:gap-4">
 				{items.map((item) => {
 					const isActive =

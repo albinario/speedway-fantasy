@@ -1,9 +1,8 @@
-import { unstable_cache } from 'next/cache'
-
 import { sql } from 'kysely'
 
 import type { TRider } from '@/components/RiderTile'
 import { cacheTags } from '@/lib/cache-tags'
+import { cachedQuery } from '@/lib/cached-query'
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
@@ -66,17 +65,16 @@ export async function getActiveRidersForGp(gpId: number): Promise<TRider[]> {
 	return [...active, wildCard as TRider]
 }
 
-export const getRidersStandings = unstable_cache(
+export const getRidersStandings = cachedQuery(
 	(year: number | TParamValues, limit?: number) =>
 		_getRidersStandings(year, limit),
 	['riders-standings'],
-	{ tags: [cacheTags.ridersStandings] }
+	{ tags: [cacheTags.ridersStandings], fallback: [] }
 )
 
 function _getRidersStandings(year: number | TParamValues, limit?: number) {
-	return dataFetch(() => {
-		if (year !== paramValues.all) {
-			const timesPickedYearScoped = sql<number>`(
+	if (year !== paramValues.all) {
+		const timesPickedYearScoped = sql<number>`(
 				SELECT COUNT(*)
 				FROM users_picks up
 				INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
@@ -89,60 +87,6 @@ function _getRidersStandings(year: number | TParamValues, limit?: number) {
 				  )
 			)`
 
-			let query = db
-				.selectFrom('riders_results')
-				.innerJoin(
-					'riders_with_country',
-					'riders_results.rider_id',
-					'riders_with_country.id'
-				)
-				.innerJoin('gps', 'riders_results.gp_id', 'gps.id')
-				.select((eb) => [
-					'riders_results.rider_id',
-					'riders_with_country.name',
-					'riders_with_country.number',
-					'riders_with_country.country_code',
-					eb.fn.sum<number>('riders_results.points').as('total_points'),
-					eb.fn
-						.count<number>('riders_results.gp_id')
-						.filterWhere('riders_results.heats', '>', 0)
-						.as('gps'),
-					eb.fn.sum<number>('riders_results.heats').as('heats'),
-					sql<
-						number[]
-					>`ARRAY_AGG(riders_results.medal ORDER BY riders_results.medal) FILTER (WHERE riders_results.medal IS NOT NULL)`.as(
-						'medals'
-					),
-					timesPickedYearScoped.as('times_picked')
-				])
-				.where(sql<number>`EXTRACT(YEAR FROM gps.start_date)`, '=', year)
-				.groupBy([
-					'riders_results.rider_id',
-					'riders_with_country.name',
-					'riders_with_country.number',
-					'riders_with_country.country_code'
-				])
-				.orderBy('total_points', 'desc')
-
-			if (limit !== undefined) {
-				query = query.limit(limit)
-			}
-
-			return query.execute()
-		}
-
-		const timesPickedAllYears = sql<number>`(
-			SELECT COUNT(*)
-			FROM users_picks up
-			INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
-			WHERE pick_gps.start_date <= NOW()
-			  AND (
-			    up.rider_1_id = riders_results.rider_id
-			    OR up.rider_2_id = riders_results.rider_id
-			    OR up.rider_3_id = riders_results.rider_id
-			  )
-		)`
-
 		let query = db
 			.selectFrom('riders_results')
 			.innerJoin(
@@ -150,6 +94,7 @@ function _getRidersStandings(year: number | TParamValues, limit?: number) {
 				'riders_results.rider_id',
 				'riders_with_country.id'
 			)
+			.innerJoin('gps', 'riders_results.gp_id', 'gps.id')
 			.select((eb) => [
 				'riders_results.rider_id',
 				'riders_with_country.name',
@@ -166,8 +111,9 @@ function _getRidersStandings(year: number | TParamValues, limit?: number) {
 				>`ARRAY_AGG(riders_results.medal ORDER BY riders_results.medal) FILTER (WHERE riders_results.medal IS NOT NULL)`.as(
 					'medals'
 				),
-				timesPickedAllYears.as('times_picked')
+				timesPickedYearScoped.as('times_picked')
 			])
+			.where(sql<number>`EXTRACT(YEAR FROM gps.start_date)`, '=', year)
 			.groupBy([
 				'riders_results.rider_id',
 				'riders_with_country.name',
@@ -181,5 +127,56 @@ function _getRidersStandings(year: number | TParamValues, limit?: number) {
 		}
 
 		return query.execute()
-	}, [])
+	}
+
+	const timesPickedAllYears = sql<number>`(
+			SELECT COUNT(*)
+			FROM users_picks up
+			INNER JOIN gps pick_gps ON pick_gps.id = up.gp_id
+			WHERE pick_gps.start_date <= NOW()
+			  AND (
+			    up.rider_1_id = riders_results.rider_id
+			    OR up.rider_2_id = riders_results.rider_id
+			    OR up.rider_3_id = riders_results.rider_id
+			  )
+		)`
+
+	let query = db
+		.selectFrom('riders_results')
+		.innerJoin(
+			'riders_with_country',
+			'riders_results.rider_id',
+			'riders_with_country.id'
+		)
+		.select((eb) => [
+			'riders_results.rider_id',
+			'riders_with_country.name',
+			'riders_with_country.number',
+			'riders_with_country.country_code',
+			eb.fn.sum<number>('riders_results.points').as('total_points'),
+			eb.fn
+				.count<number>('riders_results.gp_id')
+				.filterWhere('riders_results.heats', '>', 0)
+				.as('gps'),
+			eb.fn.sum<number>('riders_results.heats').as('heats'),
+			sql<
+				number[]
+			>`ARRAY_AGG(riders_results.medal ORDER BY riders_results.medal) FILTER (WHERE riders_results.medal IS NOT NULL)`.as(
+				'medals'
+			),
+			timesPickedAllYears.as('times_picked')
+		])
+		.groupBy([
+			'riders_results.rider_id',
+			'riders_with_country.name',
+			'riders_with_country.number',
+			'riders_with_country.country_code'
+		])
+		.orderBy('total_points', 'desc')
+
+	if (limit !== undefined) {
+		query = query.limit(limit)
+	}
+
+	return query.execute()
 }

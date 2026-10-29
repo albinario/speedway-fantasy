@@ -1,19 +1,17 @@
 'use client'
 
-import type { ColumnDef } from '@tanstack/react-table'
-
 import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
+import { PosBadge } from '@/components/PosBadge'
 import { Card } from '@/components/ui/card'
-import { DataTable } from '@/components/ui/data-table'
+import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
 
 import type { getUsersStandings } from './data'
-import { PosBadge } from '@/components/PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
-function makeColumns(viewerId?: number): ColumnDef<TRow>[] {
+function makeColumns(viewerId?: number): TColumnDef<TRow>[] {
 	return [
 		{
 			id: 'pos',
@@ -105,13 +103,16 @@ type TUsersStandingsTable = {
 
 export function UsersStandingsTable({ data, viewerId }: TUsersStandingsTable) {
 	return (
-		<Card>
+		<Card className="overflow-clip">
 			<DataTable
 				columns={makeColumns(viewerId)}
 				data={data}
 				getRowClassName={(row) =>
-					row.user_id === viewerId ? 'bg-orange-400/5' : undefined
+					row.user_id === viewerId
+						? 'bg-[color-mix(in_oklab,var(--color-orange-400)_5%,var(--card))]'
+						: undefined
 				}
+				getRowSticky={(row) => row.user_id === viewerId}
 			/>
 		</Card>
 	)

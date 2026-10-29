@@ -26,13 +26,15 @@ type TUserHero = {
 }
 
 export async function UserHero({ userId, year, createdAt }: TUserHero) {
-	const [standings, leaderRecord, streak, starRecords] = await Promise.all([
-		getUserStandingRow(year, userId),
-		getLeader(year),
-		getUserStreak(userId),
-		getUserStars(userId)
-	])
+	const [standings, leaderRecord, { streak, total: totalGps }, starRecords] =
+		await Promise.all([
+			getUserStandingRow(year, userId),
+			getLeader(year),
+			getUserStreak(userId),
+			getUserStars(userId)
+		])
 
+	const everyGp = totalGps > 0 && streak === totalGps
 	const pos = standings?.pos ?? null
 	const prevPos = standings?.prev_pos ?? null
 	const points = Number(standings?.points ?? 0)
@@ -76,14 +78,31 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 						size="lg"
 					/>
 
-					{streak > 0 && (
-						<div className="ml-auto flex items-center gap-1">
-							<span className="text-xl font-black">{streak}</span>
-							<Flame size={25} className="text-brand-red" />
-							<span className="text-muted-foreground text-xs tracking-wide uppercase">
-								GP Streak
+					{everyGp ? (
+						<div
+							title={`Picked in all ${totalGps} GPs`}
+							className="border-gold/40 bg-gold/10 relative ml-auto flex items-center gap-1 overflow-hidden rounded-full border px-3 py-1"
+						>
+							<span className="text-gold text-xl font-black">{streak}</span>
+							<Flame size={25} className="text-gold" />
+							<span className="text-gold text-xs font-black tracking-wide uppercase">
+								Every GP
 							</span>
+							<span
+								aria-hidden
+								className="animate-sheen pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-linear-to-r from-transparent via-white/25 to-transparent motion-reduce:hidden"
+							/>
 						</div>
+					) : (
+						streak > 0 && (
+							<div className="ml-auto flex items-center gap-1">
+								<span className="text-xl font-black">{streak}</span>
+								<Flame size={25} className="text-brand-red" />
+								<span className="text-muted-foreground text-xs tracking-wide uppercase">
+									GP Streak
+								</span>
+							</div>
+						)
 					)}
 				</div>
 

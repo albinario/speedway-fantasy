@@ -1,15 +1,14 @@
-import { unstable_cache } from 'next/cache'
 import { sql } from 'kysely'
 
 import type { TRider } from '@/components/RiderTile'
 import { cacheTags } from '@/lib/cache-tags'
-import { dataFetch } from '@/lib/data-fetch'
+import { cachedQuery } from '@/lib/cached-query'
 import { db } from '@/lib/db'
 
-export const getGpRiders = unstable_cache(
+export const getGpRiders = cachedQuery(
 	(gpId: number) => _getGpRiders(gpId),
 	['gp-riders'],
-	{ tags: [cacheTags.gpResults] }
+	{ tags: [cacheTags.gpResults], fallback: [] }
 )
 
 /**
@@ -25,30 +24,21 @@ async function _getGpRiders(gpId: number): Promise<TRider[]> {
 		.executeTakeFirst()
 	const wildCardId = gp?.wild_card_id
 	// Check if riders_results exist for this GP
-	const fromResults = await dataFetch(
-		() =>
-			db
-				.selectFrom('riders_results')
-				.innerJoin(
-					'riders_with_country',
-					'riders_with_country.id',
-					'riders_results.rider_id'
-				)
-				.select([
-					'riders_with_country.id',
-					'riders_with_country.name',
-					'riders_with_country.number',
-					'riders_with_country.country_code'
-				])
-				.where('riders_results.gp_id', '=', gpId)
-				.execute(),
-		[] as {
-			id: number | null
-			name: string | null
-			number: number | null
-			country_code: string | null
-		}[]
-	)
+	const fromResults = await db
+		.selectFrom('riders_results')
+		.innerJoin(
+			'riders_with_country',
+			'riders_with_country.id',
+			'riders_results.rider_id'
+		)
+		.select([
+			'riders_with_country.id',
+			'riders_with_country.name',
+			'riders_with_country.number',
+			'riders_with_country.country_code'
+		])
+		.where('riders_results.gp_id', '=', gpId)
+		.execute()
 
 	if (fromResults.length > 0) {
 		return fromResults.filter(
@@ -57,27 +47,18 @@ async function _getGpRiders(gpId: number): Promise<TRider[]> {
 	}
 
 	// Fall back to active seeded riders + wild card
-	const activeRaw = await dataFetch(
-		() =>
-			db
-				.selectFrom('riders_with_country')
-				.innerJoin('riders', 'riders.id', 'riders_with_country.id')
-				.select([
-					'riders_with_country.id',
-					'riders_with_country.name',
-					'riders_with_country.number',
-					'riders_with_country.country_code'
-				])
-				.where('riders.active', 'is not', null)
-				.orderBy('riders.active')
-				.execute(),
-		[] as {
-			id: number | null
-			name: string | null
-			number: number | null
-			country_code: string | null
-		}[]
-	)
+	const activeRaw = await db
+		.selectFrom('riders_with_country')
+		.innerJoin('riders', 'riders.id', 'riders_with_country.id')
+		.select([
+			'riders_with_country.id',
+			'riders_with_country.name',
+			'riders_with_country.number',
+			'riders_with_country.country_code'
+		])
+		.where('riders.active', 'is not', null)
+		.orderBy('riders.active')
+		.execute()
 
 	const active: TRider[] = activeRaw.filter(
 		(r): r is TRider => r.id != null && r.name != null && r.number != null
@@ -85,20 +66,16 @@ async function _getGpRiders(gpId: number): Promise<TRider[]> {
 
 	if (!wildCardId) return active
 
-	const wildCardRaw = await dataFetch(
-		() =>
-			db
-				.selectFrom('riders_with_country')
-				.select([
-					'riders_with_country.id',
-					'riders_with_country.name',
-					'riders_with_country.number',
-					'riders_with_country.country_code'
-				])
-				.where('riders_with_country.id', '=', wildCardId)
-				.executeTakeFirst(),
-		null
-	)
+	const wildCardRaw = await db
+		.selectFrom('riders_with_country')
+		.select([
+			'riders_with_country.id',
+			'riders_with_country.name',
+			'riders_with_country.number',
+			'riders_with_country.country_code'
+		])
+		.where('riders_with_country.id', '=', wildCardId)
+		.executeTakeFirst()
 
 	if (
 		!wildCardRaw ||
@@ -129,10 +106,10 @@ export type TUserPick = {
 	points: number | null
 }
 
-export const getUserPicksWithResults = unstable_cache(
+export const getUserPicksWithResults = cachedQuery(
 	(gpId: number, userId: number) => _getUserPicksWithResults(gpId, userId),
 	['user-picks-with-results'],
-	{ tags: [cacheTags.picks, cacheTags.gpResults] }
+	{ tags: [cacheTags.picks, cacheTags.gpResults], fallback: [] }
 )
 
 /** Returns a user's 3 picked riders with full details and results. */
@@ -140,67 +117,51 @@ async function _getUserPicksWithResults(
 	gpId: number,
 	userId: number
 ): Promise<TUserPick[]> {
-	const row = await dataFetch(
-		() =>
-			db
-				.selectFrom('users_picks')
-				.leftJoin(
-					'riders_with_country as r1',
-					'r1.id',
-					'users_picks.rider_1_id'
-				)
-				.leftJoin(
-					'riders_with_country as r2',
-					'r2.id',
-					'users_picks.rider_2_id'
-				)
-				.leftJoin(
-					'riders_with_country as r3',
-					'r3.id',
-					'users_picks.rider_3_id'
-				)
-				.leftJoin('riders_results as rr1', (join) =>
-					join
-						.onRef('rr1.rider_id', '=', 'users_picks.rider_1_id')
-						.on('rr1.gp_id', '=', gpId)
-				)
-				.leftJoin('riders_results as rr2', (join) =>
-					join
-						.onRef('rr2.rider_id', '=', 'users_picks.rider_2_id')
-						.on('rr2.gp_id', '=', gpId)
-				)
-				.leftJoin('riders_results as rr3', (join) =>
-					join
-						.onRef('rr3.rider_id', '=', 'users_picks.rider_3_id')
-						.on('rr3.gp_id', '=', gpId)
-				)
-				.select([
-					'r1.id as pick_1_id',
-					'r1.name as pick_1_name',
-					'r1.number as pick_1_number',
-					'r1.country_code as pick_1_country',
-					'r2.id as pick_2_id',
-					'r2.name as pick_2_name',
-					'r2.number as pick_2_number',
-					'r2.country_code as pick_2_country',
-					'r3.id as pick_3_id',
-					'r3.name as pick_3_name',
-					'r3.number as pick_3_number',
-					'r3.country_code as pick_3_country'
-				])
-				.select([
-					sql<number | null>`rr1.points`.as('pick_1_points'),
-					sql<number | null>`rr1.medal`.as('pick_1_medal'),
-					sql<number | null>`rr2.points`.as('pick_2_points'),
-					sql<number | null>`rr2.medal`.as('pick_2_medal'),
-					sql<number | null>`rr3.points`.as('pick_3_points'),
-					sql<number | null>`rr3.medal`.as('pick_3_medal')
-				])
-				.where('users_picks.gp_id', '=', gpId)
-				.where('users_picks.user_id', '=', userId)
-				.executeTakeFirst(),
-		null
-	)
+	const row = await db
+		.selectFrom('users_picks')
+		.leftJoin('riders_with_country as r1', 'r1.id', 'users_picks.rider_1_id')
+		.leftJoin('riders_with_country as r2', 'r2.id', 'users_picks.rider_2_id')
+		.leftJoin('riders_with_country as r3', 'r3.id', 'users_picks.rider_3_id')
+		.leftJoin('riders_results as rr1', (join) =>
+			join
+				.onRef('rr1.rider_id', '=', 'users_picks.rider_1_id')
+				.on('rr1.gp_id', '=', gpId)
+		)
+		.leftJoin('riders_results as rr2', (join) =>
+			join
+				.onRef('rr2.rider_id', '=', 'users_picks.rider_2_id')
+				.on('rr2.gp_id', '=', gpId)
+		)
+		.leftJoin('riders_results as rr3', (join) =>
+			join
+				.onRef('rr3.rider_id', '=', 'users_picks.rider_3_id')
+				.on('rr3.gp_id', '=', gpId)
+		)
+		.select([
+			'r1.id as pick_1_id',
+			'r1.name as pick_1_name',
+			'r1.number as pick_1_number',
+			'r1.country_code as pick_1_country',
+			'r2.id as pick_2_id',
+			'r2.name as pick_2_name',
+			'r2.number as pick_2_number',
+			'r2.country_code as pick_2_country',
+			'r3.id as pick_3_id',
+			'r3.name as pick_3_name',
+			'r3.number as pick_3_number',
+			'r3.country_code as pick_3_country'
+		])
+		.select([
+			sql<number | null>`rr1.points`.as('pick_1_points'),
+			sql<number | null>`rr1.medal`.as('pick_1_medal'),
+			sql<number | null>`rr2.points`.as('pick_2_points'),
+			sql<number | null>`rr2.medal`.as('pick_2_medal'),
+			sql<number | null>`rr3.points`.as('pick_3_points'),
+			sql<number | null>`rr3.medal`.as('pick_3_medal')
+		])
+		.where('users_picks.gp_id', '=', gpId)
+		.where('users_picks.user_id', '=', userId)
+		.executeTakeFirst()
 
 	if (!row) return []
 
@@ -234,10 +195,10 @@ async function _getUserPicksWithResults(
 	)
 }
 
-export const getUserPicks = unstable_cache(
+export const getUserPicks = cachedQuery(
 	(gpId: number, userId: number) => _getUserPicks(gpId, userId),
 	['user-picks'],
-	{ tags: [cacheTags.picks] }
+	{ tags: [cacheTags.picks], fallback: null }
 )
 
 /** Returns the existing picks for a user/GP pair as a tuple, or null if none. */
@@ -245,15 +206,11 @@ async function _getUserPicks(
 	gpId: number,
 	userId: number
 ): Promise<[number, number, number] | null> {
-	const row = await dataFetch(
-		() =>
-			db
-				.selectFrom('users_picks')
-				.select(['rider_1_id', 'rider_2_id', 'rider_3_id'])
-				.where('gp_id', '=', gpId)
-				.where('user_id', '=', userId)
-				.executeTakeFirst(),
-		null
-	)
+	const row = await db
+		.selectFrom('users_picks')
+		.select(['rider_1_id', 'rider_2_id', 'rider_3_id'])
+		.where('gp_id', '=', gpId)
+		.where('user_id', '=', userId)
+		.executeTakeFirst()
 	return row ? [row.rider_1_id, row.rider_2_id, row.rider_3_id] : null
 }

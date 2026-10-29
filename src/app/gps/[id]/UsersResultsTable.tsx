@@ -1,16 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useLayoutEffect, useRef } from 'react'
-
-import type { ColumnDef } from '@tanstack/react-table'
 
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
 import { PosBadge } from '@/components/PosBadge'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
-import { DataTable } from '@/components/ui/data-table'
+import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
 import { sortedPicks } from '@/lib/picks'
 
@@ -22,7 +19,7 @@ function makeColumns(
 	viewerId?: number,
 	firstOccurrenceByRider = new Map<number, number>(),
 	isBefore = false
-): ColumnDef<TRow>[] {
+): TColumnDef<TRow>[] {
 	return [
 		...(!isBefore
 			? [
@@ -36,7 +33,7 @@ function makeColumns(
 								<PosBadge pos={pos} size="lg" tiedPos={pos !== row.index + 1} />
 							)
 						}
-					} as ColumnDef<TRow>
+					} as TColumnDef<TRow>
 				]
 			: []),
 		{
@@ -150,33 +147,22 @@ export function GpUsersResultsTable({
 		}
 	})
 
-	const containerRef = useRef<HTMLDivElement>(null)
-	const viewerRowRef = useRef<HTMLTableRowElement>(null)
-
-	useLayoutEffect(() => {
-		const container = containerRef.current
-		const row = viewerRowRef.current
-		if (!container || !row) return
-
-		container.scrollTop =
-			row.offsetTop - container.clientHeight / 2 + row.clientHeight / 2
-	}, [])
-
 	return (
 		<div>
 			<SectionTitle>Players</SectionTitle>
 
 			<Card>
-				<div ref={containerRef} className="max-h-[420px] overflow-y-auto">
+				<div className="max-h-[420px] overflow-y-auto">
 					<DataTable
 						columns={makeColumns(viewerId, firstOccurrenceByRider, isBefore)}
 						data={data}
 						getRowClassName={(row) =>
-							row.user_id === viewerId ? 'bg-orange-400/5' : undefined
+							row.user_id === viewerId
+								? 'bg-[color-mix(in_oklab,var(--color-orange-400)_5%,var(--card))]'
+								: undefined
 						}
-						getRowRef={(row) =>
-							row.user_id === viewerId ? viewerRowRef : undefined
-						}
+						getRowSticky={(row) => row.user_id === viewerId}
+						stickyScope="container"
 					/>
 				</div>
 			</Card>

@@ -1,40 +1,31 @@
-import { unstable_cache } from 'next/cache'
 import { sql } from 'kysely'
 
 import { cacheTags } from '@/lib/cache-tags'
-import { dataFetch } from '@/lib/data-fetch'
+import { cachedQuery } from '@/lib/cached-query'
 import { db } from '@/lib/db'
 
-export const getYears = unstable_cache(
+export const getYears = cachedQuery(
 	() =>
-		dataFetch(
-			() =>
-				db
-					.selectFrom('gps')
-					.select(sql<number>`EXTRACT(YEAR FROM start_date)::int`.as('value'))
-					.distinct()
-					.orderBy('value', 'desc')
-					.execute(),
-			[]
-		),
+		db
+			.selectFrom('gps')
+			.select(sql<number>`EXTRACT(YEAR FROM start_date)::int`.as('value'))
+			.distinct()
+			.orderBy('value', 'desc')
+			.execute(),
 	['years'],
-	{ revalidate: false }
+	{ revalidate: false, fallback: [] }
 )
 export type TYears =
 	Awaited<ReturnType<typeof getYears>> extends infer R ? NonNullable<R> : never
 
-export const getLatestStandingsYear = unstable_cache(
+export const getLatestStandingsYear = cachedQuery(
 	async () => {
-		const row = await dataFetch(
-			() =>
-				db
-					.selectFrom('users_standings')
-					.select((eb) => eb.fn.max('year').as('year'))
-					.executeTakeFirst(),
-			undefined
-		)
+		const row = await db
+			.selectFrom('users_standings')
+			.select((eb) => eb.fn.max('year').as('year'))
+			.executeTakeFirst()
 		return row?.year ?? null
 	},
 	['latest-standings-year'],
-	{ tags: [cacheTags.standings] }
+	{ tags: [cacheTags.standings], fallback: null }
 )

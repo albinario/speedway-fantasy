@@ -1,9 +1,8 @@
-import { unstable_cache } from 'next/cache'
-
 import { cacheTags } from '@/lib/cache-tags'
+import { cachedQuery } from '@/lib/cached-query'
 import { db } from '@/lib/db'
 
-export const getUnreadCommentsCount = unstable_cache(
+export const getUnreadCommentsCount = cachedQuery(
 	async (userId: number): Promise<number> => {
 		const user = await db
 			.selectFrom('users')
@@ -23,5 +22,5 @@ export const getUnreadCommentsCount = unstable_cache(
 		return Number(result?.count ?? 0)
 	},
 	['unread-comments-count'],
-	{ tags: [cacheTags.commentReads] }
+	{ tags: [cacheTags.commentReads], fallback: 0 }
 )
