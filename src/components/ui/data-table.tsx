@@ -4,11 +4,15 @@ import { useState } from 'react'
 
 import {
 	type ColumnDef,
+	type RowData,
+	createSortedRowModel,
 	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
+	rowSortingFeature,
+	sortFn_alphanumeric,
+	sortFn_text,
 	type SortingState,
-	useReactTable
+	tableFeatures,
+	useTable
 } from '@tanstack/react-table'
 
 import {
@@ -21,22 +25,24 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 
-declare module '@tanstack/react-table' {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	interface ColumnMeta<TData, TValue> {
-		className?: string
-	}
-}
+const features = tableFeatures({
+	rowSortingFeature,
+	sortedRowModel: createSortedRowModel(),
+	sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+	columnMeta: {} as { className?: string }
+})
 
-type TDataTable<TData> = {
-	columns: ColumnDef<TData>[]
+export type TColumnDef<TData extends RowData> = ColumnDef<typeof features, TData>
+
+type TDataTable<TData extends RowData> = {
+	columns: TColumnDef<TData>[]
 	data: TData[]
 	hideHeader?: boolean
 	getRowClassName?: (row: TData) => string | undefined
 	getRowRef?: (row: TData) => React.Ref<HTMLTableRowElement> | undefined
 }
 
-export function DataTable<TData>({
+export function DataTable<TData extends RowData>({
 	columns,
 	data,
 	hideHeader,
@@ -45,13 +51,12 @@ export function DataTable<TData>({
 }: TDataTable<TData>) {
 	const [sorting, setSorting] = useState<SortingState>([])
 
-	const table = useReactTable({
+	const table = useTable({
+		features,
 		data,
 		columns,
 		state: { sorting },
 		onSortingChange: setSorting,
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
 		sortDescFirst: true
 	})
 
@@ -112,7 +117,7 @@ export function DataTable<TData>({
 							ref={getRowRef?.(row.original)}
 							className={getRowClassName?.(row.original)}
 						>
-							{row.getVisibleCells().map((cell) => (
+							{row.getAllCells().map((cell) => (
 								<TableCell
 									key={cell.id}
 									className={cell.column.columnDef.meta?.className}

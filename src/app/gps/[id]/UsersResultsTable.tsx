@@ -3,14 +3,12 @@
 import Link from 'next/link'
 import { useLayoutEffect, useRef } from 'react'
 
-import type { ColumnDef } from '@tanstack/react-table'
-
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
 import { PosBadge } from '@/components/PosBadge'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
-import { DataTable } from '@/components/ui/data-table'
+import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
 import { sortedPicks } from '@/lib/picks'
 
@@ -22,7 +20,7 @@ function makeColumns(
 	viewerId?: number,
 	firstOccurrenceByRider = new Map<number, number>(),
 	isBefore = false
-): ColumnDef<TRow>[] {
+): TColumnDef<TRow>[] {
 	return [
 		...(!isBefore
 			? [
@@ -36,7 +34,7 @@ function makeColumns(
 								<PosBadge pos={pos} size="lg" tiedPos={pos !== row.index + 1} />
 							)
 						}
-					} as ColumnDef<TRow>
+					} as TColumnDef<TRow>
 				]
 			: []),
 		{

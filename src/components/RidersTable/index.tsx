@@ -1,14 +1,12 @@
 'use client'
 
-import type { ColumnDef } from '@tanstack/react-table'
-
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
 import { Card } from '@/components/ui/card'
-import { DataTable } from '@/components/ui/data-table'
+import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 
 import { PosBadge } from '@/components/PosBadge'
 
@@ -36,7 +34,7 @@ function buildColumns({
 	condensedMedals,
 	showGps,
 	hidePicked
-}: Omit<TRidersTable, 'data'> & { showGps: boolean }): ColumnDef<TRiderRow>[] {
+}: Omit<TRidersTable, 'data'> & { showGps: boolean }): TColumnDef<TRiderRow>[] {
 	return [
 		{
 			id: 'pos',
@@ -124,7 +122,7 @@ function buildColumns({
 						cell: ({ getValue }: { getValue: () => unknown }) =>
 							getValue() as number,
 						meta: { className: 'hidden px-1 text-center sm:table-cell' }
-					} satisfies ColumnDef<TRiderRow>
+					} satisfies TColumnDef<TRiderRow>
 				]
 			: []),
 		...(!hidePicked
@@ -136,7 +134,7 @@ function buildColumns({
 						cell: ({ getValue }: { getValue: () => unknown }) =>
 							getValue() as number,
 						meta: { className: 'hidden px-1 text-center sm:table-cell' }
-					} satisfies ColumnDef<TRiderRow>
+					} satisfies TColumnDef<TRiderRow>
 				]
 			: [])
 	]
