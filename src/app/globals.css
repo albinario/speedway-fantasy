@@ -171,4 +171,17 @@ html {
 	[role='button']:not(:disabled) {
 		cursor: pointer;
 	}
+	/* Hide the bottom nav while the on-screen keyboard is open. iOS keeps
+	   sticky/fixed bottom bars anchored behind the keyboard, so they float
+	   mid-screen when scrolling and can stay stuck there after it closes. */
+	@media (pointer: coarse) {
+		body:has(
+				textarea:focus,
+				[contenteditable]:focus,
+				input:not([type='checkbox'], [type='radio'], [type='range'], [type='button'], [type='submit']):focus
+			)
+			[data-slot='app-footer'] {
+			display: none;
+		}
+	}
 }

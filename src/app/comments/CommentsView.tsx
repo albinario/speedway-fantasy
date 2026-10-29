@@ -516,7 +516,7 @@ export function CommentsView({
 				</div>
 			</div>
 
-			<div className="border-border bg-background sticky bottom-[70px] z-10 border-t px-4 py-3">
+			<div className="border-border bg-background sticky bottom-(--footer-h) z-10 border-t px-4 py-3">
 				<div className="mx-auto max-w-2xl">
 					{viewerId != null ? (
 						<>
