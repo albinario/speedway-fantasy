@@ -143,6 +143,20 @@ html {
 	--radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@theme {
+	/* One-shot light sweep, e.g. the "Every GP" badge */
+	--animate-sheen: sheen 1.4s ease-out 0.5s 1 both;
+
+	@keyframes sheen {
+		from {
+			transform: translateX(0) skewX(-12deg);
+		}
+		to {
+			transform: translateX(400%) skewX(-12deg);
+		}
+	}
+}
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;

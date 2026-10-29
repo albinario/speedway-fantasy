@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache'
+
 import { sql } from 'kysely'
 
 import { cacheTags } from '@/lib/cache-tags'
@@ -41,7 +42,10 @@ export const getUserStreak = unstable_cache(
 	{ tags: [cacheTags.picks] }
 )
 
-async function _getUserStreak(userId: number): Promise<number> {
+// total = finished GPs overall, so streak === total means the user never missed one
+async function _getUserStreak(
+	userId: number
+): Promise<{ streak: number; total: number }> {
 	const rows = await dataFetch(
 		() =>
 			db
@@ -63,5 +67,5 @@ async function _getUserStreak(userId: number): Promise<number> {
 		if (row.has_picks) streak++
 		else break
 	}
-	return streak
+	return { streak, total: rows.length }
 }
