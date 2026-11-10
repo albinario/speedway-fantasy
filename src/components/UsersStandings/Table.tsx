@@ -43,13 +43,14 @@ function makeColumns(viewerId?: number): TColumnDef<TRow>[] {
 				<div className="flex items-center gap-2">
 					<div>
 						<UserName
+							className="text-base sm:text-lg"
 							firstName={row.original.first_name}
 							lastName={row.original.last_name}
 							stars={row.original.stars}
 							userId={row.original.user_id}
 							isViewer={row.original.user_id === viewerId}
 						/>
-						<div className="mt-1">
+						<div className="mt-1 sm:hidden">
 							<MedalCounts
 								medal_1={Number(row.original.medal_1)}
 								medal_2={Number(row.original.medal_2)}

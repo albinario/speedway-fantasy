@@ -1,6 +1,6 @@
 import type { getGps } from '@/app/gps/data'
+import { ActivityFeed } from '@/components/ActivityFeed'
 import { HeatsCounter } from '@/components/HeatsCounter'
-import { RegisteredPlayers } from '@/components/RegisteredPlayers'
 import { WildCard } from '@/components/WildCard'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
@@ -60,10 +60,7 @@ export async function GpCard({
 				/>
 			)}
 
-			<RegisteredPlayers
-				gpId={gp.id}
-				showActivity={macroStage === EMacroStage.Before}
-			/>
+			{macroStage === EMacroStage.Before && <ActivityFeed gpId={gp.id} />}
 
 			{macroStage === EMacroStage.Before && gp.wild_card_id && (
 				<WildCard
@@ -72,7 +69,6 @@ export async function GpCard({
 					riderId={gp.wild_card_id}
 				/>
 			)}
-
 		</GpCardBase>
 	)
 }

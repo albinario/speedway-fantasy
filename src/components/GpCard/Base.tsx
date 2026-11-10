@@ -29,6 +29,7 @@ export function GpCardBase({
 
 			<GpCardHeader
 				href={href}
+				gpId={gp.id}
 				cityId={gp.city_id}
 				cityName={gp.city_name}
 				countryCode={gp.country_code}

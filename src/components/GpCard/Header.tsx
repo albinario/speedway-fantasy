@@ -6,12 +6,14 @@ import { ChevronRight } from 'lucide-react'
 import { Countdown } from '@/components/Countdown'
 import { Flag } from '@/components/Flag'
 import { LiveBadge } from '@/components/LiveBadge'
+import { RegisteredPlayers } from '@/components/RegisteredPlayers'
 import { StartTimeNote } from '@/components/StartTimeNote'
 import { EMacroStage } from '@/enums'
 import { formatDate } from '@/lib/dates'
 
 type TGpCardHeader = {
 	href?: string
+	gpId: number
 	cityId: number
 	cityName: string
 	countryCode: string
@@ -25,6 +27,7 @@ type TGpCardHeader = {
 
 export function GpCardHeader({
 	href,
+	gpId,
 	cityId,
 	cityName,
 	countryCode,
@@ -72,6 +75,8 @@ export function GpCardHeader({
 						<StartTimeNote date={startDate} eventTimeZone={timeZone} />
 					)}
 				</div>
+
+				<RegisteredPlayers gpId={gpId} />
 			</div>
 		</>
 	)
@@ -81,12 +86,8 @@ export function GpCardHeader({
 	return (
 		<Link className="group relative block" href={href}>
 			{header}
-			<div className="text-brand-red absolute top-3 right-3 z-40 flex items-center gap-0 overflow-hidden rounded-full bg-black/40 p-1.5 backdrop-blur-sm transition-all duration-300 group-hover:gap-1.5 group-hover:pl-3">
-				<span className="max-w-0 overflow-hidden text-xs font-semibold whitespace-nowrap uppercase transition-all duration-300 group-hover:max-w-20">
-					View GP
-				</span>
-
-				<ChevronRight className="size-4 shrink-0" />
+			<div className="absolute top-3 right-3 z-40 rounded-full bg-black/40 p-1.5 backdrop-blur-sm">
+				<ChevronRight className="size-4" />
 			</div>
 		</Link>
 	)

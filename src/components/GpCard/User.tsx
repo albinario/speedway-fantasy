@@ -1,8 +1,8 @@
 import type { getGps } from '@/app/gps/data'
+import { ActivityFeed } from '@/components/ActivityFeed'
 import { EMacroStage } from '@/enums'
 import { getMacroStage } from '@/lib/dates'
 
-import { RegisteredPlayers } from '../RegisteredPlayers'
 import { GpCardBase } from './Base'
 import { UserPicks } from './UserPicks'
 import { UserPicksResults } from './UserPicks/Results'
@@ -54,10 +54,7 @@ export async function UserGpCard({
 				</div>
 			)}
 
-			<RegisteredPlayers
-				gpId={gp.id}
-				showActivity={macroStage === EMacroStage.Before}
-			/>
+			{macroStage === EMacroStage.Before && <ActivityFeed gpId={gp.id} />}
 		</GpCardBase>
 	)
 }

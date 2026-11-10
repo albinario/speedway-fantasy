@@ -34,11 +34,11 @@ export function RiderHero({ stats }: TRiderHero) {
 
 			{timesPicked > 0 && (
 				<div className="ml-auto flex items-center gap-1.5">
-					<span className="text-xl font-black">{timesPicked}</span>
-					<Users size={25} className="text-brand-red" />
 					<span className="text-muted-foreground text-xs tracking-wide uppercase">
 						Times picked
 					</span>
+					<Users size={25} className="text-green-400" />
+					<span className="text-xl font-black">{timesPicked}</span>
 				</div>
 			)}
 		</div>
