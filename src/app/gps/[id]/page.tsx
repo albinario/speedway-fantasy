@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { AutoRefresh } from '@/components/AutoRefresh'
 import { GpCard } from '@/components/GpCard'
+import { GpSeasonProgress } from '@/components/GpSeasonProgress'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
@@ -18,6 +19,7 @@ import { GpMissingStandingsCard } from './GpMissingStandingsCard'
 import { GpUsersStandingsTable } from './GpUsersStandingsTable'
 import { GpRidersPreviewTable, GpRidersResultsTable } from './RidersTables'
 import { GpUsersResultsTable } from './UsersResultsTable'
+import { VenueHistory } from './VenueHistory'
 
 type TGpPage = {
 	params: Promise<{ id: string }>
@@ -67,13 +69,25 @@ export default async function GpPage({ params }: TGpPage) {
 
 	const ridersPreview =
 		ridersResults.length <= 0
-			? await getGpRidersPreview(gp.id, gp.wild_card_id, viewerId)
+			? await getGpRidersPreview(gp.id, year, gp.wild_card_id, viewerId)
 			: []
 
 	return (
 		<div className="columns-1 space-y-4 [&>*]:break-inside-avoid">
 			{macroStage === EMacroStage.During && <AutoRefresh />}
-			<GpCard gp={gp} macroStage={macroStage} />
+			{/* Card at mobile width on desktop too; season context beside it */}
+			<div className="grid items-start gap-4 md:grid-cols-2">
+				<GpCard gp={gp} macroStage={macroStage} imageLoading="eager" />
+
+				<div className="flex flex-col gap-4">
+					<GpSeasonProgress year={year} currentGpId={gp.id} />
+					<VenueHistory
+						gpId={gp.id}
+						cityName={gp.city_name}
+						viewerId={viewerId}
+					/>
+				</div>
+			</div>
 
 			{isBefore ? (
 				<GpUsersStandingsTable data={usersWithStandings} viewerId={viewerId} />

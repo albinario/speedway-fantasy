@@ -182,6 +182,15 @@ const sv: TMessages = {
 		footer:
 			'Du får det här mejlet eftersom du har påminnelser på tävlingsdagar aktiverade i Speedway Fantasy. <link>Hantera inställningar</link>'
 	},
+	VenueHistory: {
+		firstGpIn: 'Första GP:t i {city}',
+		noPreviousResults: 'Inga tidigare resultat på den här banan.',
+		lastTimeIn: 'Senast i {city}',
+		bestRider: 'Bästa förare',
+		bestPlayers: 'Bästa spelare',
+		more: '+{count} till',
+		you: 'Du'
+	},
 	RiderHero: {
 		timesPicked: 'Antal gånger vald'
 	},
@@ -208,6 +217,7 @@ const sv: TMessages = {
 		viewGp: 'Visa GP',
 		previousSeason: 'Föregående <accent>säsong</accent>',
 		seasonProgress: 'Säsongens förlopp',
+		seasonYear: 'Säsong {year}',
 		currentPodium: 'Aktuell <accent>pall</accent>',
 		finalPodium: 'Slutlig <accent>pall</accent>',
 		viewStandings: 'Visa tabellen'

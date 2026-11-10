@@ -27,6 +27,8 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 	const yearValues = await getYearValues(searchParams, currentYear)
 	const gps = await getGps(yearValues.activeYear)
 	const { upcoming, finished, upNextId } = groupGps(gps)
+	// Its first row is above the fold, so those images load eagerly (LCP)
+	const firstSection = upcoming.length > 0 ? upcoming : finished
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -42,13 +44,16 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 							<SectionTitle>{title}</SectionTitle>
 
 							<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
-								{items.map(({ gp, stage }) => (
+								{items.map(({ gp, stage }, i) => (
 									<GpCard
 										key={gp.id}
 										gp={gp}
 										isUpNext={gp.id === upNextId}
 										linked
 										macroStage={stage}
+										imageLoading={
+											items === firstSection && i < 2 ? 'eager' : undefined
+										}
 									/>
 								))}
 							</div>

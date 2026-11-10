@@ -188,6 +188,15 @@ const en = {
 		footer:
 			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>"
 	},
+	VenueHistory: {
+		firstGpIn: 'First GP in {city}',
+		noPreviousResults: 'No previous results at this venue.',
+		lastTimeIn: 'Last time in {city}',
+		bestRider: 'Best rider',
+		bestPlayers: '{count, plural, one {Best player} other {Best players}}',
+		more: '+{count} more',
+		you: 'You'
+	},
 	RiderHero: {
 		timesPicked: 'Times picked'
 	},
@@ -214,6 +223,7 @@ const en = {
 		viewGp: 'View GP',
 		previousSeason: 'Previous <accent>season</accent>',
 		seasonProgress: 'Season progress',
+		seasonYear: 'Season {year}',
 		currentPodium: 'Current <accent>podium</accent>',
 		finalPodium: 'Final <accent>podium</accent>',
 		viewStandings: 'View standings'

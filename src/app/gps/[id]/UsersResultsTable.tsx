@@ -167,11 +167,6 @@ export function GpUsersResultsTable({
 							isBefore
 						)}
 						data={data}
-						getRowClassName={(row) =>
-							row.user_id === viewerId
-								? 'bg-[color-mix(in_oklab,var(--color-orange-400)_5%,var(--card))]'
-								: undefined
-						}
 						getRowSticky={(row) => row.user_id === viewerId}
 						stickyScope="container"
 					/>
