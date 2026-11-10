@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+
 import { getGps } from '@/app/gps/data'
 import { Flag } from '@/components/Flag'
 import { Card, CardContent, CardGlow } from '@/components/ui/card'
@@ -7,16 +9,30 @@ import { EMacroStage } from '@/enums'
 import { getMacroStage } from '@/lib/dates'
 import { cn } from '@/lib/utils'
 
-export async function GpSeasonProgress() {
-	const gps = await getGps(new Date().getFullYear())
+type TGpSeasonProgress = {
+	// Defaults to the current season (home page)
+	year?: number
+	// On a GP page: highlight that GP and link to its neighbours
+	currentGpId?: number
+}
+
+export async function GpSeasonProgress({
+	year = new Date().getFullYear(),
+	currentGpId
+}: TGpSeasonProgress) {
+	const gps = await getGps(year)
 	if (!gps.length) return null
+
+	const currentIndex = gps.findIndex((gp) => gp.id === currentGpId)
+	const previousGp = currentIndex > 0 ? gps[currentIndex - 1] : undefined
+	const nextGp = currentIndex >= 0 ? gps[currentIndex + 1] : undefined
 
 	return (
 		<Card className="relative isolate">
 			<CardGlow color="green" />
 			<CardContent className="flex flex-col gap-3 pt-4">
 				<span className="text-xs font-bold tracking-wide uppercase">
-					Season progress
+					{currentGpId ? `Season ${year}` : 'Season progress'}
 				</span>
 
 				<div className="flex items-start">
@@ -26,6 +42,7 @@ export async function GpSeasonProgress() {
 						const isLive = stage === EMacroStage.During
 						const isFirst = i === 0
 						const isLast = i === gps.length - 1
+						const isCurrent = gp.id === currentGpId
 
 						return (
 							<div
@@ -35,7 +52,8 @@ export async function GpSeasonProgress() {
 								<span
 									className={cn(
 										'text-[10px] leading-none tabular-nums',
-										isDone ? 'text-green-400' : 'text-muted-foreground/40'
+										isDone ? 'text-green-400' : 'text-muted-foreground/40',
+										isCurrent && 'text-foreground font-black'
 									)}
 								>
 									{gp.round}
@@ -57,7 +75,9 @@ export async function GpSeasonProgress() {
 													? 'bg-green-400'
 													: isLive
 														? 'animate-pulse bg-yellow-400'
-														: 'bg-white/20'
+														: 'bg-white/20',
+												isCurrent &&
+													'ring-offset-card ring-2 ring-green-400 ring-offset-2'
 											)}
 										/>
 									</Link>
@@ -77,6 +97,32 @@ export async function GpSeasonProgress() {
 						)
 					})}
 				</div>
+
+				{(previousGp || nextGp) && (
+					<div className="flex justify-between gap-2 text-sm">
+						{previousGp ? (
+							<Link
+								className="text-muted-foreground hover:text-foreground flex min-w-0 items-center gap-1"
+								href={`/gps/${previousGp.id}`}
+							>
+								<ChevronLeft className="text-brand-red size-4 shrink-0" />
+								<span className="truncate">{previousGp.city_name}</span>
+							</Link>
+						) : (
+							<span />
+						)}
+
+						{nextGp && (
+							<Link
+								className="text-muted-foreground hover:text-foreground flex min-w-0 items-center gap-1"
+								href={`/gps/${nextGp.id}`}
+							>
+								<span className="truncate">{nextGp.city_name}</span>
+								<ChevronRight className="text-brand-red size-4 shrink-0" />
+							</Link>
+						)}
+					</div>
+				)}
 			</CardContent>
 		</Card>
 	)

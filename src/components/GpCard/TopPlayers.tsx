@@ -49,7 +49,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 					return (
 						<div
 							key={row.id}
-							className={`flex items-center gap-2 px-3 py-2 ${isViewer ? 'bg-orange-400/5' : ''}`}
+							className="flex items-center gap-2 px-3 py-2"
 						>
 							<PosBadge
 								pos={row.pos}

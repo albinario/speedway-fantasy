@@ -369,9 +369,14 @@ export const getUsersInStandingsWithoutGpResult = (
 	)
 
 export const getGpRidersPreview = cachedQuery(
-	async (gpId: number, wildCardId: number | null, viewerId?: number) => {
-		const year = new Date().getFullYear()
-
+	// year = the GP's season (not today's), so a next-season GP shows that
+	// season's stats instead of the current one's
+	async (
+		gpId: number,
+		year: number,
+		wildCardId: number | null,
+		viewerId?: number
+	) => {
 		const activeIds = await db
 			.selectFrom('riders')
 			.select('id')
@@ -440,4 +445,87 @@ export const getGpRidersPreview = cachedQuery(
 	},
 	['gp-riders-preview'],
 	{ tags: [cacheTags.gpResults, cacheTags.picks], fallback: [] }
+)
+
+const VENUE_TOP_PLAYERS = 3
+
+// The most recent finished GP before this one at the same venue, with its best
+// rider and best player(s). null = first GP at this venue (fallback undefined
+// on error, so a failed query doesn't claim "first GP here").
+export const getGpVenueHistory = cachedQuery(
+	async (gpId: number) => {
+		const previous = await db
+			.selectFrom('gps as g')
+			.innerJoin('gps as cur', 'cur.city_id', 'g.city_id')
+			.select([
+				'g.id',
+				sql<number>`EXTRACT(YEAR FROM g.start_date)::int`.as('year')
+			])
+			.where('cur.id', '=', gpId)
+			.whereRef('g.start_date', '<', 'cur.start_date')
+			.where('g.finished', '=', true)
+			.orderBy('g.start_date', 'desc')
+			.limit(1)
+			.executeTakeFirst()
+
+		if (!previous) return null
+
+		const [rider, players] = await Promise.all([
+			db
+				.selectFrom('riders_results')
+				.innerJoin(
+					'riders_with_country',
+					'riders_with_country.id',
+					'riders_results.rider_id'
+				)
+				.select([
+					'riders_results.rider_id',
+					'riders_with_country.name',
+					'riders_with_country.country_code',
+					'riders_with_country.number',
+					'riders_results.points'
+				])
+				.where('riders_results.gp_id', '=', previous.id)
+				.orderBy(sql`riders_results.pos asc nulls last`)
+				.orderBy('riders_results.points', 'desc')
+				.limit(1)
+				.executeTakeFirst(),
+			// Everyone sharing the best position (ties are common)
+			db
+				.selectFrom('users_results')
+				.innerJoin(
+					'users_with_stars',
+					'users_with_stars.id',
+					'users_results.user_id'
+				)
+				.select([
+					'users_results.user_id',
+					'users_with_stars.first_name',
+					'users_with_stars.last_name',
+					'users_with_stars.stars',
+					'users_results.points',
+					'users_results.pos'
+				])
+				.where('users_results.gp_id', '=', previous.id)
+				.where('users_results.pos', '=', (eb) =>
+					eb
+						.selectFrom('users_results')
+						.select((eb) => eb.fn.min('pos').as('pos'))
+						.where('gp_id', '=', previous.id)
+				)
+				.orderBy('users_with_stars.first_name')
+				.execute()
+		])
+
+		return {
+			gpId: previous.id,
+			year: previous.year,
+			rider,
+			bestPos: players[0]?.pos ?? null,
+			players: players.slice(0, VENUE_TOP_PLAYERS),
+			morePlayers: Math.max(0, players.length - VENUE_TOP_PLAYERS)
+		}
+	},
+	['gp-venue-history'],
+	{ tags: [cacheTags.gps, cacheTags.gpResults], fallback: undefined }
 )

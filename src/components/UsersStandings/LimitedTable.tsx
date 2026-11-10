@@ -20,7 +20,7 @@ function StandingRow({
 }) {
 	return (
 		<div
-			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${isViewer ? 'bg-orange-400/5' : ''}`}
+			className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3"
 		>
 			{row.pos != null && (
 				<div className="w-15">
