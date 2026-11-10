@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from 'react'
 
+import { useTranslations } from 'next-intl'
+
 import { Save } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -18,6 +20,7 @@ import {
 	SheetTitle
 } from '@/components/ui/sheet'
 import { Spinner } from '@/components/ui/spinner'
+import { accent } from '@/i18n/rich'
 
 import { savePicksAction } from './actions'
 
@@ -55,6 +58,8 @@ export function PickRidersSheet({
 			: []
 	)
 	const [isPending, startTransition] = useTransition()
+	const t = useTranslations('PickRiders')
+	const tCommon = useTranslations('Common')
 
 	const isComplete = selected.length === 3
 
@@ -82,7 +87,7 @@ export function PickRidersSheet({
 				return
 			}
 
-			toast.success('Picks saved!')
+			toast.success(t('saved'))
 			onSaved(selected as [number, number, number])
 			onOpenChange(false)
 		})
@@ -106,13 +111,16 @@ export function PickRidersSheet({
 			<SheetContent side="bottom" className="flex max-h-[90dvh] flex-col gap-0">
 				<SheetHeader className="border-b pb-3">
 					<SheetTitle className="font-black uppercase">
-						Pick your <span className="text-green-400">3</span> riders
+						{t.rich('title', { accent })}
 					</SheetTitle>
 
 					<SheetDescription className="flex items-center gap-2">
 						<Flag countryCode={gpCountryCode} />
 						{gpName}
-						<span className="text-muted-foreground"> · Round {gpRound}</span>
+						<span className="text-muted-foreground">
+							{' · '}
+							{tCommon('round', { round: gpRound })}
+						</span>
 					</SheetDescription>
 				</SheetHeader>
 
@@ -136,9 +144,11 @@ export function PickRidersSheet({
 								</div>
 								<div className="flex w-full flex-col items-center gap-0.5">
 									<span className="text-center text-xs leading-tight font-black uppercase">
-										Wild Card
+										{tCommon('wildCard')}
 									</span>
-									<span className="text-muted-foreground text-xs">TBD</span>
+									<span className="text-muted-foreground text-xs">
+										{tCommon('tbd')}
+									</span>
 								</div>
 							</div>
 						)}
@@ -156,11 +166,11 @@ export function PickRidersSheet({
 						{isPending ? (
 							<>
 								<Spinner className="size-4" />
-								Saving…
+								{t('saving')}
 							</>
 						) : (
 							<>
-								Save picks
+								{t('save')}
 								<Save className="size-4" />
 							</>
 						)}

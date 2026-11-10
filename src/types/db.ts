@@ -87,6 +87,7 @@ export interface Riders {
   id: Generated<number>;
   name: string;
   number: number;
+  ordinary: number | null;
   retired: boolean | null;
 }
 
@@ -110,12 +111,13 @@ export interface RidersWithCountry {
 
 export interface Users {
   auth0_id: string;
-  comments_last_read_at: Timestamp | null;
+  comments_last_read_at: Generated<Timestamp | null>;
   created_at: Generated<Timestamp>;
   email: string;
   first_name: string;
   id: Generated<number>;
   last_name: string;
+  locale: string | null;
   reminder: Generated<boolean>;
 }
 

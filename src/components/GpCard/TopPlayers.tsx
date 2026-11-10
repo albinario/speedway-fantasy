@@ -1,7 +1,10 @@
+import { getTranslations } from 'next-intl/server'
+
 import { getGpTopUsers, getGpUserResult } from '@/app/gps/[id]/data'
 import { MedalIcon } from '@/components/MedalIcon'
-import { UserName } from '@/components/UserName'
 import { PosBadge } from '@/components/PosBadge'
+import { UserName } from '@/components/UserName'
+import { accent } from '@/i18n/rich'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { buildMedals } from '@/lib/medals'
 
@@ -11,9 +14,10 @@ type TTopPlayers = {
 }
 
 export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
-	const [rows, viewer] = await Promise.all([
+	const [rows, viewer, t] = await Promise.all([
 		getGpTopUsers(gpId, limit),
-		getViewer()
+		getViewer(),
+		getTranslations('GpCard')
 	])
 	const viewerId = viewer?.db?.id
 
@@ -38,7 +42,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 	return (
 		<div className="flex flex-col gap-2">
 			<div className="font-black uppercase">
-				Top <span className="text-green-400">{limit}</span> players
+				{t.rich('topPlayers', { limit, accent })}
 			</div>
 
 			<div className="divide-border -mx-3 divide-y">
@@ -49,7 +53,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 					return (
 						<div
 							key={row.id}
-							className={`flex items-center gap-2 px-3 py-2 ${isViewer ? 'bg-orange-400/5' : ''}`}
+							className="flex items-center gap-2 px-3 py-2"
 						>
 							<PosBadge
 								pos={row.pos}

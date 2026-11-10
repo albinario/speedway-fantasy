@@ -1,14 +1,15 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
+import { PosBadge } from '@/components/PosBadge'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
 import { Card } from '@/components/ui/card'
 import { DataTable, type TColumnDef } from '@/components/ui/data-table'
-
-import { PosBadge } from '@/components/PosBadge'
 
 export type TRiderRow = {
 	riderId: number
@@ -30,11 +31,17 @@ type TRidersTable = {
 	hidePicked?: boolean
 }
 
+type TLabels = { points: string; heats: string; gps: string; picked: string }
+
 function buildColumns({
 	condensedMedals,
 	showGps,
-	hidePicked
-}: Omit<TRidersTable, 'data'> & { showGps: boolean }): TColumnDef<TRiderRow>[] {
+	hidePicked,
+	labels
+}: Omit<TRidersTable, 'data'> & {
+	showGps: boolean
+	labels: TLabels
+}): TColumnDef<TRiderRow>[] {
 	return [
 		{
 			id: 'pos',
@@ -99,7 +106,7 @@ function buildColumns({
 		},
 		{
 			id: 'points',
-			header: () => 'Points',
+			header: () => labels.points,
 			accessorKey: 'points',
 			cell: ({ getValue }) => (
 				<span className="text-lg">{getValue<number>()}</span>
@@ -108,7 +115,7 @@ function buildColumns({
 		},
 		{
 			id: 'heats',
-			header: () => 'Heats',
+			header: () => labels.heats,
 			accessorKey: 'heats',
 			cell: ({ getValue }: { getValue: () => unknown }) => getValue() as number,
 			meta: { className: 'hidden px-1 text-center sm:table-cell' }
@@ -117,7 +124,7 @@ function buildColumns({
 			? [
 					{
 						id: 'gps',
-						header: () => "GP's",
+						header: () => labels.gps,
 						accessorKey: 'gps',
 						cell: ({ getValue }: { getValue: () => unknown }) =>
 							getValue() as number,
@@ -129,7 +136,7 @@ function buildColumns({
 			? [
 					{
 						id: 'timesPicked',
-						header: () => 'Picked',
+						header: () => labels.picked,
 						accessorKey: 'timesPicked',
 						cell: ({ getValue }: { getValue: () => unknown }) =>
 							getValue() as number,
@@ -145,8 +152,19 @@ export function RidersTable({
 	condensedMedals,
 	hidePicked
 }: TRidersTable) {
+	const t = useTranslations('Common')
 	const showGps = data.some((r) => r.gps != null)
-	const columns = buildColumns({ condensedMedals, showGps, hidePicked })
+	const columns = buildColumns({
+		condensedMedals,
+		showGps,
+		hidePicked,
+		labels: {
+			points: t('points'),
+			heats: t('heats'),
+			gps: t('gps'),
+			picked: t('picked')
+		}
+	})
 
 	return (
 		<Card>

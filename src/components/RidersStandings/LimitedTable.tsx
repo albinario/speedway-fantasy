@@ -1,11 +1,13 @@
+import { useTranslations } from 'next-intl'
+
 import type { getRidersStandings } from '@/app/riders/data'
 import { FlagNumber } from '@/components/FlagNumber'
+import { PosBadge } from '@/components/PosBadge'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
-
-import { PosBadge } from '@/components/PosBadge'
+import { accent } from '@/i18n/rich'
 
 type TRow = Awaited<ReturnType<typeof getRidersStandings>>[number]
 
@@ -16,10 +18,12 @@ export function RidersLimitedTable({
 	data: TRow[]
 	limit: number
 }) {
+	const t = useTranslations('GpCard')
+
 	return (
 		<div>
 			<SectionTitle href="/standings?view=riders">
-				Top <span className="text-green-400">{limit}</span> riders
+				{t.rich('topRiders', { limit, accent })}
 			</SectionTitle>
 
 			<Card className="divide-border divide-y overflow-hidden py-0">

@@ -1,5 +1,6 @@
 'use server'
 
+import { getTranslations } from 'next-intl/server'
 import { updateTag } from 'next/cache'
 
 import { ActivityAction } from '@/components/ActivityFeed'
@@ -18,7 +19,7 @@ export async function savePicksAction(
 		.executeTakeFirst()
 
 	if (!gp || (gp.start_date && new Date(gp.start_date) <= new Date())) {
-		return { error: 'Picks are closed for this event.' }
+		return { error: (await getTranslations('PickRiders'))('closed') }
 	}
 
 	const existing = await db

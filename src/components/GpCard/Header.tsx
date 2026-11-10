@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -6,12 +7,15 @@ import { ChevronRight } from 'lucide-react'
 import { Countdown } from '@/components/Countdown'
 import { Flag } from '@/components/Flag'
 import { LiveBadge } from '@/components/LiveBadge'
+import { RegisteredPlayers } from '@/components/RegisteredPlayers'
 import { StartTimeNote } from '@/components/StartTimeNote'
 import { EMacroStage } from '@/enums'
+import { intlLocales } from '@/i18n/config'
 import { formatDate } from '@/lib/dates'
 
 type TGpCardHeader = {
 	href?: string
+	gpId: number
 	cityId: number
 	cityName: string
 	countryCode: string
@@ -25,6 +29,7 @@ type TGpCardHeader = {
 
 export function GpCardHeader({
 	href,
+	gpId,
 	cityId,
 	cityName,
 	countryCode,
@@ -35,6 +40,9 @@ export function GpCardHeader({
 	showCountdown = false,
 	imageLoading
 }: TGpCardHeader) {
+	const t = useTranslations('Common')
+	const locale = intlLocales[useLocale()]
+
 	const header = (
 		<>
 			<Image
@@ -64,14 +72,16 @@ export function GpCardHeader({
 				<h2 className="text-3xl font-black uppercase">{cityName}</h2>
 
 				<div className="text-sm font-black uppercase opacity-80">
-					<span className="text-brand-red">Round {round}</span>
+					<span className="text-brand-red">{t('round', { round })}</span>
 					{' • '}
-					{formatDate(startDate, timeZone)}
+					{formatDate(startDate, timeZone, locale)}
 
 					{macroStage !== EMacroStage.After && (
 						<StartTimeNote date={startDate} eventTimeZone={timeZone} />
 					)}
 				</div>
+
+				<RegisteredPlayers gpId={gpId} />
 			</div>
 		</>
 	)
@@ -81,12 +91,8 @@ export function GpCardHeader({
 	return (
 		<Link className="group relative block" href={href}>
 			{header}
-			<div className="text-brand-red absolute top-3 right-3 z-40 flex items-center gap-0 overflow-hidden rounded-full bg-black/40 p-1.5 backdrop-blur-sm transition-all duration-300 group-hover:gap-1.5 group-hover:pl-3">
-				<span className="max-w-0 overflow-hidden text-xs font-semibold whitespace-nowrap uppercase transition-all duration-300 group-hover:max-w-20">
-					View GP
-				</span>
-
-				<ChevronRight className="size-4 shrink-0" />
+			<div className="absolute top-3 right-3 z-40 rounded-full bg-black/40 p-1.5 backdrop-blur-sm">
+				<ChevronRight className="size-4" />
 			</div>
 		</Link>
 	)

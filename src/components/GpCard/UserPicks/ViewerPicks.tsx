@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 
+import { useTranslations } from 'next-intl'
+
 import { ChevronDown } from 'lucide-react'
 
 import { PickRidersSheet } from '@/components/PickRidersSheet'
 import { RiderTile, type TRider } from '@/components/RiderTile'
-import { Button } from '@/components/ui/button'
-
 import { RiderTilesEmpty } from '@/components/RiderTilesEmpty'
+import { Button } from '@/components/ui/button'
 
 type TViewerPicks = {
 	gpId: number
@@ -29,6 +30,7 @@ export function ViewerPicks({
 	riders,
 	initialPicks
 }: TViewerPicks) {
+	const t = useTranslations('GpCard')
 	const [open, setOpen] = useState(false)
 	const [savedPicks, setSavedPicks] = useState(initialPicks)
 
@@ -40,14 +42,14 @@ export function ViewerPicks({
 		<>
 			<div className="flex flex-col gap-4">
 				<div className="flex items-center justify-between font-black uppercase">
-					<span>My picked riders</span>
+					<span>{t('myPickedRiders')}</span>
 
 					<Button
 						variant="link"
 						className="h-auto gap-0.5 p-0 text-green-400 normal-case"
 						onClick={() => setOpen(true)}
 					>
-						{savedPicks ? 'Edit' : 'Pick riders'}
+						{savedPicks ? t('editPicks') : t('pickRiders')}
 
 						<ChevronDown className={`size-3.5 ${open ? 'rotate-180' : ''}`} />
 					</Button>

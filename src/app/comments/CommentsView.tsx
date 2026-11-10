@@ -9,6 +9,7 @@ import {
 	useTransition
 } from 'react'
 
+import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
 import { CornerDownLeft, LogIn, Send, SmilePlus, X } from 'lucide-react'
@@ -19,6 +20,7 @@ import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
+import { intlLocales } from '@/i18n/config'
 import { cn } from '@/lib/utils'
 
 import {
@@ -71,26 +73,30 @@ function threadComments(flat: CommentRow[]): ThreadedComment[] {
 	return topLevel.map((c) => ({ ...c, replies: replyMap.get(c.id) ?? [] }))
 }
 
-function formatTime(iso: Date | string): string {
+function formatTime(iso: Date | string, locale: string): string {
 	const d = new Date(iso)
 	const now = new Date()
 	if (d.toDateString() === now.toDateString()) {
-		return d.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })
+		return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
 	}
 	const sameYear = d.getFullYear() === now.getFullYear()
 	const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
 	if (!sameYear) options.year = 'numeric'
-	const date = d.toLocaleDateString('sv-SE', options)
+	const date = d.toLocaleDateString(locale, options)
 	if (!sameYear) return date
-	const time = d.toLocaleTimeString('sv-SE', {
+	const time = d.toLocaleTimeString(locale, {
 		hour: '2-digit',
 		minute: '2-digit'
 	})
 	return `${date} ${time}`
 }
 
-function displayName(first: string | null, last: string | null): string {
-	return [first, last].filter(Boolean).join(' ') || 'Unknown'
+function displayName(
+	first: string | null,
+	last: string | null,
+	fallback: string
+): string {
+	return [first, last].filter(Boolean).join(' ') || fallback
 }
 
 type GPBadgeProps = {
@@ -117,6 +123,8 @@ type ReplyBubbleProps = {
 }
 
 function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
+	const locale = intlLocales[useLocale()]
+
 	return (
 		<div className="flex gap-2">
 			<UserAvatar
@@ -135,7 +143,7 @@ function ReplyBubble({ reply, viewerId, onReaction }: ReplyBubbleProps) {
 						className="text-xs font-bold"
 					/>
 					<span className="text-muted-foreground ml-auto text-xs">
-						{formatTime(reply.created_at)}
+						{formatTime(reply.created_at, locale)}
 					</span>
 				</div>
 				<div className="border-border bg-card rounded-lg rounded-tl-none border px-3 py-2 text-sm leading-relaxed">
@@ -254,7 +262,9 @@ function CommentBubble({
 	viewerId,
 	isUnread
 }: CommentBubbleProps) {
-	const name = displayName(comment.first_name, comment.last_name)
+	const t = useTranslations('Comments')
+	const locale = intlLocales[useLocale()]
+	const name = displayName(comment.first_name, comment.last_name, t('unknown'))
 	return (
 		<div className="flex gap-3 px-2">
 			<UserAvatar
@@ -282,7 +292,7 @@ function CommentBubble({
 						)}
 					</div>
 					<span className="text-muted-foreground shrink-0 text-xs">
-						{formatTime(comment.created_at)}
+						{formatTime(comment.created_at, locale)}
 					</span>
 				</div>
 				<div
@@ -330,7 +340,7 @@ function CommentBubble({
 							className="text-muted-foreground"
 						>
 							<CornerDownLeft />
-							Reply
+							{t('reply')}
 						</Button>
 					)}
 				</div>
@@ -392,6 +402,7 @@ export function CommentsView({
 	viewerId,
 	lastReadAt: lastReadAtProp
 }: Props) {
+	const t = useTranslations('Comments')
 	const [lastReadAt] = useState(lastReadAtProp)
 	const [message, setMessage] = useState('')
 	const [replyingTo, setReplyingTo] = useState<ReplyTarget | null>(null)
@@ -516,7 +527,7 @@ export function CommentsView({
 				</div>
 			</div>
 
-			<div className="border-border bg-background sticky bottom-[70px] z-10 border-t px-4 py-3">
+			<div className="border-border bg-background sticky bottom-(--footer-h) z-10 border-t px-4 py-3">
 				<div className="mx-auto max-w-2xl">
 					{viewerId != null ? (
 						<>
@@ -524,7 +535,7 @@ export function CommentsView({
 								<div className="text-muted-foreground mb-2 flex items-center justify-between text-xs">
 									<span className="flex items-center gap-1">
 										<CornerDownLeft size={11} />
-										Replying to {replyingTo.name}
+										{t('replyingTo', { name: replyingTo.name })}
 									</span>
 									<Button
 										variant="ghost"
@@ -543,8 +554,8 @@ export function CommentsView({
 									onKeyDown={handleKeyDown}
 									placeholder={
 										replyingTo
-											? `Reply to ${replyingTo.name}…`
-											: 'Write a comment…'
+											? t('replyTo', { name: replyingTo.name })
+											: t('writeComment')
 									}
 									disabled={isPending}
 									rows={1}
@@ -568,7 +579,7 @@ export function CommentsView({
 					) : (
 						<Button asChild className="w-full" variant="outline">
 							<a href="/auth/login">
-								Sign in to comment <LogIn />
+								{t('signInToComment')} <LogIn />
 							</a>
 						</Button>
 					)}

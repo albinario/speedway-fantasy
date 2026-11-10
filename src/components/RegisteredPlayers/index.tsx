@@ -1,35 +1,28 @@
-import { Users } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
-import { ActivityFeed } from '@/components/ActivityFeed'
+import { Users } from 'lucide-react'
 
 import { getPicksCount } from './data'
 
 type TRegisteredPlayers = {
 	gpId: number
-	showActivity: boolean
 }
 
-export async function RegisteredPlayers({
-	gpId,
-	showActivity = false
-}: TRegisteredPlayers) {
-	const { count } = await getPicksCount(gpId)
+export async function RegisteredPlayers({ gpId }: TRegisteredPlayers) {
+	const [{ count }, t] = await Promise.all([
+		getPicksCount(gpId),
+		getTranslations('GpCard')
+	])
 
 	return (
-		<div className="flex flex-col gap-2">
-			<div className="flex items-start justify-between font-black uppercase">
-				<span>Registered players</span>
-
-				<div className="flex items-end gap-1">
-					<span className="text-2xl leading-none font-black text-green-400">
-						{count}
-					</span>
-
-					<Users className="mb-0.5 size-5 text-green-400" />
-				</div>
-			</div>
-
-			{showActivity && <ActivityFeed gpId={gpId} />}
+		<div className="flex items-center gap-1 text-sm font-black uppercase">
+			<Users className="size-4 text-green-400" />
+			<span className="text-foreground/80">
+				{t.rich('registeredPlayers', {
+					count: Number(count),
+					num: (chunks) => <span className="text-green-400">{chunks}</span>
+				})}
+			</span>
 		</div>
 	)
 }

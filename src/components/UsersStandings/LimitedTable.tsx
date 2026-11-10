@@ -1,11 +1,13 @@
+import { getTranslations } from 'next-intl/server'
+
 import { MedalCounts } from '@/components/MedalCounts'
+import { PosBadge } from '@/components/PosBadge'
 import { SectionTitle } from '@/components/SectionHeader'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
 
 import { Card } from '../ui/card'
 import { type getUsersStandings, getUserStandingRow } from './data'
-import { PosBadge } from '@/components/PosBadge'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
@@ -20,7 +22,7 @@ function StandingRow({
 }) {
 	return (
 		<div
-			className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 ${isViewer ? 'bg-orange-400/5' : ''}`}
+			className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3"
 		>
 			{row.pos != null && (
 				<div className="w-15">
@@ -64,7 +66,10 @@ export async function UsersLimitedTable({
 	data: TRow[]
 	limit: number
 }) {
-	const viewer = await getViewer()
+	const [viewer, t] = await Promise.all([
+		getViewer(),
+		getTranslations('GpCard')
+	])
 	const viewerId = viewer?.db?.id
 	const viewerInList = data.some((r) => r.user_id === viewerId)
 	const viewerRow =
@@ -75,7 +80,12 @@ export async function UsersLimitedTable({
 	return (
 		<div>
 			<SectionTitle href="/standings">
-				Top <span className="text-xl text-green-400">{limit}</span> players
+				{t.rich('topPlayers', {
+					limit,
+					accent: (chunks) => (
+						<span className="text-xl text-green-400">{chunks}</span>
+					)
+				})}
 			</SectionTitle>
 
 			<Card className="divide-border divide-y overflow-hidden py-0">

@@ -12,8 +12,10 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import type { TMessages } from '@/i18n/messages/en'
+
 export type TNavItem = {
-	label: string
+	labelKey: keyof TMessages['Nav']
 	href: string
 	icon?: LucideIcon
 	showOnMobile?: boolean
@@ -21,56 +23,56 @@ export type TNavItem = {
 
 export const navItems: TNavItem[] = [
 	{
-		label: 'Home',
+		labelKey: 'home',
 		href: '/',
 		icon: House,
 		showOnMobile: true
 	},
 	{
-		label: 'Standings',
+		labelKey: 'standings',
 		href: '/standings',
 		icon: ListOrdered,
 		showOnMobile: true
 	},
 	{
-		label: "GP's",
+		labelKey: 'gps',
 		href: '/gps',
 		icon: Flag,
 		showOnMobile: true
 	},
 	{
-		label: 'Comments',
+		labelKey: 'comments',
 		href: '/comments',
 		icon: MessagesSquare,
 		showOnMobile: true
 	},
 	{
-		label: 'Activity',
+		labelKey: 'activity',
 		href: '/activity',
 		icon: ListCheck
 	},
 	{
-		label: 'Hall of fame',
+		labelKey: 'hallOfFame',
 		href: '/hall-of-fame',
 		icon: Trophy
 	},
 	{
-		label: 'Rules',
+		labelKey: 'rules',
 		href: '/rules',
 		icon: BookOpen
 	},
 	{
-		label: 'Install app',
+		labelKey: 'install',
 		href: '/install',
 		icon: SquarePlus
 	},
 	{
-		label: 'Beer',
+		labelKey: 'beer',
 		href: '/beer',
 		icon: Beer
 	},
 	{
-		label: 'My page',
+		labelKey: 'myPage',
 		href: '/users',
 		icon: UserIcon,
 		showOnMobile: true

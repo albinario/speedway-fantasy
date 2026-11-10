@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { Users } from 'lucide-react'
 
 import type { getRiderStats } from '@/app/riders/[id]/data'
@@ -8,6 +10,8 @@ type TRiderHero = {
 }
 
 export function RiderHero({ stats }: TRiderHero) {
+	const t = useTranslations('RiderHero')
+	const tCommon = useTranslations('Common')
 	const points = Number(stats?.points ?? 0)
 	const timesPicked = Number(stats?.times_picked ?? 0)
 	const medals = {
@@ -21,7 +25,7 @@ export function RiderHero({ stats }: TRiderHero) {
 			<div className="flex flex-col items-center">
 				<span className="text-5xl leading-none font-black">{points}</span>
 				<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
-					Points
+					{tCommon('points')}
 				</span>
 			</div>
 
@@ -34,11 +38,11 @@ export function RiderHero({ stats }: TRiderHero) {
 
 			{timesPicked > 0 && (
 				<div className="ml-auto flex items-center gap-1.5">
-					<span className="text-xl font-black">{timesPicked}</span>
-					<Users size={25} className="text-brand-red" />
 					<span className="text-muted-foreground text-xs tracking-wide uppercase">
-						Times picked
+						{t('timesPicked')}
 					</span>
+					<Users size={25} className="text-green-400" />
+					<span className="text-xl font-black">{timesPicked}</span>
 				</div>
 			)}
 		</div>

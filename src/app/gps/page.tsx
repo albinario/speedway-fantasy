@@ -1,13 +1,13 @@
-import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 
 import { GpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionTitle } from '@/components/SectionHeader'
+import { getPageMetadata } from '@/i18n/page-metadata'
 import { groupGps } from '@/lib/group-gps'
 import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
-import { metaData } from './[id]/constants'
 import { getGps } from './data'
 
 type TGpsPage = {
@@ -16,21 +16,27 @@ type TGpsPage = {
 	}>
 }
 
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('gps')
 
 export default async function GpsPage({ searchParams }: TGpsPage) {
+	const [tPages, tCommon] = await Promise.all([
+		getTranslations('Pages'),
+		getTranslations('Common')
+	])
 	const currentYear = new Date().getFullYear()
 	const yearValues = await getYearValues(searchParams, currentYear)
 	const gps = await getGps(yearValues.activeYear)
 	const { upcoming, finished, upNextId } = groupGps(gps)
+	// Its first row is above the fold, so those images load eagerly (LCP)
+	const firstSection = upcoming.length > 0 ? upcoming : finished
 
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader title={metaData.title} defaultYear={currentYear} />
+			<PageHeader title={tPages('gps.title')} defaultYear={currentYear} />
 
 			{[
-				{ title: 'Upcoming', items: upcoming },
-				{ title: 'Results', items: finished }
+				{ title: tCommon('upcoming'), items: upcoming },
+				{ title: tCommon('results'), items: finished }
 			].map(
 				({ title, items }) =>
 					items.length > 0 && (
@@ -38,13 +44,16 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 							<SectionTitle>{title}</SectionTitle>
 
 							<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
-								{items.map(({ gp, stage }) => (
+								{items.map(({ gp, stage }, i) => (
 									<GpCard
 										key={gp.id}
 										gp={gp}
 										isUpNext={gp.id === upNextId}
 										linked
 										macroStage={stage}
+										imageLoading={
+											items === firstSection && i < 2 ? 'eager' : undefined
+										}
 									/>
 								))}
 							</div>
