@@ -75,6 +75,21 @@ const en = {
 			description: 'Latest picks from all players'
 		}
 	},
+	// Tab title + description for pages about one GP / rider / player
+	DetailPages: {
+		gp: {
+			title: '{city} GP {year}',
+			description: 'Results and picks for round {round}, {city} {year}'
+		},
+		rider: {
+			title: '{name}',
+			description: '{name} – Speedway GP results and fantasy stats'
+		},
+		user: {
+			title: '{name}',
+			description: 'Speedway Fantasy profile for {name}'
+		}
+	},
 	Errors: {
 		title: 'Something went wrong',
 		description: "We couldn't load this page. Please try again in a moment.",

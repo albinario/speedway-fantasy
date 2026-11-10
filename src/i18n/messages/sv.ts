@@ -73,6 +73,20 @@ const sv: TMessages = {
 			description: 'Senaste valen från alla spelare'
 		}
 	},
+	DetailPages: {
+		gp: {
+			title: '{city} GP {year}',
+			description: 'Resultat och val för omgång {round}, {city} {year}'
+		},
+		rider: {
+			title: '{name}',
+			description: '{name} – resultat i Speedway GP och fantasystatistik'
+		},
+		user: {
+			title: '{name}',
+			description: 'Profil för {name} i Speedway Fantasy'
+		}
+	},
 	Errors: {
 		title: 'Något gick fel',
 		description: 'Sidan kunde inte laddas. Försök igen om en stund.',

@@ -1,11 +1,14 @@
+import { cache } from 'react'
+
 import { sql } from 'kysely'
 
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 import { paramValues, type TParamValues } from '@/lib/params'
 
-export function getRider(id: number) {
-	return dataFetch(
+// cache(): shared by generateMetadata and the page within one request
+export const getRider = cache((id: number) =>
+	dataFetch(
 		() =>
 			db
 				.selectFrom('riders_with_country')
@@ -14,7 +17,7 @@ export function getRider(id: number) {
 				.executeTakeFirst(),
 		null
 	)
-}
+)
 
 export function getRiderStats(riderId: number, year: number | TParamValues) {
 	return dataFetch(async () => {

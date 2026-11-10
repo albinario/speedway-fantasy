@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
 import { getGps } from '@/app/gps/data'
@@ -17,6 +18,23 @@ import { getUser, getUserResultGpIds } from './data'
 type TUserPage = {
 	params: Promise<{ id: string }>
 	searchParams: Promise<{ year?: string | TParamValues }>
+}
+
+export async function generateMetadata({
+	params
+}: Pick<TUserPage, 'params'>): Promise<Metadata> {
+	const { id } = await params
+	const [user, t] = await Promise.all([
+		getUser(Number(id)),
+		getTranslations('DetailPages')
+	])
+	if (!user) return {}
+
+	const name = [user.first_name, user.last_name].filter(Boolean).join(' ')
+	return {
+		title: t('user.title', { name }),
+		description: t('user.description', { name })
+	}
 }
 
 export default async function UserPage({ params, searchParams }: TUserPage) {

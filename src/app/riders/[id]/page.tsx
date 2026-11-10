@@ -1,3 +1,6 @@
+import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
+
 import { FlagNumber } from '@/components/FlagNumber'
 import { RiderGpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
@@ -11,6 +14,22 @@ import { getRider, getRiderGps, getRiderStats } from './data'
 type TRiderPage = {
 	params: Promise<{ id: string }>
 	searchParams: Promise<{ year?: string | TParamValues }>
+}
+
+export async function generateMetadata({
+	params
+}: Pick<TRiderPage, 'params'>): Promise<Metadata> {
+	const { id } = await params
+	const [rider, t] = await Promise.all([
+		getRider(Number(id)),
+		getTranslations('DetailPages')
+	])
+	if (!rider?.name) return {}
+
+	return {
+		title: t('rider.title', { name: rider.name }),
+		description: t('rider.description', { name: rider.name })
+	}
 }
 
 export default async function RiderPage({ params, searchParams }: TRiderPage) {
