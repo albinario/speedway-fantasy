@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import { ChevronRight, Sparkles } from 'lucide-react'
@@ -26,10 +28,12 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 function Points({ points }: { points: number | null }) {
+	const t = useTranslations('Common')
+
 	return (
 		<span className="shrink-0 text-sm">
 			<span className="font-bold tabular-nums">{points ?? 0}</span>{' '}
-			<span className="text-muted-foreground text-xs">pts</span>
+			<span className="text-muted-foreground text-xs">{t('pts')}</span>
 		</span>
 	)
 }
@@ -39,7 +43,11 @@ export async function VenueHistory({
 	cityName,
 	viewerId
 }: TVenueHistory) {
-	const history = await getGpVenueHistory(gpId)
+	const [history, t, tHome] = await Promise.all([
+		getGpVenueHistory(gpId),
+		getTranslations('VenueHistory'),
+		getTranslations('Home')
+	])
 
 	// Query failed: show nothing rather than wrongly claiming a first visit
 	if (history === undefined) return null
@@ -51,9 +59,11 @@ export async function VenueHistory({
 				<CardContent className="flex items-center gap-3 pt-4">
 					<Sparkles className="text-gold size-5 shrink-0" />
 					<div className="flex flex-col">
-						<span className="font-black uppercase">First GP in {cityName}</span>
+						<span className="font-black uppercase">
+							{t('firstGpIn', { city: cityName })}
+						</span>
 						<span className="text-muted-foreground text-sm">
-							No previous results at this venue.
+							{t('noPreviousResults')}
 						</span>
 					</div>
 				</CardContent>
@@ -82,7 +92,7 @@ export async function VenueHistory({
 			<CardContent className="flex flex-col gap-4 pt-4">
 				<div className="flex items-baseline justify-between gap-2">
 					<span className="text-xs font-bold tracking-wide uppercase">
-						Last time in {cityName}{' '}
+						{t('lastTimeIn', { city: cityName })}{' '}
 						<span className="text-muted-foreground">{history.year}</span>
 					</span>
 
@@ -90,13 +100,13 @@ export async function VenueHistory({
 						className="text-brand-red flex shrink-0 items-center text-sm"
 						href={`/gps/${history.gpId}`}
 					>
-						View GP <ChevronRight className="size-4" />
+						{tHome('viewGp')} <ChevronRight className="size-4" />
 					</Link>
 				</div>
 
 				{rider && (
 					<div className="flex flex-col gap-1">
-						<Label>Best rider</Label>
+						<Label>{t('bestRider')}</Label>
 						<div className="flex items-center justify-between gap-2">
 							<div className="flex min-w-0 items-center gap-2">
 								<RiderName name={rider.name} riderId={rider.rider_id} />
@@ -112,7 +122,7 @@ export async function VenueHistory({
 
 				{players.length > 0 && (
 					<div className="flex flex-col gap-1">
-						<Label>{players.length > 1 ? 'Best players' : 'Best player'}</Label>
+						<Label>{t('bestPlayers', { count: players.length })}</Label>
 						<div className="flex items-start justify-between gap-2">
 							<div className="flex min-w-0 flex-col gap-1">
 								{players.map((player) => (
@@ -127,7 +137,7 @@ export async function VenueHistory({
 								))}
 								{morePlayers > 0 && (
 									<span className="text-muted-foreground text-xs">
-										+{morePlayers} more
+										{t('more', { count: morePlayers })}
 									</span>
 								)}
 							</div>
@@ -138,7 +148,7 @@ export async function VenueHistory({
 
 				{viewerRow && !viewerIsBest && (
 					<div className="flex flex-col gap-1">
-						<Label>You</Label>
+						<Label>{t('you')}</Label>
 						<div className="flex items-center justify-between gap-2">
 							<div className="flex min-w-0 items-center gap-2">
 								<PosBadge pos={viewerRow.pos} />
