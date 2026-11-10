@@ -1,5 +1,8 @@
+import { getLocale, getTranslations } from 'next-intl/server'
+
 import { Flag } from '@/components/Flag'
 import { UserName } from '@/components/UserName'
+import { intlLocales } from '@/i18n/config'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { cn } from '@/lib/utils'
 
@@ -10,10 +13,10 @@ export const ActivityAction = {
 	PickUpdated: 2
 } as const
 
-export const ActivityActionLabel: Record<number, string> = {
-	[ActivityAction.PickCreated]: 'Picked',
-	[ActivityAction.PickUpdated]: 'Updated'
-}
+const actionLabelKey = {
+	[ActivityAction.PickCreated]: 'picked',
+	[ActivityAction.PickUpdated]: 'updated'
+} as const
 
 type TActivityFeed = {
 	gpId?: number
@@ -26,9 +29,11 @@ export async function ActivityFeed({
 	limit = 5,
 	offset = 0
 }: TActivityFeed) {
-	const [entries, viewer] = await Promise.all([
+	const [entries, viewer, t, locale] = await Promise.all([
 		getActivityFeed(gpId, limit, offset),
-		getViewer()
+		getViewer(),
+		getTranslations('Activity'),
+		getLocale()
 	])
 	const viewerId = viewer?.db?.id
 
@@ -81,13 +86,16 @@ export async function ActivityFeed({
 								)}
 
 								<span className="truncate text-xs">
-									{entry.city_name} · {ActivityActionLabel[entry.action]}
+									{entry.city_name} ·{' '}
+									{t(
+										actionLabelKey[entry.action as keyof typeof actionLabelKey]
+									)}
 								</span>
 							</div>
 						</div>
 
 						<time className="text-muted-foreground shrink-0 self-center text-xs tabular-nums">
-							{new Date(entry.created_at).toLocaleString('sv-SE', {
+							{new Date(entry.created_at).toLocaleString(intlLocales[locale], {
 								month: 'short',
 								day: 'numeric',
 								hour: '2-digit',

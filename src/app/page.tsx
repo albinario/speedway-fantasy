@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
 
+import { getTranslations } from 'next-intl/server'
+
 import { getLatestGp, getNextGp } from '@/app/gps/data'
 import { HallOfFameCard } from '@/app/hall-of-fame/Card'
 import { getLatestHallOfFame } from '@/app/hall-of-fame/data'
@@ -10,6 +12,7 @@ import { HomeLeaderPodium } from '@/components/HomeLeaderPodium'
 import { Season2027AnnouncementCard } from '@/components/Season2027AnnouncementCard'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
+import { accent } from '@/i18n/rich'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { cn } from '@/lib/utils'
 import { getYearValues } from '@/lib/year'
@@ -24,13 +27,15 @@ function msFromNow(date: Date | string | null | undefined): number {
 }
 
 export default async function Home() {
-	const [yearValues, nextGp, latestGp, latestHallOfFame, viewer] =
+	const [yearValues, nextGp, latestGp, latestHallOfFame, viewer, t, tNav] =
 		await Promise.all([
 			getYearValues(Promise.resolve({})),
 			getNextGp(),
 			getLatestGp(),
 			getLatestHallOfFame(),
-			getViewer()
+			getViewer(),
+			getTranslations('Home'),
+			getTranslations('Nav')
 		])
 
 	const viewerId = viewer?.db?.id
@@ -61,8 +66,8 @@ export default async function Home() {
 			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
 				{nextGp && (
 					<div className={cn(nextGpIsCloser ? 'order-1' : 'order-2')}>
-						<SectionTitle href={`/gps/${nextGp.id}`} linkLabel="View GP">
-							Next <span className="text-green-400">GP</span>
+						<SectionTitle href={`/gps/${nextGp.id}`} linkLabel={t('viewGp')}>
+							{t.rich('nextGp', { accent })}
 						</SectionTitle>
 
 						<Suspense fallback={<SectionFallback />}>
@@ -73,8 +78,8 @@ export default async function Home() {
 
 				{latestGp && (
 					<div className={cn(nextGpIsCloser ? 'order-2' : 'order-1')}>
-						<SectionTitle href={`/gps/${latestGp.id}`} linkLabel="View GP">
-							Previous <span className="text-green-400">GP</span>
+						<SectionTitle href={`/gps/${latestGp.id}`} linkLabel={t('viewGp')}>
+							{t.rich('previousGp', { accent })}
 						</SectionTitle>
 
 						<Suspense fallback={<SectionFallback />}>
@@ -88,8 +93,8 @@ export default async function Home() {
 
 			{!isSeasonFinished && nextGp?.round !== 1 && latestHofYear && (
 				<div>
-					<SectionTitle href="/hall-of-fame" linkLabel="Hall of fame">
-						Previous <span className="text-green-400">season</span>
+					<SectionTitle href="/hall-of-fame" linkLabel={tNav('hallOfFame')}>
+						{t.rich('previousSeason', { accent })}
 					</SectionTitle>
 
 					<HallOfFameCard entries={latestHallOfFame} glow viewerId={viewerId} />

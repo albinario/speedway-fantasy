@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 
 import { PageHeader } from '@/components/PageHeader'
 import { Season2027AnnouncementCard } from '@/components/Season2027AnnouncementCard'
@@ -9,33 +9,38 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card'
+import { getPageMetadata } from '@/i18n/page-metadata'
 import { getMedalColorStr } from '@/lib/medals'
 import { cn } from '@/lib/utils'
 
-import { metaData } from './constants'
 import { HowItWorksCard } from './HowItWorksCard'
 
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('rules')
 
 const heatPoints = [
-	{ position: 'Winner', points: 3 },
-	{ position: '2nd', points: 2 },
-	{ position: '3rd', points: 1 },
-	{ position: '4th', points: 0 }
-]
+	{ position: 'heatWinner', points: 3 },
+	{ position: 'heatSecond', points: 2 },
+	{ position: 'heatThird', points: 1 },
+	{ position: 'heatFourth', points: 0 }
+] as const
 
 const sortingOrder = [
-	'Total Points',
-	'GP Wins',
-	'2nd places',
-	'3rd places',
-	'Finished heats'
-]
+	'sortPoints',
+	'sortWins',
+	'sortSecond',
+	'sortThird',
+	'sortHeats'
+] as const
 
-export default function RulesPage() {
+export default async function RulesPage() {
+	const [tPages, t] = await Promise.all([
+		getTranslations('Pages'),
+		getTranslations('Rules')
+	])
+
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader title={metaData.title} hideYearSelector />
+			<PageHeader title={tPages('rules.title')} hideYearSelector />
 
 			<div className="grid items-start gap-4 sm:grid-cols-2">
 				<HowItWorksCard />
@@ -44,7 +49,7 @@ export default function RulesPage() {
 					<CardGlow color="green" position="top" />
 
 					<CardHeader>
-						<CardTitle>Heat points</CardTitle>
+						<CardTitle>{t('heatPoints')}</CardTitle>
 					</CardHeader>
 					<CardContent className="p-0">
 						<div className="divide-y">
@@ -60,25 +65,25 @@ export default function RulesPage() {
 										)}
 										style={{ animationDelay: `${i * 75}ms` }}
 									>
-										<span className={cn('text-sm', textColor)}>{position}</span>
+										<span className={cn('text-sm', textColor)}>
+											{t(position)}
+										</span>
 										<span
 											className={cn(
 												'text-sm font-bold tabular-nums',
 												textColor
 											)}
 										>
-											{points} pts
+											{t('heatPointsValue', { points })}
 										</span>
 									</div>
 								)
 							})}
 							<div className="text-muted-foreground px-3 py-2.5 text-sm">
-								This includes all qualifying heats, semifinals and final
+								{t('allHeats')}
 							</div>
 							<div className="text-muted-foreground px-3 py-2.5 text-sm">
-								The first- and second-placed riders from the qualifying round
-								shall each be awarded three (3) additional points and one (1)
-								additional heat, corresponding to a semi-final win
+								{t('qualifyingBonus')}
 							</div>
 						</div>
 					</CardContent>
@@ -88,7 +93,7 @@ export default function RulesPage() {
 					<CardGlow color="green" position="top" />
 
 					<CardHeader>
-						<CardTitle>Standings sorting order</CardTitle>
+						<CardTitle>{t('sortingOrder')}</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="flex flex-col">
@@ -108,7 +113,7 @@ export default function RulesPage() {
 											<div className="bg-border my-1 w-px flex-1" />
 										)}
 									</div>
-									<span className="pt-1 pb-3 text-sm">{label}</span>
+									<span className="pt-1 pb-3 text-sm">{t(label)}</span>
 								</div>
 							))}
 						</div>

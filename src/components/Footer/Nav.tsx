@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -13,12 +14,13 @@ type TNavFooter = {
 
 export function NavFooter({ viewerId, unreadComments = 0 }: TNavFooter) {
 	const pathname = usePathname()
+	const t = useTranslations('Nav')
 
 	const items = navItems.map((item) => {
 		if (item.href === '/users') {
 			return viewerId
 				? { ...item, href: `/users/${viewerId}` }
-				: { ...item, label: 'Log in', href: '/auth/login' }
+				: { ...item, labelKey: 'logIn' as const, href: '/auth/login' }
 		}
 		return item
 	})
@@ -62,7 +64,7 @@ export function NavFooter({ viewerId, unreadComments = 0 }: TNavFooter) {
 									</span>
 								)}
 								<span className="w-full truncate text-center">
-									{item.label}
+									{t(item.labelKey)}
 								</span>
 							</Link>
 						</li>

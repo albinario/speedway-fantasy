@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,6 +10,7 @@ import { LiveBadge } from '@/components/LiveBadge'
 import { RegisteredPlayers } from '@/components/RegisteredPlayers'
 import { StartTimeNote } from '@/components/StartTimeNote'
 import { EMacroStage } from '@/enums'
+import { intlLocales } from '@/i18n/config'
 import { formatDate } from '@/lib/dates'
 
 type TGpCardHeader = {
@@ -38,6 +40,9 @@ export function GpCardHeader({
 	showCountdown = false,
 	imageLoading
 }: TGpCardHeader) {
+	const t = useTranslations('Common')
+	const locale = intlLocales[useLocale()]
+
 	const header = (
 		<>
 			<Image
@@ -67,9 +72,9 @@ export function GpCardHeader({
 				<h2 className="text-3xl font-black uppercase">{cityName}</h2>
 
 				<div className="text-sm font-black uppercase opacity-80">
-					<span className="text-brand-red">Round {round}</span>
+					<span className="text-brand-red">{t('round', { round })}</span>
 					{' • '}
-					{formatDate(startDate, timeZone)}
+					{formatDate(startDate, timeZone, locale)}
 
 					{macroStage !== EMacroStage.After && (
 						<StartTimeNote date={startDate} eventTimeZone={timeZone} />

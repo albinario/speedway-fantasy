@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import { getGps } from '@/app/gps/data'
@@ -8,7 +9,10 @@ import { getMacroStage } from '@/lib/dates'
 import { cn } from '@/lib/utils'
 
 export async function GpSeasonProgress() {
-	const gps = await getGps(new Date().getFullYear())
+	const [gps, t] = await Promise.all([
+		getGps(new Date().getFullYear()),
+		getTranslations('Home')
+	])
 	if (!gps.length) return null
 
 	return (
@@ -16,7 +20,7 @@ export async function GpSeasonProgress() {
 			<CardGlow color="green" />
 			<CardContent className="flex flex-col gap-3 pt-4">
 				<span className="text-xs font-bold tracking-wide uppercase">
-					Season progress
+					{t('seasonProgress')}
 				</span>
 
 				<div className="flex items-start">

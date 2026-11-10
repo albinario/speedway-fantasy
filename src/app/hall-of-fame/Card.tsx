@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 import { Star } from 'lucide-react'
@@ -29,6 +30,7 @@ export function HallOfFameCard({
 	viewerId,
 	year
 }: Props) {
+	const t = useTranslations('Common')
 	const byType = Object.fromEntries(entries.map((e) => [e.type, e]))
 	const podium = [byType[2], byType[1], byType[3]].filter(Boolean)
 
@@ -95,7 +97,9 @@ export function HallOfFameCard({
 
 								<span className={cn('mt-auto', tier.points)}>
 									<span className="font-bold tabular-nums">{entry.points}</span>{' '}
-									<span className="text-muted-foreground text-xs">pts</span>
+									<span className="text-muted-foreground text-xs">
+										{t('pts')}
+									</span>
 								</span>
 							</div>
 						</div>

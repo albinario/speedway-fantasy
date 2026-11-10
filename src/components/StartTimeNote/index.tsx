@@ -1,6 +1,8 @@
 'use client'
 
-import { locale } from '@/config/time-zone'
+import { useLocale, useTranslations } from 'next-intl'
+
+import { intlLocales } from '@/i18n/config'
 
 type TStartTimeNote = {
 	date?: string | number | Date | null
@@ -8,7 +10,7 @@ type TStartTimeNote = {
 }
 
 function getTimeZoneOffsetLabel(date: Date, timeZone: string) {
-	return new Intl.DateTimeFormat(locale, {
+	return new Intl.DateTimeFormat('en-GB', {
 		timeZone,
 		timeZoneName: 'shortOffset'
 	})
@@ -17,6 +19,9 @@ function getTimeZoneOffsetLabel(date: Date, timeZone: string) {
 }
 
 export function StartTimeNote({ date, eventTimeZone }: TStartTimeNote) {
+	const t = useTranslations('GpCard')
+	const locale = intlLocales[useLocale()]
+
 	if (!date || !eventTimeZone) return null
 
 	const eventDate = new Date(date)
@@ -38,7 +43,7 @@ export function StartTimeNote({ date, eventTimeZone }: TStartTimeNote) {
 	return (
 		<span className="text-yellow-400">
 			<br />
-			Where you are {userTime}
+			{t('whereYouAre', { time: userTime })}
 		</span>
 	)
 }

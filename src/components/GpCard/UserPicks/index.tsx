@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { RiderTilesEmpty } from '@/components/RiderTilesEmpty'
 import { getViewer } from '@/lib/auth/get-viewer'
 
@@ -46,10 +48,11 @@ export async function UserPicks({
 	}
 
 	const hasPicks = userPicks.length > 0
+	const t = await getTranslations('GpCard')
 
 	return (
 		<>
-			<div className="font-black uppercase">Picked riders</div>
+			<div className="font-black uppercase">{t('pickedRiders')}</div>
 
 			<div className="grid grid-cols-3 gap-2">
 				<RiderTilesEmpty count={3} variant={hasPicks ? 'green' : 'red'} />

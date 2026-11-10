@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 import { FlagNumber } from '@/components/FlagNumber'
@@ -15,7 +16,10 @@ import type { getGpUsersResults } from './data'
 
 type TRow = Awaited<ReturnType<typeof getGpUsersResults>>[number]
 
+type TLabels = { points: string; heats: string; total: string }
+
 function makeColumns(
+	labels: TLabels,
 	viewerId?: number,
 	firstOccurrenceByRider = new Map<number, number>(),
 	isBefore = false
@@ -108,7 +112,7 @@ function makeColumns(
 		},
 		{
 			accessorKey: 'points',
-			header: 'Points',
+			header: labels.points,
 			cell: ({ getValue }) => (
 				<span className="text-lg">{getValue<number>()}</span>
 			),
@@ -116,12 +120,12 @@ function makeColumns(
 		},
 		{
 			accessorKey: 'heats',
-			header: 'Heats',
+			header: labels.heats,
 			meta: { className: 'hidden px-1 text-center sm:table-cell' }
 		},
 		{
 			accessorKey: 'season_points',
-			header: 'Total',
+			header: labels.total,
 			meta: { className: 'px-1 text-center' }
 		}
 	]
@@ -138,6 +142,8 @@ export function GpUsersResultsTable({
 	viewerId,
 	isBefore
 }: TGpUsersResultsTable) {
+	const t = useTranslations('Common')
+
 	const firstOccurrenceByRider = new Map<number, number>()
 	data.forEach((row, index) => {
 		for (const pick of sortedPicks(row)) {
@@ -149,12 +155,17 @@ export function GpUsersResultsTable({
 
 	return (
 		<div>
-			<SectionTitle>Players</SectionTitle>
+			<SectionTitle>{t('players')}</SectionTitle>
 
 			<Card>
 				<div className="max-h-[420px] overflow-y-auto">
 					<DataTable
-						columns={makeColumns(viewerId, firstOccurrenceByRider, isBefore)}
+						columns={makeColumns(
+							{ points: t('points'), heats: t('heats'), total: t('total') },
+							viewerId,
+							firstOccurrenceByRider,
+							isBefore
+						)}
 						data={data}
 						getRowClassName={(row) =>
 							row.user_id === viewerId
