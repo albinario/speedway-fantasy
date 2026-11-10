@@ -1,3 +1,6 @@
+import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
+
 import { AutoRefresh } from '@/components/AutoRefresh'
 import { GpCard } from '@/components/GpCard'
 import { GpSeasonProgress } from '@/components/GpSeasonProgress'
@@ -20,6 +23,25 @@ import { VenueHistory } from './VenueHistory'
 
 type TGpPage = {
 	params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: TGpPage): Promise<Metadata> {
+	const { id } = await params
+	const [gp, t] = await Promise.all([
+		getGp(Number(id)),
+		getTranslations('DetailPages')
+	])
+	if (!gp) return {}
+
+	const values = {
+		city: gp.city_name,
+		round: gp.round,
+		year: new Date(gp.start_date).getFullYear()
+	}
+	return {
+		title: t('gp.title', values),
+		description: t('gp.description', values)
+	}
 }
 
 export default async function GpPage({ params }: TGpPage) {

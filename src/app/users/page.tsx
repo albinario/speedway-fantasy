@@ -1,13 +1,11 @@
-import type { Metadata } from 'next'
-
 import { Card } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserName } from '@/components/UserName'
+import { getPageMetadata } from '@/i18n/page-metadata'
 
-import { metaData } from './constants'
 import { getUsers } from './data'
 
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('users')
 
 export default async function UsersPage() {
 	const users = await getUsers()

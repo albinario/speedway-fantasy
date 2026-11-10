@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -7,10 +7,11 @@ import { ActivityFeed } from '@/components/ActivityFeed'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { getPageMetadata } from '@/i18n/page-metadata'
 
 import { getActivityCount } from './data'
 
-export const metadata: Metadata = { title: 'Activity' }
+export const generateMetadata = () => getPageMetadata('activity')
 
 const LIMIT = 50
 
@@ -22,7 +23,11 @@ export default async function ActivityPage({ searchParams }: TActivityPage) {
 	const { page: pageParam } = await searchParams
 	const page = Math.max(1, parseInt(pageParam ?? '1', 10) || 1)
 
-	const countResult = await getActivityCount()
+	const [countResult, tPages, tCommon] = await Promise.all([
+		getActivityCount(),
+		getTranslations('Pages'),
+		getTranslations('Common')
+	])
 	const total = Number(countResult?.count ?? 0)
 	const totalPages = Math.max(1, Math.ceil(total / LIMIT))
 	const clampedPage = Math.min(page, totalPages)
@@ -30,7 +35,7 @@ export default async function ActivityPage({ searchParams }: TActivityPage) {
 
 	return (
 		<div className="mx-auto flex max-w-2xl flex-col gap-4">
-			<PageHeader title="Activity" hideYearSelector />
+			<PageHeader title={tPages('activity.title')} hideYearSelector />
 
 			<Card className="px-4 py-1">
 				<ActivityFeed limit={LIMIT} offset={offset} />
@@ -45,7 +50,7 @@ export default async function ActivityPage({ searchParams }: TActivityPage) {
 						variant="outline"
 					>
 						<Link
-							aria-label="Previous page"
+							aria-label={tCommon('previousPage')}
 							href={`/activity?page=${clampedPage - 1}`}
 						>
 							<ChevronLeft />
@@ -63,7 +68,7 @@ export default async function ActivityPage({ searchParams }: TActivityPage) {
 						variant="outline"
 					>
 						<Link
-							aria-label="Next page"
+							aria-label={tCommon('nextPage')}
 							href={`/activity?page=${clampedPage + 1}`}
 						>
 							<ChevronRight />

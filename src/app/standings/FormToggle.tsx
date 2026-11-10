@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 
+import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { LoadingFallback } from '@/components/LoadingFallback'
@@ -17,6 +18,7 @@ export function FormToggle({ form, children }: TFormToggle) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const [isPending, startTransition] = useTransition()
+	const t = useTranslations('Standings')
 
 	function setForm(next: TUsersForm) {
 		const params = new URLSearchParams(searchParams.toString())
@@ -30,9 +32,9 @@ export function FormToggle({ form, children }: TFormToggle) {
 		<>
 			<SegmentedControl
 				options={[
-					{ value: 'total', label: 'Total' },
-					{ value: 'last2', label: 'Last 2' },
-					{ value: 'last4', label: 'Last 4' }
+					{ value: 'total', label: t('formTotal') },
+					{ value: 'last2', label: t('formLast2') },
+					{ value: 'last4', label: t('formLast4') }
 				]}
 				value={form}
 				onChange={setForm}

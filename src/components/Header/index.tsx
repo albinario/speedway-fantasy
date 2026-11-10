@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -34,7 +35,7 @@ export function HeaderShell({ children }: { children?: React.ReactNode }) {
 }
 
 export async function Header() {
-	const viewer = await getViewer()
+	const [viewer, t] = await Promise.all([getViewer(), getTranslations('Nav')])
 
 	return (
 		<HeaderShell>
@@ -42,7 +43,7 @@ export async function Header() {
 				<>
 					<Button asChild size="lg" variant="outline">
 						<Link href={`/users/${viewer.db?.id}`}>
-							My page <UserIcon />
+							{t('myPage')} <UserIcon />
 						</Link>
 					</Button>
 
@@ -65,7 +66,7 @@ export async function Header() {
 			) : (
 				<Button asChild size="lg" variant="outline">
 					<a href="/auth/login">
-						Sign in <LogIn />
+						{t('signIn')} <LogIn />
 					</a>
 				</Button>
 			)}

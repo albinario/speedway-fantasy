@@ -1,5 +1,7 @@
 import { PropsWithChildren } from 'react'
 
+import { getTranslations } from 'next-intl/server'
+
 import { Users } from 'lucide-react'
 
 import type { getRiderGps } from '@/app/riders/[id]/data'
@@ -32,10 +34,15 @@ function Stat({ label, children }: TStat) {
 export async function RiderGpCard({ gp }: TRiderGpCard) {
 	if (new Date(gp.start_date) > new Date()) return null
 
+	const [t, tCommon] = await Promise.all([
+		getTranslations('GpCard'),
+		getTranslations('Common')
+	])
+
 	return (
 		<GpCardBase gp={gp} linked macroStage={EMacroStage.After}>
 			<div className="divide-foreground/10 grid grid-cols-3 items-end divide-x">
-				<Stat label="Position">
+				<Stat label={tCommon('position')}>
 					{gp.medal != null && <MedalIcon type={gp.medal} size="lg" />}
 					{gp.pos != null ? (
 						<span>{gp.pos}</span>
@@ -44,11 +51,11 @@ export async function RiderGpCard({ gp }: TRiderGpCard) {
 					)}
 				</Stat>
 
-				<Stat label="Points">
+				<Stat label={tCommon('points')}>
 					<span className="text-4xl">{gp.points}</span>
 				</Stat>
 
-				<Stat label="Picked by">
+				<Stat label={t('pickedBy')}>
 					<Users className="size-6 text-green-400" />
 					{gp.times_picked}
 				</Stat>

@@ -1,5 +1,8 @@
+import { getTranslations } from 'next-intl/server'
+
 import { getGpTopRiders, getGpViewerPickedRiders } from '@/app/gps/[id]/data'
 import { RidersResultRow } from '@/components/RidersResultRow'
+import { accent } from '@/i18n/rich'
 
 type TTopRiders = {
 	gpId: number
@@ -8,11 +11,12 @@ type TTopRiders = {
 }
 
 export async function GpTopRiders({ gpId, limit = 3, viewerId }: TTopRiders) {
-	const [rows, viewerPicks] = await Promise.all([
+	const [rows, viewerPicks, t] = await Promise.all([
 		getGpTopRiders(gpId, limit),
 		viewerId != null
 			? getGpViewerPickedRiders(gpId, viewerId)
-			: Promise.resolve([])
+			: Promise.resolve([]),
+		getTranslations('GpCard')
 	])
 
 	const validRows = rows.filter(
@@ -30,7 +34,7 @@ export async function GpTopRiders({ gpId, limit = 3, viewerId }: TTopRiders) {
 	return (
 		<div className="flex flex-col gap-2">
 			<div className="font-black uppercase">
-				Top <span className="text-green-400">{limit}</span> riders
+				{t.rich('topRiders', { limit, accent })}
 			</div>
 
 			<div className="divide-border -mx-3 divide-y">

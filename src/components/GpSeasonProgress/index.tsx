@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -20,7 +21,7 @@ export async function GpSeasonProgress({
 	year = new Date().getFullYear(),
 	currentGpId
 }: TGpSeasonProgress) {
-	const gps = await getGps(year)
+	const [gps, t] = await Promise.all([getGps(year), getTranslations('Home')])
 	if (!gps.length) return null
 
 	const currentIndex = gps.findIndex((gp) => gp.id === currentGpId)
@@ -32,7 +33,7 @@ export async function GpSeasonProgress({
 			<CardGlow color="green" />
 			<CardContent className="flex flex-col gap-3 pt-4">
 				<span className="text-xs font-bold tracking-wide uppercase">
-					{currentGpId ? `Season ${year}` : 'Season progress'}
+					{currentGpId ? t('seasonYear', { year }) : t('seasonProgress')}
 				</span>
 
 				<div className="flex items-start">

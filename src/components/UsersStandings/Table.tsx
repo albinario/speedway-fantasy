@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { PosBadge } from '@/components/PosBadge'
@@ -11,7 +13,9 @@ import type { getUsersStandings } from './data'
 
 type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
-function makeColumns(viewerId?: number): TColumnDef<TRow>[] {
+type TLabels = { points: string; heats: string; gps: string }
+
+function makeColumns(labels: TLabels, viewerId?: number): TColumnDef<TRow>[] {
 	return [
 		{
 			id: 'pos',
@@ -63,7 +67,7 @@ function makeColumns(viewerId?: number): TColumnDef<TRow>[] {
 		},
 		{
 			accessorKey: 'points',
-			header: 'Points',
+			header: labels.points,
 			cell: ({ getValue }) => (
 				<span className="text-lg">{getValue<number>()}</span>
 			),
@@ -86,12 +90,12 @@ function makeColumns(viewerId?: number): TColumnDef<TRow>[] {
 		},
 		{
 			accessorKey: 'heats',
-			header: 'Heats',
+			header: labels.heats,
 			meta: { className: 'hidden px-1 text-center sm:table-cell' }
 		},
 		{
 			accessorKey: 'gps',
-			header: 'GPs',
+			header: labels.gps,
 			meta: { className: 'hidden px-1 text-center sm:table-cell' }
 		}
 	]
@@ -103,10 +107,13 @@ type TUsersStandingsTable = {
 }
 
 export function UsersStandingsTable({ data, viewerId }: TUsersStandingsTable) {
+	const t = useTranslations('Common')
+	const labels = { points: t('points'), heats: t('heats'), gps: t('gps') }
+
 	return (
 		<Card className="overflow-clip">
 			<DataTable
-				columns={makeColumns(viewerId)}
+				columns={makeColumns(labels, viewerId)}
 				data={data}
 				getRowSticky={(row) => row.user_id === viewerId}
 			/>

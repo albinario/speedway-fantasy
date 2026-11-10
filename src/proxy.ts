@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server'
 
+import { isLocale, localeCookie, localeCookieOptions } from './i18n/config'
 import { auth0 } from './lib/auth/auth0'
 import { getRoles } from './lib/auth/auth0-claims'
 
 export async function proxy(request: Request) {
+	// Legacy ?lang= links (from the old per-page toggles): remember the choice
+	// and drop the param, the locale now lives in a cookie
+	const url = new URL(request.url)
+	const lang = url.searchParams.get('lang')
+	if (lang !== null) {
+		url.searchParams.delete('lang')
+		const redirect = NextResponse.redirect(url)
+		if (isLocale(lang)) {
+			redirect.cookies.set(localeCookie, lang, localeCookieOptions)
+		}
+		return redirect
+	}
+
 	const authResponse = await auth0.middleware(request)
-	const { pathname, search } = new URL(request.url)
+	const { pathname, search } = url
 
 	// For redirects from auth0 (login/callback/logout), return as-is
 	if (authResponse.status !== 200) return authResponse

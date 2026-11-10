@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import { PosBadge } from '@/components/PosBadge'
@@ -8,6 +9,7 @@ import {
 	getUsersStandings,
 	getUserStandingRow
 } from '@/components/UsersStandings/data'
+import { accent } from '@/i18n/rich'
 import { getMedalColorHex, getPodiumTier } from '@/lib/medals'
 import type { TParamValues } from '@/lib/params'
 import { cn } from '@/lib/utils'
@@ -23,9 +25,11 @@ export async function HomeLeaderPodium({
 	viewerId,
 	year
 }: THomeLeaderPodium) {
-	const [standings, viewerRow] = await Promise.all([
+	const [standings, viewerRow, t, tCommon] = await Promise.all([
 		getUsersStandings(year, 3),
-		viewerId ? getUserStandingRow(year, viewerId) : Promise.resolve(null)
+		viewerId ? getUserStandingRow(year, viewerId) : Promise.resolve(null),
+		getTranslations('Home'),
+		getTranslations('Common')
 	])
 	if (!standings.length) return null
 
@@ -42,9 +46,8 @@ export async function HomeLeaderPodium({
 
 	return (
 		<div>
-			<SectionTitle href="/standings" linkLabel="View standings">
-				{isFinal ? 'Final' : 'Current'}{' '}
-				<span className="text-green-400">podium</span>
+			<SectionTitle href="/standings" linkLabel={t('viewStandings')}>
+				{t.rich(isFinal ? 'finalPodium' : 'currentPodium', { accent })}
 			</SectionTitle>
 
 			<Card className="relative isolate">
@@ -93,7 +96,9 @@ export async function HomeLeaderPodium({
 											<span className="font-bold tabular-nums">
 												{Number(entry.points)}
 											</span>{' '}
-											<span className="text-muted-foreground text-xs">pts</span>
+											<span className="text-muted-foreground text-xs">
+												{tCommon('pts')}
+											</span>
 										</span>
 									</div>
 								</div>
@@ -121,7 +126,9 @@ export async function HomeLeaderPodium({
 								<span className="font-bold tabular-nums">
 									{Number(viewerRow.points)}
 								</span>{' '}
-								<span className="text-muted-foreground text-xs">pts</span>
+								<span className="text-muted-foreground text-xs">
+									{tCommon('pts')}
+								</span>
 							</span>
 						</div>
 					)}

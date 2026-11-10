@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 const MAX_HEATS = 23
 
 type THeatsFinished = {
@@ -5,10 +7,12 @@ type THeatsFinished = {
 }
 
 export function HeatsCounter({ heatsFinished }: THeatsFinished) {
+	const t = useTranslations('Common')
+
 	return (
 		<div className="flex flex-col gap-3">
 			<div className="flex items-baseline justify-between">
-				<span className="text-muted-foreground">Heats</span>
+				<span className="text-muted-foreground">{t('heats')}</span>
 
 				<div className="flex items-baseline gap-1.5">
 					<span className="text-lg leading-none text-green-400">

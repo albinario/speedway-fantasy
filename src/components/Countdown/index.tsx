@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { useTranslations } from 'next-intl'
+
 import { Badge } from '@/components/ui/badge'
 
 type TCountdown = {
@@ -44,6 +46,7 @@ function Divider() {
 }
 
 export function Countdown({ startDate }: TCountdown) {
+	const t = useTranslations('Countdown')
 	const [parts, setParts] = useState<TCountdownParts | null>(null)
 
 	useEffect(() => {
@@ -67,17 +70,17 @@ export function Countdown({ startDate }: TCountdown) {
 		<Badge variant="frosted" className="text-green-400">
 			{parts.days > 0 && (
 				<>
-					<Segment value={parts.days} label="days" />
+					<Segment value={parts.days} label={t('days')} />
 					<Divider />
 				</>
 			)}
-			<Segment value={parts.hours} label="hrs" />
+			<Segment value={parts.hours} label={t('hours')} />
 			<Divider />
-			<Segment value={parts.minutes} label="min" />
+			<Segment value={parts.minutes} label={t('minutes')} />
 			{showSeconds && (
 				<>
 					<Divider />
-					<Segment value={parts.seconds} label="sec" />
+					<Segment value={parts.seconds} label={t('seconds')} />
 				</>
 			)}
 		</Badge>

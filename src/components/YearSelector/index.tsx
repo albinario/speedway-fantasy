@@ -1,4 +1,5 @@
 'use client'
+import { useTranslations } from 'next-intl'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { ChevronDown, X } from 'lucide-react'
@@ -25,6 +26,7 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 	const router = useRouter()
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
+	const t = useTranslations('YearSelector')
 
 	const latestYear = defaultYear ?? years[0]?.value
 	const yearParam = searchParams.get(paramKeys.year)
@@ -66,7 +68,7 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 						variant="outline"
 					>
 						<span>
-							{activeYear === paramValues.all ? 'All time' : activeYear}
+							{activeYear === paramValues.all ? t('allTime') : activeYear}
 						</span>
 
 						<ChevronDown
@@ -78,15 +80,15 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 
 				{showClearButton && (
 					<Button onClick={clearYear} size="lg" variant="outline">
-						<X aria-hidden className="size-4 text-white" /> Reset
-						<span className="hidden sm:inline"> to current year</span>
+						<X aria-hidden className="size-4 text-white" /> {t('reset')}
+						<span className="hidden sm:inline"> {t('toCurrentYear')}</span>
 					</Button>
 				)}
 			</div>
 
 			<DropdownMenuContent align="end" className="w-fit min-w-0 px-2">
 				<DropdownMenuGroup>
-					<DropdownMenuLabel>Years</DropdownMenuLabel>
+					<DropdownMenuLabel>{t('years')}</DropdownMenuLabel>
 
 					{years.map((year) => (
 						<DropdownMenuItem
@@ -102,7 +104,7 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 
 				<DropdownMenuGroup>
 					<DropdownMenuItem onClick={() => updateYear(paramValues.all)}>
-						All time
+						{t('allTime')}
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>

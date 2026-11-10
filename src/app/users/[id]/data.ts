@@ -1,18 +1,27 @@
+import { cache } from 'react'
+
 import { dataFetch } from '@/lib/data-fetch'
 import { db } from '@/lib/db'
 
-export function getUser(id: number) {
-	return dataFetch(
+// cache(): shared by generateMetadata and the page within one request
+export const getUser = cache((id: number) =>
+	dataFetch(
 		() =>
 			db
 				.selectFrom('users_with_stars')
 				.innerJoin('users', 'users.id', 'users_with_stars.id')
-				.select(['users_with_stars.id', 'users_with_stars.first_name', 'users_with_stars.last_name', 'stars', 'users.created_at'])
+				.select([
+					'users_with_stars.id',
+					'users_with_stars.first_name',
+					'users_with_stars.last_name',
+					'stars',
+					'users.created_at'
+				])
 				.where('users_with_stars.id', '=', id)
 				.executeTakeFirst(),
 		null
 	)
-}
+)
 
 export function getUserResultGpIds(userId: number) {
 	return dataFetch(
