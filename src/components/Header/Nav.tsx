@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { LogOut, Menu } from 'lucide-react'
 import { VisuallyHidden } from 'radix-ui'
 
+import { LocaleSelector } from '@/components/LocaleSelector'
 import { ReminderToggle } from '@/components/ReminderToggle'
 import { Button } from '@/components/ui/button'
 import {
@@ -78,6 +79,8 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 				</nav>
 
 				<div className="mt-auto flex flex-col gap-4 p-4">
+					<LocaleSelector />
+
 					{!!viewerId && (
 						<>
 							<ReminderToggle defaultChecked={reminder ?? false} />

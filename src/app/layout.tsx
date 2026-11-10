@@ -1,6 +1,8 @@
 import { Suspense } from 'react'
 
 import type { Metadata } from 'next'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale } from 'next-intl/server'
 import { Inter } from 'next/font/google'
 
 import { Analytics } from '@vercel/analytics/react'
@@ -27,14 +29,16 @@ export const metadata: Metadata = {
 	description: metaData.description
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children
 }: Readonly<{
 	children: React.ReactNode
 }>) {
+	const locale = await getLocale()
+
 	return (
 		<html
-			lang="en"
+			lang={locale}
 			translate="no"
 			className="dark notranslate"
 			style={{ colorScheme: 'dark' }}
@@ -48,9 +52,11 @@ export default function RootLayout({
 			<body className={cn(inter.className, 'flex min-h-screen flex-col')}>
 				{process.env.DB_ENV === 'test' && <TestBadge />}
 
-				<Suspense fallback={<Splash />}>
-					<AppShell>{children}</AppShell>
-				</Suspense>
+				<NextIntlClientProvider>
+					<Suspense fallback={<Splash />}>
+						<AppShell>{children}</AppShell>
+					</Suspense>
+				</NextIntlClientProvider>
 
 				<Toaster position="top-center" />
 				<Analytics />

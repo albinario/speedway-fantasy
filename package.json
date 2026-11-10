@@ -11,7 +11,8 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint",
-		"db:types": "dotenv -e .env.local -- kysely-codegen --dialect postgres --out-file src/types/db.ts"
+		"db:types": "dotenv -e .env.local -- kysely-codegen --dialect postgres --out-file src/types/db.ts",
+		"db:types:test": "dotenv -e .env.local -- kysely-codegen --dialect postgres --url 'env(DATABASE_URL_TEST)' --out-file src/types/db.ts"
 	},
 	"dependencies": {
 		"@auth0/nextjs-auth0": "^4.16.0",
@@ -27,6 +28,7 @@
 		"kysely-neon": "^3.0.0",
 		"lucide-react": "^1.7.0",
 		"next": "^16.2.1",
+		"next-intl": "4.14.9",
 		"next-themes": "^0.4.6",
 		"prettier-plugin-sql": "^0.20.0",
 		"radix-ui": "^1.4.3",
