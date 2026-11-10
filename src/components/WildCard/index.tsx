@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
@@ -10,6 +12,8 @@ type TWildCard = {
 }
 
 export function WildCard({ countryCode, name, riderId }: TWildCard) {
+	const t = useTranslations('Common')
+
 	return (
 		<div className="flex justify-between">
 			<div className="flex items-center gap-4">
@@ -29,7 +33,7 @@ export function WildCard({ countryCode, name, riderId }: TWildCard) {
 				variant="warning"
 				className="gap-1 self-start font-black whitespace-normal uppercase"
 			>
-				Wild card
+				{t('wildCard')}
 			</Badge>
 		</div>
 	)

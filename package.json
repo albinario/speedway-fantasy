@@ -11,6 +11,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint",
+		"i18n:check": "bun scripts/check-i18n-client.ts",
 		"db:types": "dotenv -e .env.local -- kysely-codegen --dialect postgres --out-file src/types/db.ts",
 		"db:types:test": "dotenv -e .env.local -- kysely-codegen --dialect postgres --url 'env(DATABASE_URL_TEST)' --out-file src/types/db.ts"
 	},

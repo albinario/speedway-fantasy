@@ -1,12 +1,10 @@
-import type { Metadata } from 'next'
-
+import { getPageMetadata } from '@/i18n/page-metadata'
 import { getViewer } from '@/lib/auth/get-viewer'
 
 import { CommentsView } from './CommentsView'
-import { metaData } from './constants'
 import { getComments } from './data'
 
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('comments')
 
 export default async function CommentsPage() {
 	const [rawComments, viewer] = await Promise.all([getComments(), getViewer()])

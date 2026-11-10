@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -20,6 +21,25 @@ import {
 import { navItems } from '@/config/nav'
 import { cn } from '@/lib/utils'
 
+function CreditLink({
+	href,
+	children
+}: {
+	href: string
+	children: React.ReactNode
+}) {
+	return (
+		<a
+			className="underline"
+			href={href}
+			rel="noopener noreferrer"
+			target="_blank"
+		>
+			{children}
+		</a>
+	)
+}
+
 type THeaderNav = {
 	viewerId?: number
 	reminder?: boolean
@@ -27,6 +47,7 @@ type THeaderNav = {
 
 export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 	const pathname = usePathname()
+	const t = useTranslations('Nav')
 
 	const items = navItems.flatMap((item) => {
 		if (item.href === '/users') {
@@ -46,12 +67,10 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 
 			<SheetContent side="right" className="flex w-56 flex-col pt-6">
 				<VisuallyHidden.Root asChild>
-					<SheetTitle>Navigation menu</SheetTitle>
+					<SheetTitle>{t('menuTitle')}</SheetTitle>
 				</VisuallyHidden.Root>
 				<VisuallyHidden.Root asChild>
-					<SheetDescription>
-						Links to the main sections of Speedway Fantasy
-					</SheetDescription>
+					<SheetDescription>{t('menuDescription')}</SheetDescription>
 				</VisuallyHidden.Root>
 
 				<nav className="mt-4 flex flex-col gap-1">
@@ -70,7 +89,7 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 								>
 									<Link href={item.href}>
 										{item.icon && <item.icon />}
-										{item.label}
+										{t(item.labelKey)}
 									</Link>
 								</Button>
 							</SheetClose>
@@ -88,7 +107,7 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 							<SheetClose asChild>
 								<Button asChild variant="destructive">
 									<a href="/auth/logout">
-										Log out
+										{t('logOut')}
 										<LogOut />
 									</a>
 								</Button>
@@ -99,48 +118,34 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 					<div className="text-muted-foreground flex flex-col gap-1 text-xs opacity-50">
 						<p>© {new Date().getFullYear()} Speedway Fantasy.</p>
 						<p>
-							Developed by{' '}
-							<a
-								className="underline"
-								href="https://github.com/albinario"
-								rel="noopener noreferrer"
-								target="_blank"
-							>
-								Albin Lindeborg
-							</a>
-							.
+							{t.rich('developedBy', {
+								link: (chunks) => (
+									<CreditLink href="https://github.com/albinario">
+										{chunks}
+									</CreditLink>
+								)
+							})}
 						</p>
 						<p>
-							Designed by{' '}
-							<a
-								className="underline"
-								href="https://www.linkedin.com/in/albinlindeborg/"
-								rel="noopener noreferrer"
-								target="_blank"
-							>
-								Albin Lindeborg
-							</a>
-							,{' '}
-							<a
-								className="underline"
-								href="https://www.linkedin.com/in/pablosuzarte"
-								rel="noopener noreferrer"
-								target="_blank"
-							>
-								Pablo Suzarte
-							</a>{' '}
-							and{' '}
-							<a
-								className="underline"
-								href="https://www.alexaraducanu.com"
-								rel="noopener noreferrer"
-								target="_blank"
-							>
-								Alexa Raducanu
-							</a>
-							.
+							{t.rich('designedBy', {
+								albin: (chunks) => (
+									<CreditLink href="https://www.linkedin.com/in/albinlindeborg/">
+										{chunks}
+									</CreditLink>
+								),
+								pablo: (chunks) => (
+									<CreditLink href="https://www.linkedin.com/in/pablosuzarte">
+										{chunks}
+									</CreditLink>
+								),
+								alexa: (chunks) => (
+									<CreditLink href="https://www.alexaraducanu.com">
+										{chunks}
+									</CreditLink>
+								)
+							})}
 						</p>
-						<p>All rights reserved.</p>
+						<p>{t('rightsReserved')}</p>
 					</div>
 				</div>
 			</SheetContent>

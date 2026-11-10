@@ -1,9 +1,11 @@
-import { defaultTimeZone, locale } from '@/config/time-zone'
+import { defaultTimeZone } from '@/config/time-zone'
 import { EMacroStage } from '@/enums'
+import { defaultLocale, intlLocales } from '@/i18n/config'
 
 export function formatDate(
 	date?: Date | string | number | null,
-	timeZone = defaultTimeZone
+	timeZone = defaultTimeZone,
+	locale = intlLocales[defaultLocale]
 ) {
 	if (!date) return null
 

@@ -5,6 +5,233 @@ const en = {
 	LocaleSelector: {
 		label: 'Language'
 	},
+	Nav: {
+		home: 'Home',
+		standings: 'Standings',
+		gps: "GP's",
+		comments: 'Comments',
+		activity: 'Activity',
+		hallOfFame: 'Hall of fame',
+		rules: 'Rules',
+		install: 'Install app',
+		beer: 'Beer',
+		myPage: 'My page',
+		logIn: 'Log in',
+		signIn: 'Sign in',
+		logOut: 'Log out',
+		menuTitle: 'Navigation menu',
+		menuDescription: 'Links to the main sections of Speedway Fantasy',
+		emailReminder: 'Email reminder',
+		developedBy: 'Developed by <link>Albin Lindeborg</link>.',
+		designedBy:
+			'Designed by <albin>Albin Lindeborg</albin>, <pablo>Pablo Suzarte</pablo> and <alexa>Alexa Raducanu</alexa>.',
+		rightsReserved: 'All rights reserved.'
+	},
+	// Browser tab title + description per page, and the page's error text
+	Pages: {
+		standings: {
+			title: 'Standings',
+			description: 'Standings of the current season'
+		},
+		gps: {
+			title: "GP's",
+			description: 'Browse and view the GP results'
+		},
+		gp: {
+			title: "GP's",
+			description: 'Browse and view the GP results'
+		},
+		comments: {
+			title: 'Comments',
+			description: 'Browse and view the comments'
+		},
+		hallOfFame: {
+			title: 'Hall of Fame',
+			description: 'Hall of Fame',
+			noData: 'No hall of fame data'
+		},
+		riders: {
+			title: 'Riders',
+			description: 'Browse and view the rider roster'
+		},
+		users: {
+			title: 'Users',
+			description: 'Users'
+		},
+		rules: {
+			title: 'Rules',
+			description: 'Rules'
+		},
+		install: {
+			title: 'Install app on home screen',
+			description: 'Install Speedway Fantasy on your phone'
+		},
+		beer: {
+			title: 'Buy me a beer',
+			description: 'Support Speedway Fantasy'
+		},
+		activity: {
+			title: 'Activity',
+			description: 'Latest picks from all players'
+		}
+	},
+	Errors: {
+		title: 'Something went wrong',
+		description: "We couldn't load this page. Please try again in a moment.",
+		tryAgain: 'Try again'
+	},
+	// Short labels reused across features
+	Common: {
+		viewAll: 'View all',
+		pts: 'pts',
+		points: 'Points',
+		heats: 'Heats',
+		position: 'Position',
+		live: 'Live',
+		wildCard: 'Wild card',
+		tbd: 'TBD',
+		round: 'Round {round}',
+		gps: "GP's",
+		picked: 'Picked',
+		total: 'Total',
+		players: 'Players',
+		riders: 'Riders',
+		upcoming: 'Upcoming',
+		results: 'Results',
+		previousPage: 'Previous page',
+		nextPage: 'Next page'
+	},
+	UserHero: {
+		pickedInAllGps: 'Picked in all {count} GPs',
+		everyGp: 'Every GP',
+		gpStreak: 'GP Streak',
+		positions: '{count} pos',
+		ptsBehind: '{gap} pts',
+		behindLeader: 'behind leader',
+		memberSince: 'Member since',
+		trophyCollection: 'Trophy collection',
+		winner: 'Winner',
+		second: 'Second',
+		third: 'Third'
+	},
+	Rules: {
+		howItWorks: 'How it works',
+		pick: 'Pick three (3) riders in each Grand Prix.',
+		collect:
+			'Collect the points that your three (3) riders score in each Grand Prix.',
+		change:
+			'You may change your selected riders as many times as you like, up until the start of each Grand Prix.',
+		calculation:
+			'All rider points are calculated based on heat points, and not according to the official Grand Prix point structure.',
+		qualifyingBonus:
+			'The first- and second-placed riders from the qualifying round shall each be awarded three (3) additional points and one (1) additional heat, corresponding to a semi-final win.',
+		heatPoints: 'Heat points',
+		heatWinner: 'Winner',
+		heatSecond: '2nd',
+		heatThird: '3rd',
+		heatFourth: '4th',
+		heatPointsValue: '{points} pts',
+		allHeats: 'This includes all qualifying heats, semifinals and final',
+		sortingOrder: 'Standings sorting order',
+		sortPoints: 'Total Points',
+		sortWins: 'GP Wins',
+		sortSecond: '2nd places',
+		sortThird: '3rd places',
+		sortHeats: 'Finished heats'
+	},
+	Onboarding: {
+		title: 'Welcome to Speedway Fantasy',
+		description: 'Enter your name to continue.',
+		firstName: 'First name',
+		lastName: 'Last name',
+		submit: 'Save and continue',
+		saving: 'Saving…',
+		nameRequired: 'Please enter both your first and last name.',
+		saveFailed: "Couldn't save your name. Please try again."
+	},
+	Comments: {
+		unknown: 'Unknown',
+		reply: 'Reply',
+		replyingTo: 'Replying to {name}',
+		replyTo: 'Reply to {name}…',
+		writeComment: 'Write a comment…',
+		signInToComment: 'Sign in to comment'
+	},
+	// Reminder emails (rendered in each recipient's saved locale)
+	Email: {
+		heading: '🏁 GP round {round} in {city} tonight',
+		subjectPicked: '{heading} — your picks are in',
+		subjectNotPicked: "{heading} — don't forget your picks!",
+		greeting: 'Hi {name},',
+		greetingNoName: 'Hi there,',
+		bodyPicked:
+			"Your picks are in for tonight's GP in <strong>{city}</strong>. If you'd like to make any last-minute changes, now's the time!",
+		bodyNotPicked:
+			"This is a reminder to pick riders for tonight's GP in <strong>{city}</strong>. Don't miss out!",
+		ctaPicked: 'View / update picks →',
+		ctaNotPicked: 'Pick your riders →',
+		footer:
+			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>"
+	},
+	RiderHero: {
+		timesPicked: 'Times picked'
+	},
+	Standings: {
+		formTotal: 'Total',
+		formLast2: 'Last 2',
+		formLast4: 'Last 4'
+	},
+	YearSelector: {
+		years: 'Years',
+		allTime: 'All time',
+		reset: 'Reset',
+		toCurrentYear: 'to current year'
+	},
+	Home: {
+		welcome: 'Welcome to <accent>Speedway Fantasy</accent>',
+		viewRules: 'View rules',
+		featurePick: 'Pick 3 riders in each GP',
+		featureEarn: 'Earn their heat points',
+		featureClimb: 'Climb standings',
+		signInToPlay: 'Sign in to play',
+		nextGp: 'Next <accent>GP</accent>',
+		previousGp: 'Previous <accent>GP</accent>',
+		viewGp: 'View GP',
+		previousSeason: 'Previous <accent>season</accent>',
+		seasonProgress: 'Season progress',
+		currentPodium: 'Current <accent>podium</accent>',
+		finalPodium: 'Final <accent>podium</accent>',
+		viewStandings: 'View standings'
+	},
+	Countdown: {
+		days: 'days',
+		hours: 'hrs',
+		minutes: 'min',
+		seconds: 'sec'
+	},
+	GpCard: {
+		registeredPlayers:
+			'{count, plural, one {<num>#</num> registered player} other {<num>#</num> registered players}}',
+		whereYouAre: 'Where you are {time}',
+		topPlayers: 'Top <accent>{limit}</accent> players',
+		topRiders: 'Top <accent>{limit}</accent> riders',
+		pickedRiders: 'Picked riders',
+		myPickedRiders: 'My picked riders',
+		editPicks: 'Edit',
+		pickRiders: 'Pick riders',
+		pickedBy: 'Picked by'
+	},
+	PickRiders: {
+		title: 'Pick your <accent>3</accent> riders',
+		save: 'Save picks',
+		saving: 'Saving…',
+		saved: 'Picks saved!',
+		closed: 'Picks are closed for this event.'
+	},
+	Activity: {
+		picked: 'Picked',
+		updated: 'Updated'
+	},
 	Beer: {
 		title: 'Buy me a beer',
 		paragraph1:
@@ -16,7 +243,9 @@ const en = {
 		paragraph4:
 			'Of course this is completely voluntary - the game will always be here regardless. The goal is not to make money, it is to grow the sport. But all support is received with a big thank you!',
 		signoff: 'Thanks for playing,\nAlbin',
-		card: 'Card'
+		card: 'Card',
+		swishLogo: 'Swish logo',
+		swishQr: 'Swish QR code'
 	},
 	Install: {
 		title: 'Install app',

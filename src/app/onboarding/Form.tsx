@@ -1,28 +1,36 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
+
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import { CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+import type { saveProfile, TSaveProfileState } from './actions'
+
 type TOnboardingForm = {
-	action: (formData: FormData) => Promise<void>
+	action: typeof saveProfile
 }
 
+const initialState: TSaveProfileState = {}
+
 export function OnboardingForm({ action }: TOnboardingForm) {
+	const t = useTranslations('Onboarding')
+	const [state, formAction, isPending] = useActionState(action, initialState)
 	const [firstName, setFirstName] = useState('')
 	const [lastName, setLastName] = useState('')
-	const disabled = !firstName.trim() || !lastName.trim()
+	const disabled = !firstName.trim() || !lastName.trim() || isPending
 
 	return (
 		<>
 			<CardContent>
-				<form id="onboarding-form" action={action}>
+				<form id="onboarding-form" action={formAction}>
 					<div className="flex flex-col gap-4">
 						<div className="grid gap-2">
-							<Label htmlFor="first_name">First name</Label>
+							<Label htmlFor="first_name">{t('firstName')}</Label>
 							<Input
 								autoComplete="given-name"
 								autoFocus
@@ -36,7 +44,7 @@ export function OnboardingForm({ action }: TOnboardingForm) {
 						</div>
 
 						<div className="grid gap-2">
-							<Label htmlFor="last_name">Last name</Label>
+							<Label htmlFor="last_name">{t('lastName')}</Label>
 							<Input
 								autoComplete="family-name"
 								id="last_name"
@@ -47,6 +55,12 @@ export function OnboardingForm({ action }: TOnboardingForm) {
 								value={lastName}
 							/>
 						</div>
+
+						{state.error && (
+							<p className="text-destructive text-sm" role="alert">
+								{t(state.error)}
+							</p>
+						)}
 					</div>
 				</form>
 			</CardContent>
@@ -59,7 +73,7 @@ export function OnboardingForm({ action }: TOnboardingForm) {
 					disabled={disabled}
 					size="lg"
 				>
-					Save and continue
+					{isPending ? t('saving') : t('submit')}
 				</Button>
 			</CardFooter>
 		</>

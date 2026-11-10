@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 
+import { useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { LoadingFallback } from '@/components/LoadingFallback'
@@ -18,6 +19,7 @@ export function StandingsToggle({ view, children }: TStandingsToggle) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const [isPending, startTransition] = useTransition()
+	const t = useTranslations('Common')
 
 	function setView(next: TView) {
 		const params = new URLSearchParams(searchParams.toString())
@@ -31,8 +33,8 @@ export function StandingsToggle({ view, children }: TStandingsToggle) {
 		<>
 			<SegmentedControl
 				options={[
-					{ value: 'players', label: 'Players' },
-					{ value: 'riders', label: 'Riders' }
+					{ value: 'players', label: t('players') },
+					{ value: 'riders', label: t('riders') }
 				]}
 				value={view}
 				onChange={setView}

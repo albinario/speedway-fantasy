@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
 import {
@@ -14,6 +15,7 @@ import { getUserStars } from '@/app/users/[id]/data'
 import { MedalCounts } from '@/components/MedalCounts'
 import { CardGlow } from '@/components/ui/card'
 import { getUserStandingRow } from '@/components/UsersStandings/data'
+import { intlLocales } from '@/i18n/config'
 import { getMedalColorHex } from '@/lib/medals'
 import { type TParamValues } from '@/lib/params'
 
@@ -26,13 +28,23 @@ type TUserHero = {
 }
 
 export async function UserHero({ userId, year, createdAt }: TUserHero) {
-	const [standings, leaderRecord, { streak, total: totalGps }, starRecords] =
-		await Promise.all([
-			getUserStandingRow(year, userId),
-			getLeader(year),
-			getUserStreak(userId),
-			getUserStars(userId)
-		])
+	const [
+		standings,
+		leaderRecord,
+		{ streak, total: totalGps },
+		starRecords,
+		t,
+		tCommon,
+		locale
+	] = await Promise.all([
+		getUserStandingRow(year, userId),
+		getLeader(year),
+		getUserStreak(userId),
+		getUserStars(userId),
+		getTranslations('UserHero'),
+		getTranslations('Common'),
+		getLocale()
+	])
 
 	const everyGp = totalGps > 0 && streak === totalGps
 	const pos = standings?.pos ?? null
@@ -51,11 +63,14 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 	const progressPct =
 		leader > 0 ? Math.min(100, Math.round((points / leader) * 100)) : 100
 
-	const memberSince = new Date(createdAt).toLocaleDateString('en-GB', {
-		day: 'numeric',
-		month: 'long',
-		year: 'numeric'
-	})
+	const memberSince = new Date(createdAt).toLocaleDateString(
+		intlLocales[locale],
+		{
+			day: 'numeric',
+			month: 'long',
+			year: 'numeric'
+		}
+	)
 
 	return (
 		<div className="flex flex-col gap-1">
@@ -67,7 +82,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 					<div className="flex flex-col items-center">
 						<span className="text-5xl leading-none font-black">{points}</span>
 						<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
-							Points
+							{tCommon('points')}
 						</span>
 					</div>
 
@@ -80,13 +95,13 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 
 					{everyGp ? (
 						<div
-							title={`Picked in all ${totalGps} GPs`}
+							title={t('pickedInAllGps', { count: totalGps })}
 							className="border-gold/40 bg-gold/10 relative ml-auto flex items-center gap-1 overflow-hidden rounded-full border px-3 py-1"
 						>
 							<span className="text-gold text-xl font-black">{streak}</span>
 							<Flame size={25} className="text-gold" />
 							<span className="text-gold text-xs font-black tracking-wide uppercase">
-								Every GP
+								{t('everyGp')}
 							</span>
 							<span
 								aria-hidden
@@ -99,7 +114,7 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 								<span className="text-xl font-black">{streak}</span>
 								<Flame size={25} className="text-brand-red" />
 								<span className="text-muted-foreground text-xs tracking-wide uppercase">
-									GP Streak
+									{t('gpStreak')}
 								</span>
 							</div>
 						)
@@ -118,29 +133,32 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 								{moved != null && moved > 0 && (
 									<span className="flex items-center gap-0.5 rounded-full bg-green-400/20 px-2 py-0.5 text-xs font-black text-green-400">
 										<ArrowUp size={12} />
-										{moved} pos
+										{t('positions', { count: moved })}
 									</span>
 								)}
 								{moved != null && moved < 0 && (
 									<span className="flex items-center gap-0.5 rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-black text-red-500">
-										<ArrowDown size={12} /> {Math.abs(moved)} pos
+										<ArrowDown size={12} />{' '}
+										{t('positions', { count: Math.abs(moved) })}
 									</span>
 								)}
 							</div>
 
 							<span className="tracking-wide uppercase">
-								<span className="text-brand-red">{gap} pts</span>{' '}
+								<span className="text-brand-red">
+									{t('ptsBehind', { gap })}
+								</span>{' '}
 								{leaderUserId != null && leaderUserId !== userId ? (
 									<Link
 										className="text-muted-foreground inline-flex items-center text-xs hover:underline"
 										href={`/users/${leaderUserId}${year !== 'all' ? `?year=${year}` : ''}`}
 									>
-										behind leader
+										{t('behindLeader')}
 										<ChevronRight className="text-brand-red" size={16} />
 									</Link>
 								) : (
 									<span className="text-muted-foreground text-xs">
-										behind leader
+										{t('behindLeader')}
 									</span>
 								)}
 							</span>
@@ -160,22 +178,23 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 				{/* Member since */}
 				<div className="flex items-center gap-1.5 px-4 py-3 text-xs">
 					<UserRoundCheck className="size-3.5 text-green-400" />
-					<span className="text-muted-foreground">Member since</span>
+					<span className="text-muted-foreground">{t('memberSince')}</span>
 					<span>{memberSince}</span>
 				</div>
 
 				{/* Trophy collection */}
 				<div className="flex flex-wrap items-start gap-x-6 gap-y-3 p-4">
 					<span className="text-muted-foreground shrink-0 text-xs font-black tracking-wide uppercase">
-						Trophy collection
+						{t('trophyCollection')}
 					</span>
 
 					{starRecords.length > 0 ? (
 						<div className="flex flex-1 justify-end gap-4">
 							{starRecords.map(({ year: starYear, type }) => {
 								const color = getMedalColorHex(type)
-								const label =
-									type === 1 ? 'Winner' : type === 2 ? 'Second' : 'Third'
+								const label = t(
+									type === 1 ? 'winner' : type === 2 ? 'second' : 'third'
+								)
 
 								return (
 									<div key={starYear} className="flex items-center gap-2">

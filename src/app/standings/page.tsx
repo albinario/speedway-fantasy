@@ -1,14 +1,14 @@
-import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 
 import { PageHeader } from '@/components/PageHeader'
 import { RidersStandings } from '@/components/RidersStandings'
 import { UsersStandings } from '@/components/UsersStandings'
 import type { TUsersForm } from '@/components/UsersStandings'
-import type { TParamValues } from '@/lib/params'
 import { getLatestStandingsYear } from '@/data/year'
+import { getPageMetadata } from '@/i18n/page-metadata'
+import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
-import { metaData } from './constants'
 import { FormToggle } from './FormToggle'
 import { StandingsToggle } from './StandingsToggle'
 
@@ -20,11 +20,12 @@ type TStandingsPage = {
 	}>
 }
 
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('standings')
 
 const formValues: TUsersForm[] = ['total', 'last2', 'last4']
 
 export default async function StandingsPage({ searchParams }: TStandingsPage) {
+	const tPages = await getTranslations('Pages')
 	const resolved = await searchParams
 	const latestStandingsYear = await getLatestStandingsYear()
 	const yearValues = await getYearValues(searchParams, latestStandingsYear)
@@ -37,7 +38,10 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader title={metaData.title} defaultYear={latestStandingsYear} />
+			<PageHeader
+				title={tPages('standings.title')}
+				defaultYear={latestStandingsYear}
+			/>
 
 			<StandingsToggle view={view}>
 				{view === 'players' ? (

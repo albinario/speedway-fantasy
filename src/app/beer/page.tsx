@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 
@@ -7,11 +6,10 @@ import { Beer, CreditCard } from 'lucide-react'
 import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { getPageMetadata } from '@/i18n/page-metadata'
 import { cn } from '@/lib/utils'
 
-import { metaData } from './constants'
-
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('beer')
 
 const paragraphs = [
 	'paragraph1',
@@ -57,7 +55,7 @@ export default async function BeerPage() {
 						rel="noopener noreferrer"
 					>
 						<Image
-							alt="Swish logo"
+							alt={t('swishLogo')}
 							className="size-5"
 							height={475}
 							width={475}
@@ -80,7 +78,7 @@ export default async function BeerPage() {
 			</div>
 
 			<Image
-				alt="Swish QR code"
+				alt={t('swishQr')}
 				className="mx-auto hidden max-w-xs sm:block"
 				height={945}
 				width={625}

@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { getGps } from '@/app/gps/data'
 import { UserGpCard } from '@/components/GpCard'
 import { PageHeader } from '@/components/PageHeader'
@@ -22,11 +24,12 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 	const userId = Number(id)
 
 	const currentYear = new Date().getFullYear()
-	const [user, yearValues, viewer, resultGpIds] = await Promise.all([
+	const [user, yearValues, viewer, resultGpIds, t] = await Promise.all([
 		getUser(userId),
 		getYearValues(searchParams, currentYear),
 		getViewer(),
-		getUserResultGpIds(userId)
+		getUserResultGpIds(userId),
+		getTranslations('Common')
 	])
 
 	if (!user) return null
@@ -64,8 +67,8 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 			/>
 
 			{[
-				{ title: 'Upcoming', items: upcoming },
-				{ title: 'Results', items: finished }
+				{ title: t('upcoming'), items: upcoming },
+				{ title: t('results'), items: finished }
 			].map(
 				({ title, items }) =>
 					items.length > 0 && (

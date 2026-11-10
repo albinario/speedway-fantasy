@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale } from 'next-intl/server'
+import { getLocale, getMessages } from 'next-intl/server'
 import { Inter } from 'next/font/google'
 
 import { Analytics } from '@vercel/analytics/react'
@@ -13,6 +13,7 @@ import { Splash } from '@/components/Splash'
 import { TestBadge } from '@/components/TestBadge'
 import { Toaster } from '@/components/ui/sonner'
 import { metaData } from '@/config/brand'
+import { clientNamespaces } from '@/i18n/config'
 import { cn } from '@/lib/utils'
 
 import { AppShell } from './AppShell'
@@ -34,7 +35,11 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode
 }>) {
-	const locale = await getLocale()
+	const [locale, messages] = await Promise.all([getLocale(), getMessages()])
+	// Only what client components need; server components read the full set
+	const clientMessages = Object.fromEntries(
+		clientNamespaces.map((namespace) => [namespace, messages[namespace]])
+	)
 
 	return (
 		<html
@@ -52,7 +57,7 @@ export default async function RootLayout({
 			<body className={cn(inter.className, 'flex min-h-screen flex-col')}>
 				{process.env.DB_ENV === 'test' && <TestBadge />}
 
-				<NextIntlClientProvider>
+				<NextIntlClientProvider messages={clientMessages}>
 					<Suspense fallback={<Splash />}>
 						<AppShell>{children}</AppShell>
 					</Suspense>

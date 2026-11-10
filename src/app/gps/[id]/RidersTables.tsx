@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import { RidersTable } from '@/components/RidersTable'
 import { SectionTitle } from '@/components/SectionHeader'
 
@@ -10,9 +12,11 @@ type TGpRidersResultsTable = {
 }
 
 export function GpRidersResultsTable({ data }: TGpRidersResultsTable) {
+	const t = useTranslations('Common')
+
 	return (
 		<div>
-			<SectionTitle>Riders</SectionTitle>
+			<SectionTitle>{t('riders')}</SectionTitle>
 			<RidersTable
 				data={data.map((r) => ({
 					riderId: r.rider_id,
@@ -40,9 +44,11 @@ export function GpRidersPreviewTable({
 	data,
 	isBefore
 }: TGpRidersPreviewTable) {
+	const t = useTranslations('Common')
+
 	return (
 		<div>
-			<SectionTitle>Riders</SectionTitle>
+			<SectionTitle>{t('riders')}</SectionTitle>
 			<RidersTable
 				hidePicked={isBefore}
 				data={data.map((r, i) => ({

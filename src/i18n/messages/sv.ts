@@ -4,6 +4,229 @@ const sv: TMessages = {
 	LocaleSelector: {
 		label: 'Språk'
 	},
+	Nav: {
+		home: 'Hem',
+		standings: 'Tabell',
+		gps: 'GP',
+		comments: 'Kommentarer',
+		activity: 'Aktivitet',
+		hallOfFame: 'Hall of fame',
+		rules: 'Regler',
+		install: 'Installera app',
+		beer: 'Bärs',
+		myPage: 'Min sida',
+		logIn: 'Logga in',
+		signIn: 'Logga in',
+		logOut: 'Logga ut',
+		menuTitle: 'Navigeringsmeny',
+		menuDescription: 'Länkar till Speedway Fantasys olika delar',
+		emailReminder: 'Påminnelse via e-post',
+		developedBy: 'Utvecklad av <link>Albin Lindeborg</link>.',
+		designedBy:
+			'Designad av <albin>Albin Lindeborg</albin>, <pablo>Pablo Suzarte</pablo> och <alexa>Alexa Raducanu</alexa>.',
+		rightsReserved: 'Alla rättigheter förbehållna.'
+	},
+	Pages: {
+		standings: {
+			title: 'Tabell',
+			description: 'Tabellen för innevarande säsong'
+		},
+		gps: {
+			title: 'GP',
+			description: 'Bläddra bland och se resultaten från alla GP'
+		},
+		gp: {
+			title: 'GP',
+			description: 'Bläddra bland och se resultaten från alla GP'
+		},
+		comments: {
+			title: 'Kommentarer',
+			description: 'Läs och bläddra bland kommentarerna'
+		},
+		hallOfFame: {
+			title: 'Hall of Fame',
+			description: 'Hall of Fame',
+			noData: 'Ingen data i Hall of Fame än'
+		},
+		riders: {
+			title: 'Förare',
+			description: 'Bläddra bland förarna'
+		},
+		users: {
+			title: 'Spelare',
+			description: 'Spelare'
+		},
+		rules: {
+			title: 'Regler',
+			description: 'Regler'
+		},
+		install: {
+			title: 'Installera appen på hemskärmen',
+			description: 'Installera Speedway Fantasy på din telefon'
+		},
+		beer: {
+			title: 'Bjud på en bärs',
+			description: 'Stöd Speedway Fantasy'
+		},
+		activity: {
+			title: 'Aktivitet',
+			description: 'Senaste valen från alla spelare'
+		}
+	},
+	Errors: {
+		title: 'Något gick fel',
+		description: 'Sidan kunde inte laddas. Försök igen om en stund.',
+		tryAgain: 'Försök igen'
+	},
+	Common: {
+		viewAll: 'Visa alla',
+		pts: 'p',
+		points: 'Poäng',
+		heats: 'Heat',
+		position: 'Placering',
+		live: 'Live',
+		wildCard: 'Wild card',
+		tbd: 'Meddelas',
+		round: 'Omgång {round}',
+		gps: 'GP',
+		picked: 'Vald',
+		total: 'Totalt',
+		players: 'Spelare',
+		riders: 'Förare',
+		upcoming: 'Kommande',
+		results: 'Resultat',
+		previousPage: 'Föregående sida',
+		nextPage: 'Nästa sida'
+	},
+	UserHero: {
+		pickedInAllGps: 'Har valt förare i alla {count} GP',
+		everyGp: 'Varje GP',
+		gpStreak: 'GP i rad',
+		positions: '{count} plac.',
+		ptsBehind: '{gap} p',
+		behindLeader: 'efter ledaren',
+		memberSince: 'Medlem sedan',
+		trophyCollection: 'Troféer',
+		winner: 'Vinnare',
+		second: 'Tvåa',
+		third: 'Trea'
+	},
+	Rules: {
+		howItWorks: 'Så fungerar det',
+		pick: 'Välj tre (3) förare i varje Grand Prix.',
+		collect: 'Samla de poäng som dina tre (3) förare tar i varje Grand Prix.',
+		change:
+			'Du får byta förare hur många gånger du vill, fram till att respektive Grand Prix startar.',
+		calculation:
+			'Alla förarpoäng räknas på heatpoäng, inte enligt det officiella poängsystemet för Grand Prix.',
+		qualifyingBonus:
+			'Första- och andraplacerad förare efter kvalomgångarna får vardera tre (3) extra poäng och ett (1) extra heat, motsvarande en semifinalseger.',
+		heatPoints: 'Heatpoäng',
+		heatWinner: 'Vinnare',
+		heatSecond: '2:a',
+		heatThird: '3:e',
+		heatFourth: '4:e',
+		heatPointsValue: '{points} p',
+		allHeats: 'Detta gäller alla kvalheat, semifinaler och finalen',
+		sortingOrder: 'Sorteringsordning i tabellen',
+		sortPoints: 'Totala poäng',
+		sortWins: 'GP-segrar',
+		sortSecond: 'Andraplatser',
+		sortThird: 'Tredjeplatser',
+		sortHeats: 'Körda heat'
+	},
+	Onboarding: {
+		title: 'Välkommen till Speedway Fantasy',
+		description: 'Ange ditt namn för att fortsätta.',
+		firstName: 'Förnamn',
+		lastName: 'Efternamn',
+		submit: 'Spara och fortsätt',
+		saving: 'Sparar…',
+		nameRequired: 'Ange både förnamn och efternamn.',
+		saveFailed: 'Det gick inte att spara ditt namn. Försök igen.'
+	},
+	Comments: {
+		unknown: 'Okänd',
+		reply: 'Svara',
+		replyingTo: 'Svarar {name}',
+		replyTo: 'Svara {name}…',
+		writeComment: 'Skriv en kommentar…',
+		signInToComment: 'Logga in för att kommentera'
+	},
+	Email: {
+		heading: '🏁 GP omgång {round} i {city} ikväll',
+		subjectPicked: '{heading} — dina val är klara',
+		subjectNotPicked: '{heading} — glöm inte dina val!',
+		greeting: 'Hej {name},',
+		greetingNoName: 'Hej!',
+		bodyPicked:
+			'Dina val är klara inför kvällens GP i <strong>{city}</strong>. Vill du göra några ändringar i sista minuten är det dags nu!',
+		bodyNotPicked:
+			'En påminnelse om att välja förare inför kvällens GP i <strong>{city}</strong>. Missa inte!',
+		ctaPicked: 'Visa / ändra val →',
+		ctaNotPicked: 'Välj dina förare →',
+		footer:
+			'Du får det här mejlet eftersom du har påminnelser på tävlingsdagar aktiverade i Speedway Fantasy. <link>Hantera inställningar</link>'
+	},
+	RiderHero: {
+		timesPicked: 'Antal gånger vald'
+	},
+	Standings: {
+		formTotal: 'Totalt',
+		formLast2: 'Senaste 2',
+		formLast4: 'Senaste 4'
+	},
+	YearSelector: {
+		years: 'År',
+		allTime: 'Alla år',
+		reset: 'Återställ',
+		toCurrentYear: 'till innevarande år'
+	},
+	Home: {
+		welcome: 'Välkommen till <accent>Speedway Fantasy</accent>',
+		viewRules: 'Visa reglerna',
+		featurePick: 'Välj 3 förare i varje GP',
+		featureEarn: 'Få deras heatpoäng',
+		featureClimb: 'Klättra i tabellen',
+		signInToPlay: 'Logga in för att spela',
+		nextGp: 'Nästa <accent>GP</accent>',
+		previousGp: 'Föregående <accent>GP</accent>',
+		viewGp: 'Visa GP',
+		previousSeason: 'Föregående <accent>säsong</accent>',
+		seasonProgress: 'Säsongens förlopp',
+		currentPodium: 'Aktuell <accent>pall</accent>',
+		finalPodium: 'Slutlig <accent>pall</accent>',
+		viewStandings: 'Visa tabellen'
+	},
+	Countdown: {
+		days: 'dagar',
+		hours: 'tim',
+		minutes: 'min',
+		seconds: 'sek'
+	},
+	GpCard: {
+		registeredPlayers:
+			'{count, plural, one {<num>#</num> registrerad spelare} other {<num>#</num> registrerade spelare}}',
+		whereYouAre: 'Hos dig {time}',
+		topPlayers: 'Topp <accent>{limit}</accent> spelare',
+		topRiders: 'Topp <accent>{limit}</accent> förare',
+		pickedRiders: 'Valda förare',
+		myPickedRiders: 'Mina valda förare',
+		editPicks: 'Ändra',
+		pickRiders: 'Välj förare',
+		pickedBy: 'Vald av'
+	},
+	PickRiders: {
+		title: 'Välj dina <accent>3</accent> förare',
+		save: 'Spara val',
+		saving: 'Sparar…',
+		saved: 'Dina val är sparade!',
+		closed: 'Valen är låsta för det här GP:t.'
+	},
+	Activity: {
+		picked: 'Valde',
+		updated: 'Ändrade'
+	},
 	Beer: {
 		title: 'Bjud på en bärs',
 		paragraph1:
@@ -15,7 +238,9 @@ const sv: TMessages = {
 		paragraph4:
 			'Självklart är detta helt frivilligt - spelet kommer alltid att finnas kvar oavsett. Målet är inte att tjäna pengar - det är att öka intresset för sporten. Men all support tas emot med ett stort tack!',
 		signoff: 'Tack för att du spelar,\nAlbin',
-		card: 'Kort'
+		card: 'Kort',
+		swishLogo: 'Swish-logga',
+		swishQr: 'QR-kod för Swish'
 	},
 	Install: {
 		title: 'Installera app',

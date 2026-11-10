@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { headers } from 'next/headers'
 
@@ -7,11 +6,11 @@ import type { LucideIcon } from 'lucide-react'
 
 import { PageHeader } from '@/components/PageHeader'
 import { Card, CardContent, CardGlow } from '@/components/ui/card'
+import { getPageMetadata } from '@/i18n/page-metadata'
 
-import { metaData } from './constants'
 import { OsToggle } from './OsToggle'
 
-export const metadata: Metadata = metaData
+export const generateMetadata = () => getPageMetadata('install')
 
 type TOs = 'ios' | 'android'
 
