@@ -53,7 +53,7 @@ export async function GpSeasonProgress({
 								<span
 									className={cn(
 										'text-[10px] leading-none tabular-nums',
-										isDone ? 'text-green-400' : 'text-muted-foreground/40',
+										isDone ? 'text-foreground' : 'text-muted-foreground/40',
 										isCurrent && 'text-foreground font-black'
 									)}
 								>

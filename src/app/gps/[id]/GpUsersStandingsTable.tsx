@@ -2,10 +2,7 @@
 
 import { useLayoutEffect, useRef } from 'react'
 
-import { useTranslations } from 'next-intl'
-
 import { PosBadge } from '@/components/PosBadge'
-import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { UserName } from '@/components/UserName'
 
@@ -19,7 +16,6 @@ type Props = {
 }
 
 export function GpUsersStandingsTable({ data, viewerId }: Props) {
-	const t = useTranslations('Common')
 	const containerRef = useRef<HTMLDivElement>(null)
 	const viewerRowRef = useRef<HTMLDivElement>(null)
 
@@ -36,7 +32,6 @@ export function GpUsersStandingsTable({ data, viewerId }: Props) {
 
 	return (
 		<div>
-			<SectionTitle>{t('players')}</SectionTitle>
 			<Card>
 				<div
 					ref={containerRef}

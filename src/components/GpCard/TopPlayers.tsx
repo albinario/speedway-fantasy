@@ -51,10 +51,7 @@ export async function GpTopPlayers({ gpId, limit = 3 }: TTopPlayers) {
 					const medals = buildMedals(row)
 
 					return (
-						<div
-							key={row.id}
-							className="flex items-center gap-2 px-3 py-2"
-						>
+						<div key={row.id} className="flex items-center gap-2 px-3 py-2">
 							<PosBadge
 								pos={row.pos}
 								tiedPos={i < limit && row.pos !== i + 1}

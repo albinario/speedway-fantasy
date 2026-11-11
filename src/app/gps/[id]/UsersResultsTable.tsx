@@ -6,10 +6,10 @@ import Link from 'next/link'
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
 import { PosBadge } from '@/components/PosBadge'
-import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
 import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
+import { buildMedals } from '@/lib/medals'
 import { sortedPicks } from '@/lib/picks'
 
 import type { getGpUsersResults } from './data'
@@ -47,6 +47,7 @@ function makeColumns(
 				const { user_id, first_name, last_name, stars } = row.original
 
 				const picks = isBefore ? [] : sortedPicks(row.original)
+				const medals = buildMedals(row.original)
 
 				return (
 					<div className="flex items-center gap-2">
@@ -82,30 +83,16 @@ function makeColumns(
 										</Link>
 									)
 								})}
+
+								{medals.length > 0 && (
+									<div className="hidden items-center gap-1 pl-2 sm:flex">
+										{medals.map((m, i) => (
+											<MedalIcon key={i} type={m} />
+										))}
+									</div>
+								)}
 							</div>
 						</div>
-					</div>
-				)
-			}
-		},
-		{
-			id: 'medals',
-			header: '',
-			enableSorting: false,
-			meta: { className: 'hidden px-0 sm:table-cell' },
-			cell: ({ row }) => {
-				const { medal_1, medal_2, medal_3 } = row.original
-				const medals = [
-					...(medal_1 ? Array<number>(medal_1).fill(1) : []),
-					...(medal_2 ? Array<number>(medal_2).fill(2) : []),
-					...(medal_3 ? Array<number>(medal_3).fill(3) : [])
-				]
-				if (!medals.length) return null
-				return (
-					<div className="flex justify-center gap-1">
-						{medals.map((m, i) => (
-							<MedalIcon key={i} type={m} />
-						))}
 					</div>
 				)
 			}
@@ -154,24 +141,17 @@ export function GpUsersResultsTable({
 	})
 
 	return (
-		<div>
-			<SectionTitle>{t('players')}</SectionTitle>
-
-			<Card>
-				<div className="max-h-[420px] overflow-y-auto">
-					<DataTable
-						columns={makeColumns(
-							{ points: t('points'), heats: t('heats'), total: t('total') },
-							viewerId,
-							firstOccurrenceByRider,
-							isBefore
-						)}
-						data={data}
-						getRowSticky={(row) => row.user_id === viewerId}
-						stickyScope="container"
-					/>
-				</div>
-			</Card>
-		</div>
+		<Card className="overflow-clip">
+			<DataTable
+				columns={makeColumns(
+					{ points: t('points'), heats: t('heats'), total: t('total') },
+					viewerId,
+					firstOccurrenceByRider,
+					isBefore
+				)}
+				data={data}
+				getRowSticky={(row) => row.user_id === viewerId}
+			/>
+		</Card>
 	)
 }

@@ -1,8 +1,8 @@
 import { FlagNumber } from '@/components/FlagNumber'
 import { MedalIcon } from '@/components/MedalIcon'
+import { PosBadge } from '@/components/PosBadge'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
-import { PosBadge } from '@/components/PosBadge'
 
 type TRidersResultRow = {
 	riderId: number
@@ -28,9 +28,7 @@ export function RidersResultRow({
 	tiedPos = false
 }: TRidersResultRow) {
 	return (
-		<div
-			className={`flex items-center gap-2 px-3 py-2 ${isPicked ? 'bg-orange-400/5' : ''}`}
-		>
+		<div className="flex items-center gap-2 px-3 py-2">
 			<PosBadge pos={pos} tiedPos={tiedPos} />
 
 			<RiderImage className="size-8 shrink-0" name={name} riderId={riderId} />

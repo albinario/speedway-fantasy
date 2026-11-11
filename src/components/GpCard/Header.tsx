@@ -67,7 +67,8 @@ export function GpCardHeader({
 				className="absolute inset-0 z-30 transition-colors duration-200 group-hover:bg-black/20"
 			/>
 
-			<div className="absolute inset-0 z-40 flex flex-col justify-end gap-1 p-4">
+			{/* Dark glow behind the text so it stays readable on bright photos */}
+			<div className="absolute inset-0 z-40 flex flex-col justify-end gap-1 p-4 text-shadow-black/70 text-shadow-lg">
 				<Flag countryCode={countryCode} widthClass="w-8" />
 				<h2 className="text-3xl font-black uppercase">{cityName}</h2>
 

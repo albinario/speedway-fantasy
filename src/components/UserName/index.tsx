@@ -26,7 +26,7 @@ export function UserName({
 		<Link
 			className={cn(
 				'inline-flex items-start gap-0.5 truncate',
-				isViewer && 'text-orange-400',
+				isViewer && 'font-bold text-orange-400',
 				className
 			)}
 			href={`/users/${userId}`}

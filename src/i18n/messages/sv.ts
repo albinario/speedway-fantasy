@@ -141,7 +141,7 @@ const sv: TMessages = {
 		injuries:
 			'Om en av dina förare ersätts på grund av skada eller av annan anledning skickar vi ett mejl till dig. Det är upp till dig att sälja föraren och köpa en annan. Har du en skadad förare i laget får du förstås fortfarande poäng för dina övriga förare.',
 		privateTrades:
-			'Dina byten är hemliga. Andra spelare ser ditt lag när Grand Prix:t startar.',
+			"Dina byten är hemliga. Andra spelare ser ditt lag när Grand Prix't startar.",
 		priceTiers: 'Prisnivåer',
 		tierRiders: 'Förare rankade {from}-{to}',
 		tierCoins: '{coins} coins',
@@ -200,9 +200,10 @@ const sv: TMessages = {
 			'Du får det här mejlet eftersom du har påminnelser på tävlingsdagar aktiverade i Speedway Fantasy. <link>Hantera inställningar</link>'
 	},
 	VenueHistory: {
-		firstGpIn: 'Första GP:t i {city}',
 		noPreviousResults: 'Inga tidigare resultat på den här banan.',
-		lastTimeIn: 'Senast i {city}',
+		lastTimeIn: 'Senast i {city}'
+	},
+	ResultSummary: {
 		bestRider: 'Bästa förare',
 		bestPlayers: 'Bästa spelare',
 		more: '+{count} till',
@@ -219,8 +220,7 @@ const sv: TMessages = {
 	YearSelector: {
 		years: 'År',
 		allTime: 'Alla år',
-		reset: 'Återställ',
-		toCurrentYear: 'till innevarande år'
+		reset: 'Återställ'
 	},
 	Home: {
 		welcome: 'Välkommen till <accent>Speedway Fantasy</accent>',
@@ -262,7 +262,7 @@ const sv: TMessages = {
 		save: 'Spara val',
 		saving: 'Sparar…',
 		saved: 'Dina val är sparade!',
-		closed: 'Valen är låsta för det här GP:t.'
+		closed: "Valen är låsta för det här GP't."
 	},
 	Activity: {
 		picked: 'Valde',
@@ -335,7 +335,7 @@ const sv: TMessages = {
 		},
 		privateTrades: {
 			label: 'Hemliga byten',
-			text: 'Dina byten är privata tills valen låses när GP:t startar — precis som idag.'
+			text: "Dina byten är privata tills valen låses när GP't startar — precis som idag."
 		},
 		rulesLink: 'Läs alla regler på <link>regelsidan</link>.'
 	}

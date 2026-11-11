@@ -93,7 +93,7 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 						<section key={title} className="flex flex-col gap-1">
 							<SectionTitle>{title}</SectionTitle>
 
-							<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2">
+							<div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2 md:gap-4">
 								{items.map(({ gp, stage }) => (
 									<UserGpCard
 										key={gp.id}

@@ -1,3 +1,4 @@
+import { VenueHistoryContent } from '@/app/gps/[id]/VenueHistory'
 import type { getGps } from '@/app/gps/data'
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { HeatsCounter } from '@/components/HeatsCounter'
@@ -16,6 +17,7 @@ type TGpCard = {
 	isUpNext?: boolean
 	linked?: boolean
 	macroStage?: EMacroStage
+	showVenueHistory?: boolean
 	viewerId?: number
 	imageLoading?: 'eager' | 'lazy'
 }
@@ -25,6 +27,7 @@ export async function GpCard({
 	isUpNext = false,
 	linked = false,
 	macroStage: macroStageProp,
+	showVenueHistory = false,
 	viewerId: viewerIdProp,
 	imageLoading
 }: TGpCard) {
@@ -67,6 +70,14 @@ export async function GpCard({
 					countryCode={gp.wild_card_country_code}
 					name={gp.wild_card_name}
 					riderId={gp.wild_card_id}
+				/>
+			)}
+
+			{showVenueHistory && macroStage === EMacroStage.Before && (
+				<VenueHistoryContent
+					gpId={gp.id}
+					cityName={gp.city_name}
+					viewerId={viewerId}
 				/>
 			)}
 		</GpCardBase>

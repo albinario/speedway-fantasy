@@ -206,9 +206,10 @@ const en = {
 			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>"
 	},
 	VenueHistory: {
-		firstGpIn: 'First GP in {city}',
 		noPreviousResults: 'No previous results at this venue.',
-		lastTimeIn: 'Last time in {city}',
+		lastTimeIn: 'Last time in {city}'
+	},
+	ResultSummary: {
 		bestRider: 'Best rider',
 		bestPlayers: '{count, plural, one {Best player} other {Best players}}',
 		more: '+{count} more',
@@ -225,8 +226,7 @@ const en = {
 	YearSelector: {
 		years: 'Years',
 		allTime: 'All time',
-		reset: 'Reset',
-		toCurrentYear: 'to current year'
+		reset: 'Reset'
 	},
 	Home: {
 		welcome: 'Welcome to <accent>Speedway Fantasy</accent>',

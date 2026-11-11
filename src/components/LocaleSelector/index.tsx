@@ -23,8 +23,7 @@ export function LocaleSelector() {
 	}
 
 	return (
-		<div className="flex flex-col gap-1">
-			<span className="text-muted-foreground text-xs">{t('label')}</span>
+		<div role="group" aria-label={t('label')}>
 			<SegmentedControl
 				onChange={handleChange}
 				options={[
