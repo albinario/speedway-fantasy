@@ -7,8 +7,8 @@ const sv: TMessages = {
 	Nav: {
 		home: 'Hem',
 		standings: 'Tabell',
-		gps: 'GP',
-		comments: 'Kommentarer',
+		gps: "GP's",
+		comments: 'Chatt',
 		activity: 'Aktivitet',
 		hallOfFame: 'Hall of fame',
 		rules: 'Regler',
@@ -32,15 +32,15 @@ const sv: TMessages = {
 			description: 'Tabellen för innevarande säsong'
 		},
 		gps: {
-			title: 'GP',
+			title: "GP's",
 			description: 'Bläddra bland och se resultaten från alla GP'
 		},
 		gp: {
-			title: 'GP',
+			title: "GP's",
 			description: 'Bläddra bland och se resultaten från alla GP'
 		},
 		comments: {
-			title: 'Kommentarer',
+			title: 'Chatt',
 			description: 'Läs och bläddra bland kommentarerna'
 		},
 		hallOfFame: {
@@ -80,7 +80,7 @@ const sv: TMessages = {
 		},
 		rider: {
 			title: '{name}',
-			description: '{name} – resultat i Speedway GP och fantasystatistik'
+			description: '{name} - resultat i Speedway GP och fantasystatistik'
 		},
 		user: {
 			title: '{name}',
@@ -102,7 +102,7 @@ const sv: TMessages = {
 		wildCard: 'Wild card',
 		tbd: 'Meddelas',
 		round: 'Omgång {round}',
-		gps: 'GP',
+		gps: "GP's",
 		picked: 'Vald',
 		total: 'Totalt',
 		players: 'Spelare',
@@ -127,10 +127,27 @@ const sv: TMessages = {
 	},
 	Rules: {
 		howItWorks: 'Så fungerar det',
-		pick: 'Välj tre (3) förare i varje Grand Prix.',
+		budget:
+			'Du har 10 coins för att sätta ihop ett lag med tre (3) förare. Ditt lag får aldrig kosta mer än 10 coins.',
+		buy: 'Inför säsongen köper du tre (3) förare. Du behöver ett fullt lag för att ta poäng.',
 		collect: 'Samla de poäng som dina tre (3) förare tar i varje Grand Prix.',
-		change:
-			'Du får byta förare hur många gånger du vill, fram till att respektive Grand Prix startar.',
+		keepTeam:
+			'Gör du inga ändringar följer ditt lag automatiskt med till nästa Grand Prix.',
+		transferWindow:
+			'Nya priser publiceras oftast morgonen efter varje Grand Prix, och då öppnar transferfönstret. Köp/sälj förare så ofta du vill fram tills nästa Grand Prix startar.',
+		swap: 'Varje byte innebär att du säljer en förare och köper en annan. Ditt lag måste rymmas inom 10 coins efter varje byte.',
+		lockedPrice:
+			'Så länge du inte säljer din förare så behåller du föraren till priset du köpte honom för, även om marknadspriset för föraren har ändrats. Säljer du föraren får du tillbaka exakt det du köpte föraren för.',
+		injuries:
+			'Om en av dina förare ersätts på grund av skada eller av annan anledning skickar vi ett mejl till dig. Det är upp till dig att sälja föraren och köpa en annan. Har du en skadad förare i laget får du förstås fortfarande poäng för dina övriga förare.',
+		privateTrades:
+			"Dina byten är hemliga. Andra spelare ser ditt lag när Grand Prix't startar.",
+		priceTiers: 'Prisnivåer',
+		tierRiders: 'Förare rankade {from}-{to}',
+		tierCoins: '{coins} coins',
+		tierFieldSize: 'Varje Grand Prix har 16 förare.',
+		tierOdds:
+			'Priserna bygger på oddsen inför varje Grand Prix. De största favoriterna kostar mest.',
 		calculation:
 			'Alla förarpoäng räknas på heatpoäng, inte enligt det officiella poängsystemet för Grand Prix.',
 		qualifyingBonus:
@@ -183,9 +200,10 @@ const sv: TMessages = {
 			'Du får det här mejlet eftersom du har påminnelser på tävlingsdagar aktiverade i Speedway Fantasy. <link>Hantera inställningar</link>'
 	},
 	VenueHistory: {
-		firstGpIn: 'Första GP:t i {city}',
 		noPreviousResults: 'Inga tidigare resultat på den här banan.',
-		lastTimeIn: 'Senast i {city}',
+		lastTimeIn: 'Senast i {city}'
+	},
+	ResultSummary: {
 		bestRider: 'Bästa förare',
 		bestPlayers: 'Bästa spelare',
 		more: '+{count} till',
@@ -202,8 +220,7 @@ const sv: TMessages = {
 	YearSelector: {
 		years: 'År',
 		allTime: 'Alla år',
-		reset: 'Återställ',
-		toCurrentYear: 'till innevarande år'
+		reset: 'Återställ'
 	},
 	Home: {
 		welcome: 'Välkommen till <accent>Speedway Fantasy</accent>',
@@ -245,7 +262,7 @@ const sv: TMessages = {
 		save: 'Spara val',
 		saving: 'Sparar…',
 		saved: 'Dina val är sparade!',
-		closed: 'Valen är låsta för det här GP:t.'
+		closed: "Valen är låsta för det här GP't."
 	},
 	Activity: {
 		picked: 'Valde',
@@ -287,18 +304,18 @@ const sv: TMessages = {
 	Season2027: {
 		heading: 'Stora förändringar <year>2027</year>',
 		title:
-			'Nu tar Speedway Fantasy nästa steg — ett budgetsystem för att sätta ditt lag.',
+			'Nu tar Speedway Fantasy nästa steg — ett budgetsystem introduceras för att sätta ditt lag.',
 		budget: {
 			label: 'Budget',
-			text: 'Inför varje GP har du 10 coins att spendera.'
+			text: 'Ditt lag med tre förare får kosta högst 10 coins totalt.'
 		},
 		riderPicks: {
 			label: 'Val av förare',
-			text: 'Du väljer fortfarande tre förare, men deras sammanlagda kostnad måste rymmas inom budgeten.'
+			text: 'Du väljer/köper fortfarande tre förare. Inför säsongen köper du alla tre — du behöver ett fullt lag för att ta poäng.'
 		},
 		priceTiers: {
 			label: 'Prisnivåer',
-			text: 'Förarna delas in i fem nivåer — 5, 4, 3, 2 och 1 coin. De tre högst rankade kostar 5 coins, nästa tre kostar 4, och så vidare. De fyra lägst rankade kostar 1 coin.'
+			text: 'Varje GP har 16 förare i fem prisnivåer. De tre största favoriterna kostar 5 coins, nästa tre kostar 4, och så vidare ner till 1 coin för de fyra sista. Priserna bygger på oddsen inför varje GP.'
 		},
 		keepTeam: {
 			label: 'Behåll ditt lag',
@@ -306,18 +323,21 @@ const sv: TMessages = {
 		},
 		transferWindow: {
 			label: 'Transferfönster',
-			text: 'Efter varje GP uppdateras priserna och ett nytt transferfönster öppnas. Byt så mycket du vill fram tills nästa GP startar — precis som idag.'
+			text: 'Nya priser publiceras oftast morgonen efter varje GP, och då öppnar transferfönstret. Köp/sälj förare så ofta du vill fram tills nästa GP startar.'
 		},
 		lockedPrice: {
 			label: 'Låst pris',
-			text: 'Priset du betalar för en förare låses fast. Även om förarens värde ändras senare behåller du föraren till samma pris.'
+			text: 'Så länge du inte säljer din förare så behåller du föraren till priset du köpte honom för, även om marknadspriset för föraren har ändrats. Säljer du föraren får du tillbaka exakt det du köpte föraren för.'
+		},
+		injuries: {
+			label: 'Skador',
+			text: 'Om en av dina förare ersätts på grund av skada eller av annan anledning skickar vi ett mejl till dig. Det är upp till dig att sälja föraren och köpa en annan. Har du en skadad förare i laget får du förstås fortfarande poäng för dina övriga förare.'
 		},
 		privateTrades: {
 			label: 'Hemliga byten',
-			text: 'Dina byten är privata tills valen låses när GP:t startar — precis som idag.'
+			text: "Dina byten är privata tills valen låses när GP't startar — precis som idag."
 		},
-		tbdNote:
-			'Exakt hur beräkningen av prisnivåerna går till är fortfarande under arbete och kommer att förtydligas innan säsongen 2027 drar igång.'
+		rulesLink: 'Läs alla regler på <link>regelsidan</link>.'
 	}
 }
 

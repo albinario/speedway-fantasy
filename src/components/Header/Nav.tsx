@@ -103,7 +103,6 @@ export function HeaderNav({ viewerId, reminder }: THeaderNav) {
 					{!!viewerId && (
 						<>
 							<ReminderToggle defaultChecked={reminder ?? false} />
-
 							<SheetClose asChild>
 								<Button asChild variant="destructive">
 									<a href="/auth/logout">

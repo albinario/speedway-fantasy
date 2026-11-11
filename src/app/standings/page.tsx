@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 
 import { PageHeader } from '@/components/PageHeader'
+import { PlayersRidersToggle } from '@/components/PlayersRidersToggle'
 import { RidersStandings } from '@/components/RidersStandings'
 import { UsersStandings } from '@/components/UsersStandings'
 import type { TUsersForm } from '@/components/UsersStandings'
@@ -10,7 +11,6 @@ import type { TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
 import { FormToggle } from './FormToggle'
-import { StandingsToggle } from './StandingsToggle'
 
 type TStandingsPage = {
 	searchParams: Promise<{
@@ -43,8 +43,9 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 				defaultYear={latestStandingsYear}
 			/>
 
-			<StandingsToggle view={view}>
-				{view === 'players' ? (
+			<PlayersRidersToggle
+				initialView={view}
+				players={
 					isCurrentYear ? (
 						<FormToggle form={form}>
 							<UsersStandings year={yearValues.activeYear} form={form} />
@@ -52,10 +53,9 @@ export default async function StandingsPage({ searchParams }: TStandingsPage) {
 					) : (
 						<UsersStandings year={yearValues.activeYear} form={form} />
 					)
-				) : (
-					<RidersStandings year={yearValues.activeYear} />
-				)}
-			</StandingsToggle>
+				}
+				riders={<RidersStandings year={yearValues.activeYear} />}
+			/>
 		</div>
 	)
 }

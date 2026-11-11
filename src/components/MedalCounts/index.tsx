@@ -24,7 +24,10 @@ export function MedalCounts({
 
 				return (
 					<span key={type} className="inline-flex items-center gap-1">
-						<MedalIcon type={type} size={size} />
+						<MedalIcon
+							type={type}
+							className={size === 'lg' ? 'size-6' : undefined}
+						/>
 						<span className={countClass}>{count}</span>
 					</span>
 				)

@@ -4,6 +4,8 @@ import { getTranslations } from 'next-intl/server'
 import { AutoRefresh } from '@/components/AutoRefresh'
 import { GpCard } from '@/components/GpCard'
 import { GpSeasonProgress } from '@/components/GpSeasonProgress'
+import { PlayersRidersToggle } from '@/components/PlayersRidersToggle'
+import { SectionTitle } from '@/components/SectionHeader'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
@@ -23,6 +25,7 @@ import { VenueHistory } from './VenueHistory'
 
 type TGpPage = {
 	params: Promise<{ id: string }>
+	searchParams?: Promise<{ view?: string }>
 }
 
 export async function generateMetadata({ params }: TGpPage): Promise<Metadata> {
@@ -44,8 +47,9 @@ export async function generateMetadata({ params }: TGpPage): Promise<Metadata> {
 	}
 }
 
-export default async function GpPage({ params }: TGpPage) {
+export default async function GpPage({ params, searchParams }: TGpPage) {
 	const { id } = await params
+	const view = (await searchParams)?.view === 'riders' ? 'riders' : 'players'
 	const gp = await getGp(Number(id))
 
 	if (!gp) return null
@@ -72,8 +76,29 @@ export default async function GpPage({ params }: TGpPage) {
 			? await getGpRidersPreview(gp.id, year, gp.wild_card_id, viewerId)
 			: []
 
+	const tCommon = await getTranslations('Common')
+
+	const playersTable = isBefore ? (
+		usersWithStandings.length > 0 ? (
+			<GpUsersStandingsTable data={usersWithStandings} viewerId={viewerId} />
+		) : null
+	) : usersResults.length > 0 ? (
+		<GpUsersResultsTable
+			data={usersResults}
+			isBefore={isBefore}
+			viewerId={viewerId}
+		/>
+	) : null
+
+	const ridersTable =
+		ridersResults.length > 0 ? (
+			<GpRidersResultsTable data={ridersResults} />
+		) : ridersPreview.length > 0 ? (
+			<GpRidersPreviewTable data={ridersPreview} isBefore={isBefore} />
+		) : null
+
 	return (
-		<div className="columns-1 space-y-4 [&>*]:break-inside-avoid">
+		<div className="flex flex-col gap-4">
 			{macroStage === EMacroStage.During && <AutoRefresh />}
 			{/* Card at mobile width on desktop too; season context beside it */}
 			<div className="grid items-start gap-4 md:grid-cols-2">
@@ -81,28 +106,32 @@ export default async function GpPage({ params }: TGpPage) {
 
 				<div className="flex flex-col gap-4">
 					<GpSeasonProgress year={year} currentGpId={gp.id} />
-					<VenueHistory
-						gpId={gp.id}
-						cityName={gp.city_name}
-						viewerId={viewerId}
-					/>
+					{isBefore && (
+						<VenueHistory
+							gpId={gp.id}
+							cityName={gp.city_name}
+							viewerId={viewerId}
+						/>
+					)}
 				</div>
 			</div>
 
-			{isBefore ? (
-				<GpUsersStandingsTable data={usersWithStandings} viewerId={viewerId} />
-			) : usersResults.length > 0 ? (
-				<GpUsersResultsTable
-					data={usersResults}
-					isBefore={isBefore}
-					viewerId={viewerId}
+			{playersTable && ridersTable ? (
+				<PlayersRidersToggle
+					initialView={view}
+					players={playersTable}
+					riders={ridersTable}
 				/>
-			) : null}
-
-			{ridersResults.length > 0 ? (
-				<GpRidersResultsTable data={ridersResults} />
-			) : ridersPreview.length > 0 ? (
-				<GpRidersPreviewTable data={ridersPreview} isBefore={isBefore} />
+			) : playersTable ? (
+				<div>
+					<SectionTitle>{tCommon('players')}</SectionTitle>
+					{playersTable}
+				</div>
+			) : ridersTable ? (
+				<div>
+					<SectionTitle>{tCommon('riders')}</SectionTitle>
+					{ridersTable}
+				</div>
 			) : null}
 
 			{viewer.isAdmin && (

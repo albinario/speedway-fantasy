@@ -1,7 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 
 import { PageHeader } from '@/components/PageHeader'
-import { Season2027AnnouncementCard } from '@/components/Season2027AnnouncementCard'
 import {
 	Card,
 	CardContent,
@@ -24,6 +23,15 @@ const heatPoints = [
 	{ position: 'heatFourth', points: 0 }
 ] as const
 
+// Always 16 riders per GP, split into 5 tiers by odds (see 2027 budget doc)
+const priceTiers = [
+	{ coins: 5, from: 1, to: 3 },
+	{ coins: 4, from: 4, to: 6 },
+	{ coins: 3, from: 7, to: 9 },
+	{ coins: 2, from: 10, to: 12 },
+	{ coins: 1, from: 13, to: 16 }
+] as const
+
 const sortingOrder = [
 	'sortPoints',
 	'sortWins',
@@ -42,8 +50,42 @@ export default async function RulesPage() {
 		<div className="flex flex-col gap-4">
 			<PageHeader title={tPages('rules.title')} hideYearSelector />
 
-			<div className="grid items-start gap-4 sm:grid-cols-2">
+			<div className="columns-1 gap-4 sm:columns-2 [&>*]:mb-4 [&>*]:break-inside-avoid">
 				<HowItWorksCard />
+
+				<Card className="relative isolate">
+					<CardGlow color="green" position="top" />
+
+					<CardHeader>
+						<CardTitle>{t('priceTiers')}</CardTitle>
+					</CardHeader>
+					<CardContent className="p-0">
+						<div className="divide-y">
+							{priceTiers.map(({ coins, from, to }, i) => (
+								<div
+									key={coins}
+									className={cn(
+										'animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex items-center justify-between px-3 py-2.5 duration-500'
+									)}
+									style={{ animationDelay: `${i * 75}ms` }}
+								>
+									<span className="text-sm">
+										{t('tierRiders', { from, to })}
+									</span>
+									<span className="text-sm font-bold text-orange-400 tabular-nums">
+										{t('tierCoins', { coins })}
+									</span>
+								</div>
+							))}
+							<div className="text-muted-foreground px-3 py-2.5 text-sm">
+								{t('tierFieldSize')}
+							</div>
+							<div className="text-muted-foreground px-3 py-2.5 text-sm">
+								{t('tierOdds')}
+							</div>
+						</div>
+					</CardContent>
+				</Card>
 
 				<Card className="relative isolate">
 					<CardGlow color="green" position="top" />
@@ -119,8 +161,6 @@ export default async function RulesPage() {
 						</div>
 					</CardContent>
 				</Card>
-
-				<Season2027AnnouncementCard />
 			</div>
 		</div>
 	)

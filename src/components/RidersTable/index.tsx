@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl'
 
 import { FlagNumber } from '@/components/FlagNumber'
-import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { PosBadge } from '@/components/PosBadge'
 import { RiderImage } from '@/components/RiderImage'
@@ -27,14 +26,12 @@ export type TRiderRow = {
 
 type TRidersTable = {
 	data: TRiderRow[]
-	condensedMedals?: boolean
 	hidePicked?: boolean
 }
 
 type TLabels = { points: string; heats: string; gps: string; picked: string }
 
 function buildColumns({
-	condensedMedals,
 	showGps,
 	hidePicked,
 	labels
@@ -81,21 +78,17 @@ function buildColumns({
 							)}
 
 							<div className="mt-1 flex w-fit items-center gap-1">
-								<FlagNumber countryCode={countryCode} number={number} />
+								<FlagNumber
+									countryCode={countryCode}
+									number={number}
+									size="xs"
+								/>
 
 								{medals && medals.length > 0 && (
 									<div className="flex items-center gap-0.5 pl-1 sm:gap-1 sm:pl-2">
-										{condensedMedals ? (
-											<MedalCounts
-												medal_1={medals.filter((m) => m === 1).length}
-												medal_2={medals.filter((m) => m === 2).length}
-												medal_3={medals.filter((m) => m === 3).length}
-											/>
-										) : (
-											medals.map((medal, i) => (
-												<MedalIcon key={i} type={medal} />
-											))
-										)}
+										{medals.map((medal, i) => (
+											<MedalIcon key={i} type={medal} />
+										))}
 									</div>
 								)}
 							</div>
@@ -147,15 +140,10 @@ function buildColumns({
 	]
 }
 
-export function RidersTable({
-	data,
-	condensedMedals,
-	hidePicked
-}: TRidersTable) {
+export function RidersTable({ data, hidePicked }: TRidersTable) {
 	const t = useTranslations('Common')
 	const showGps = data.some((r) => r.gps != null)
 	const columns = buildColumns({
-		condensedMedals,
 		showGps,
 		hidePicked,
 		labels: {
@@ -168,13 +156,7 @@ export function RidersTable({
 
 	return (
 		<Card>
-			<DataTable
-				columns={columns}
-				data={data}
-				getRowClassName={(row) =>
-					row.pickedByViewer ? 'bg-orange-400/5' : undefined
-				}
-			/>
+			<DataTable columns={columns} data={data} />
 		</Card>
 	)
 }

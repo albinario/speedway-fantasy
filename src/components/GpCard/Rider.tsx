@@ -43,7 +43,7 @@ export async function RiderGpCard({ gp }: TRiderGpCard) {
 		<GpCardBase gp={gp} linked macroStage={EMacroStage.After}>
 			<div className="divide-foreground/10 grid grid-cols-3 items-end divide-x">
 				<Stat label={tCommon('position')}>
-					{gp.medal != null && <MedalIcon type={gp.medal} size="lg" />}
+					{gp.medal != null && <MedalIcon type={gp.medal} className="size-6" />}
 					{gp.pos != null ? (
 						<span>{gp.pos}</span>
 					) : (

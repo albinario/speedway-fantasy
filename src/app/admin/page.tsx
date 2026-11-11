@@ -8,7 +8,6 @@ import { AddGP } from './AddGP'
 import { AddRider } from './AddRider'
 import { AssignWildCard } from './AssignWildCard'
 import { RevalidateAll } from './RevalidateAll'
-import { SendReminders } from './SendReminders'
 import {
 	getCities,
 	getCountries,
@@ -26,14 +25,13 @@ const AdminPage = auth0.withPageAuthRequired(
 		])
 
 		return (
-			<div className="columns-1 space-y-4 sm:columns-2 [&>*]:break-inside-avoid">
+			<div className="columns-1 space-y-6 sm:columns-2 sm:space-y-4 [&>*]:break-inside-avoid">
 				<AddGP cities={cities} />
 				<AssignWildCard gps={gpsWildCard} riders={ridersWildCard} />
 				<AddRider countries={countries} />
 				<AddCity countries={countries} />
 				<AddCountry />
 				<RevalidateAll />
-				<SendReminders />
 			</div>
 		)
 	},

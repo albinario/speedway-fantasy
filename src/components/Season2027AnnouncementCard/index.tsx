@@ -1,8 +1,10 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 
 import {
+	Bandage,
 	Coins,
 	EyeOff,
 	Layers,
@@ -31,6 +33,7 @@ const highlights = [
 	{ icon: Repeat, key: 'keepTeam' },
 	{ icon: RefreshCw, key: 'transferWindow' },
 	{ icon: Lock, key: 'lockedPrice' },
+	{ icon: Bandage, key: 'injuries' },
 	{ icon: EyeOff, key: 'privateTrades' }
 ] as const satisfies { icon: LucideIcon; key: string }[]
 
@@ -74,7 +77,18 @@ export function Season2027AnnouncementCard() {
 						))}
 					</ol>
 
-					<p className="text-muted-foreground pt-3 text-xs">{t('tbdNote')}</p>
+					<p className="text-muted-foreground pt-3 text-xs">
+						{t.rich('rulesLink', {
+							link: (chunks) => (
+								<Link
+									href="/rules"
+									className="text-blue-400 underline underline-offset-2"
+								>
+									{chunks}
+								</Link>
+							)
+						})}
+					</p>
 				</CardContent>
 			</Card>
 		</div>

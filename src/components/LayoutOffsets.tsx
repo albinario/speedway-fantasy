@@ -12,8 +12,9 @@ const targets = [
 export function LayoutOffsets() {
 	useEffect(() => {
 		const root = document.documentElement
+		const observed = new Set<Element>()
 
-		const observer = new ResizeObserver((entries) => {
+		const resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
 				const target = targets.find((t) => entry.target.matches(t.selector))
 				if (!target) continue
@@ -24,12 +25,35 @@ export function LayoutOffsets() {
 			}
 		})
 
-		for (const { selector } of targets) {
-			const el = document.querySelector(selector)
-			if (el) observer.observe(el)
+		function observeTargets() {
+			for (const { selector } of targets) {
+				const el = document.querySelector(selector)
+				if (el && !observed.has(el)) {
+					observed.add(el)
+					resizeObserver.observe(el)
+				}
+			}
 		}
 
-		return () => observer.disconnect()
+		observeTargets()
+
+		// The footer streams in behind a Suspense boundary, so it may not exist
+		// yet on mount: keep watching until every target has been found
+		const mutationObserver = new MutationObserver(() => {
+			observeTargets()
+			if (observed.size === targets.length) mutationObserver.disconnect()
+		})
+		if (observed.size < targets.length) {
+			mutationObserver.observe(document.body, {
+				childList: true,
+				subtree: true
+			})
+		}
+
+		return () => {
+			resizeObserver.disconnect()
+			mutationObserver.disconnect()
+		}
 	}, [])
 
 	return null

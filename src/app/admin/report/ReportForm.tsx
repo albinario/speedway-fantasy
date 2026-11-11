@@ -67,18 +67,22 @@ export function ReportForm({
 
 	return (
 		<div className="mx-auto flex max-w-sm flex-col gap-4 p-3">
-			<div className="flex items-center justify-between">
-				<h1 className="text-2xl font-black uppercase">{cityName}</h1>
+			<div className="flex items-center justify-between gap-4">
+				<h1 className="min-w-0 truncate text-2xl font-black uppercase">
+					{cityName}
+				</h1>
 
-				<div className="flex items-center gap-4">
+				<div className="flex shrink-0 items-center gap-4">
 					<label className="flex cursor-pointer items-center gap-2">
 						<input
 							type="checkbox"
 							checked={isFinal}
 							onChange={(e) => setIsFinal(e.target.checked)}
-							className="size-5 cursor-pointer accent-yellow-400"
+							className="size-5 shrink-0 cursor-pointer accent-yellow-400"
 						/>
-						<span className="text-sm font-semibold">Final</span>
+						<span className="text-sm font-semibold whitespace-nowrap">
+							Final
+						</span>
 					</label>
 
 					<label className="flex cursor-pointer items-center gap-2">
@@ -86,9 +90,11 @@ export function ReportForm({
 							type="checkbox"
 							checked={noHeat}
 							onChange={(e) => setNoHeat(e.target.checked)}
-							className="size-5 cursor-pointer accent-yellow-400"
+							className="size-5 shrink-0 cursor-pointer accent-yellow-400"
 						/>
-						<span className="text-sm font-semibold">No heat</span>
+						<span className="text-sm font-semibold whitespace-nowrap">
+							No heat
+						</span>
 					</label>
 				</div>
 			</div>

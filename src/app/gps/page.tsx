@@ -43,7 +43,7 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 						<section key={title} className="flex flex-col gap-1">
 							<SectionTitle>{title}</SectionTitle>
 
-							<div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-2">
+							<div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 sm:gap-4">
 								{items.map(({ gp, stage }, i) => (
 									<GpCard
 										key={gp.id}
@@ -51,6 +51,7 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 										isUpNext={gp.id === upNextId}
 										linked
 										macroStage={stage}
+										showVenueHistory
 										imageLoading={
 											items === firstSection && i < 2 ? 'eager' : undefined
 										}
