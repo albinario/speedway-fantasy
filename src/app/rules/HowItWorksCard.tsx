@@ -1,6 +1,18 @@
 import { useTranslations } from 'next-intl'
 
-import { Calculator, RefreshCw, Trophy, Users, Zap } from 'lucide-react'
+import {
+	ArrowLeftRight,
+	Bandage,
+	Calculator,
+	Coins,
+	EyeOff,
+	Lock,
+	RefreshCw,
+	Repeat,
+	ShoppingCart,
+	Trophy,
+	Zap
+} from 'lucide-react'
 
 import {
 	Card,
@@ -16,26 +28,17 @@ type THowItWorksCard = {
 }
 
 const rules = [
-	{
-		icon: Users,
-		key: 'pick'
-	},
-	{
-		icon: Trophy,
-		key: 'collect'
-	},
-	{
-		icon: RefreshCw,
-		key: 'change'
-	},
-	{
-		icon: Calculator,
-		key: 'calculation'
-	},
-	{
-		icon: Zap,
-		key: 'qualifyingBonus'
-	}
+	{ icon: Coins, key: 'budget' },
+	{ icon: ShoppingCart, key: 'buy' },
+	{ icon: Trophy, key: 'collect' },
+	{ icon: Repeat, key: 'keepTeam' },
+	{ icon: RefreshCw, key: 'transferWindow' },
+	{ icon: ArrowLeftRight, key: 'swap' },
+	{ icon: Lock, key: 'lockedPrice' },
+	{ icon: Bandage, key: 'injuries' },
+	{ icon: EyeOff, key: 'privateTrades' },
+	{ icon: Calculator, key: 'calculation' },
+	{ icon: Zap, key: 'qualifyingBonus' }
 ] as const
 
 export function HowItWorksCard({ hideTitle = false }: THowItWorksCard) {

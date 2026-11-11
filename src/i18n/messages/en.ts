@@ -9,7 +9,7 @@ const en = {
 		home: 'Home',
 		standings: 'Standings',
 		gps: "GP's",
-		comments: 'Comments',
+		comments: 'Chat',
 		activity: 'Activity',
 		hallOfFame: 'Hall of fame',
 		rules: 'Rules',
@@ -42,7 +42,7 @@ const en = {
 			description: 'Browse and view the GP results'
 		},
 		comments: {
-			title: 'Comments',
+			title: 'Chat',
 			description: 'Browse and view the comments'
 		},
 		hallOfFame: {
@@ -83,7 +83,7 @@ const en = {
 		},
 		rider: {
 			title: '{name}',
-			description: '{name} – Speedway GP results and fantasy stats'
+			description: '{name} - Speedway GP results and fantasy stats'
 		},
 		user: {
 			title: '{name}',
@@ -131,11 +131,28 @@ const en = {
 	},
 	Rules: {
 		howItWorks: 'How it works',
-		pick: 'Pick three (3) riders in each Grand Prix.',
+		budget:
+			'You have 10 coins to build a team of three (3) riders. Your team can never cost more than 10 coins.',
+		buy: 'Start the season by buying three (3) riders. You need a full team to score points.',
 		collect:
 			'Collect the points that your three (3) riders score in each Grand Prix.',
-		change:
-			'You may change your selected riders as many times as you like, up until the start of each Grand Prix.',
+		keepTeam:
+			"If you don't make any changes, your team carries over to the next Grand Prix automatically.",
+		transferWindow:
+			'New prices are usually published the morning after each Grand Prix, and the transfer window opens. Buy/sell riders as often as you like until the next Grand Prix starts.',
+		swap: 'Every trade is a swap: you sell one rider and buy another. Your team must fit within 10 coins after every swap.',
+		lockedPrice:
+			"As long as you don't sell a rider, you keep them at the price you bought them for, even if their market price has changed. Sell them and you get back exactly what you paid.",
+		injuries:
+			"If one of your riders is replaced because of an injury or for any other reason, we'll send you an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team, you still score points for your other riders, of course.",
+		privateTrades:
+			'Your trades are private. Other players see your team when the Grand Prix starts.',
+		priceTiers: 'Price tiers',
+		tierRiders: 'Riders ranked {from}–{to}',
+		tierCoins: '{coins, plural, one {# coin} other {# coins}}',
+		tierFieldSize: 'Each Grand Prix has 16 riders.',
+		tierOdds:
+			'Prices are based on the odds for each Grand Prix. The biggest favourites cost the most.',
 		calculation:
 			'All rider points are calculated based on heat points, and not according to the official Grand Prix point structure.',
 		qualifyingBonus:
@@ -291,18 +308,18 @@ const en = {
 	Season2027: {
 		heading: 'Big changes coming in <year>2027</year>',
 		title:
-			'Speedway Fantasy takes the next step — a budget system for building your team.',
+			'Speedway Fantasy takes the next step — introducing a budget system for building your team.',
 		budget: {
 			label: 'Budget',
-			text: "You'll have 10 coins to spend before each GP."
+			text: 'Your team of three riders can cost at most 10 coins in total.'
 		},
 		riderPicks: {
 			label: 'Rider picks',
-			text: "You'll still pick three riders, but their combined cost must fit within your budget."
+			text: 'You still pick/buy three riders. Start the season by buying all three — you need a full team to score points.'
 		},
 		priceTiers: {
 			label: 'Price tiers',
-			text: 'Riders are split into five tiers — 5, 4, 3, 2 and 1 coin. The three highest-ranked riders cost 5 coins, the next three cost 4, and so on. The four lowest-ranked riders cost 1 coin.'
+			text: 'Each GP has 16 riders in five price tiers. The three biggest favourites cost 5 coins, the next three cost 4, and so on down to 1 coin for the last four. Prices are based on the odds for each GP.'
 		},
 		keepTeam: {
 			label: 'Keep your team',
@@ -310,18 +327,21 @@ const en = {
 		},
 		transferWindow: {
 			label: 'Transfer window',
-			text: 'After each GP, prices update and a new transfer window opens. Trade as much as you like until the next GP starts — just like today.'
+			text: 'New prices are usually published the morning after each GP, and the transfer window opens. Buy/sell riders as often as you like until the next GP starts.'
 		},
 		lockedPrice: {
 			label: 'Locked price',
-			text: "The price you pay for a rider is locked in. Even if the rider's value changes later, you'll keep them at the same price."
+			text: "As long as you don't sell a rider, you keep them at the price you bought them for, even if their market price has changed. Sell them and you get back exactly what you paid."
+		},
+		injuries: {
+			label: 'Injuries',
+			text: "If one of your riders is replaced because of an injury or for any other reason, we'll send you an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team, you still score points for your other riders, of course."
 		},
 		privateTrades: {
 			label: 'Private trades',
 			text: 'Your trades are private until picks lock when the GP starts — just like today.'
 		},
-		tbdNote:
-			'Exactly how the price tiers are calculated is still being worked on and will be clarified before the 2027 season begins.'
+		rulesLink: 'Read all the rules on the <link>rules page</link>.'
 	}
 }
 
