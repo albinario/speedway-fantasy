@@ -56,6 +56,13 @@ export interface Comments {
   user_id: number;
 }
 
+export interface ContactMessages {
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  message: string;
+  user_id: number;
+}
+
 export interface Countries {
   code: string;
   id: Generated<number>;
@@ -185,6 +192,7 @@ export interface DB {
   cities_with_country: CitiesWithCountry;
   comment_reactions: CommentReactions;
   comments: Comments;
+  contact_messages: ContactMessages;
   countries: Countries;
   gp_rounds_per_year: GpRoundsPerYear;
   gps: Gps;

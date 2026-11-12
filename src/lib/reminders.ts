@@ -3,7 +3,6 @@
 import { createTranslator } from 'next-intl'
 
 import { sql } from 'kysely'
-import { Resend } from 'resend'
 
 import { adminEmail, colors } from '@/config/brand'
 import { defaultLocale, isLocale, type TLocale } from '@/i18n/config'
@@ -11,20 +10,9 @@ import en from '@/i18n/messages/en'
 import sv from '@/i18n/messages/sv'
 
 import { db } from './db'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
-const from = 'Speedway Fantasy <reminders@speedwayfantasy.com>'
-const appUrl = process.env.APP_BASE_URL ?? ''
+import { appUrl, escapeHtml, fromAddress as from, resend } from './email'
 
 const messages = { en, sv }
-
-function escapeHtml(value: string) {
-	return value
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-}
 
 function getEmailTranslator(locale: string | null) {
 	const resolved: TLocale = isLocale(locale) ? locale : defaultLocale

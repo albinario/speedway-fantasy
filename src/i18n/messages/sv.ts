@@ -14,6 +14,7 @@ const sv: TMessages = {
 		rules: 'Regler',
 		install: 'Installera app',
 		beer: 'Bärs',
+		contact: 'Kontakt',
 		myPage: 'Min sida',
 		logIn: 'Logga in',
 		signIn: 'Logga in',
@@ -71,6 +72,10 @@ const sv: TMessages = {
 		activity: {
 			title: 'Aktivitet',
 			description: 'Senaste valen från alla spelare'
+		},
+		contact: {
+			title: 'Kontakt',
+			description: 'Skicka ett meddelande till Speedway Fantasy-admin'
 		}
 	},
 	DetailPages: {
@@ -139,7 +144,7 @@ const sv: TMessages = {
 		lockedPrice:
 			'Så länge du inte säljer din förare så behåller du föraren till priset du köpte honom för, även om marknadspriset för föraren har ändrats. Säljer du föraren får du tillbaka exakt det du köpte föraren för.',
 		injuries:
-			'Om en av dina förare ersätts på grund av skada eller av annan anledning skickar vi ett mejl till dig. Det är upp till dig att sälja föraren och köpa en annan. Har du en skadad förare i laget får du förstås fortfarande poäng för dina övriga förare.',
+			'Om en av dina förare ersätts på grund av skada eller av annan anledning skickas ett mejl till dig. Det är upp till dig själv att sälja föraren och köpa en annan. Har du en skadad förare i laget under ett GP så får du fortfarande poäng för dina övriga förare.',
 		privateTrades:
 			"Dina byten är hemliga. Andra spelare ser ditt lag när Grand Prix't startar.",
 		priceTiers: 'Prisnivåer',
@@ -165,6 +170,21 @@ const sv: TMessages = {
 		sortSecond: 'Andraplatser',
 		sortThird: 'Tredjeplatser',
 		sortHeats: 'Körda heat'
+	},
+	Contact: {
+		title: 'Kontakt',
+		replyInfo: 'Svar skickas till: <strong>{email}</strong>',
+		logInInfo: 'Logga in för att skicka ett meddelande.',
+		logIn: 'Logga in',
+		message: 'Meddelande',
+		messagePlaceholder: 'Skriv ditt meddelande…',
+		submit: 'Skicka meddelande',
+		sending: 'Skickar…',
+		sentTitle: 'Meddelandet är skickat',
+		sentDescription: 'Tack! Svar skickas till din e-post.',
+		messageTooShort: 'Meddelandet är lite kort — skriv minst 10 tecken.',
+		tooLong: 'Meddelandet är för långt.',
+		sendFailed: 'Det gick inte att skicka meddelandet. Försök igen.'
 	},
 	Onboarding: {
 		title: 'Välkommen till Speedway Fantasy',
@@ -331,7 +351,7 @@ const sv: TMessages = {
 		},
 		injuries: {
 			label: 'Skador',
-			text: 'Om en av dina förare ersätts på grund av skada eller av annan anledning skickar vi ett mejl till dig. Det är upp till dig att sälja föraren och köpa en annan. Har du en skadad förare i laget får du förstås fortfarande poäng för dina övriga förare.'
+			text: 'Om en av dina förare ersätts på grund av skada eller av annan anledning skickas ett mejl till dig. Det är upp till dig själv att sälja föraren och köpa en annan. Har du en skadad förare i laget under ett GP så får du fortfarande poäng för dina övriga förare.'
 		},
 		privateTrades: {
 			label: 'Hemliga byten',

@@ -15,6 +15,7 @@ const en = {
 		rules: 'Rules',
 		install: 'Install app',
 		beer: 'Beer',
+		contact: 'Contact',
 		myPage: 'My page',
 		logIn: 'Log in',
 		signIn: 'Sign in',
@@ -73,6 +74,10 @@ const en = {
 		activity: {
 			title: 'Activity',
 			description: 'Latest picks from all players'
+		},
+		contact: {
+			title: 'Contact',
+			description: 'Send a message to the Speedway Fantasy admin'
 		}
 	},
 	// Tab title + description for pages about one GP / rider / player
@@ -92,7 +97,7 @@ const en = {
 	},
 	Errors: {
 		title: 'Something went wrong',
-		description: "We couldn't load this page. Please try again in a moment.",
+		description: "This page couldn't be loaded. Please try again in a moment.",
 		tryAgain: 'Try again'
 	},
 	// Short labels reused across features
@@ -144,7 +149,7 @@ const en = {
 		lockedPrice:
 			"As long as you don't sell a rider, you keep them at the price you bought them for, even if their market price has changed. Sell them and you get back exactly what you paid.",
 		injuries:
-			"If one of your riders is replaced because of an injury or for any other reason, we'll send you an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team, you still score points for your other riders, of course.",
+			"If one of your riders is replaced because of an injury or for any other reason, you'll get an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team during a GP, you still score points for your other riders.",
 		privateTrades:
 			'Your trades are private. Other players see your team when the Grand Prix starts.',
 		priceTiers: 'Price tiers',
@@ -170,6 +175,21 @@ const en = {
 		sortSecond: '2nd places',
 		sortThird: '3rd places',
 		sortHeats: 'Finished heats'
+	},
+	Contact: {
+		title: 'Contact',
+		replyInfo: 'Replies are sent to: <strong>{email}</strong>',
+		logInInfo: 'Log in to send a message.',
+		logIn: 'Log in',
+		message: 'Message',
+		messagePlaceholder: 'Write your message…',
+		submit: 'Send message',
+		sending: 'Sending…',
+		sentTitle: 'Message sent',
+		sentDescription: 'Thanks! A reply will be sent to your email.',
+		messageTooShort: 'Your message is a bit short — please write at least 10 characters.',
+		tooLong: 'Your message is too long.',
+		sendFailed: "Couldn't send your message. Please try again."
 	},
 	Onboarding: {
 		title: 'Welcome to Speedway Fantasy',
@@ -335,7 +355,7 @@ const en = {
 		},
 		injuries: {
 			label: 'Injuries',
-			text: "If one of your riders is replaced because of an injury or for any other reason, we'll send you an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team, you still score points for your other riders, of course."
+			text: "If one of your riders is replaced because of an injury or for any other reason, you'll get an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team during a GP, you still score points for your other riders."
 		},
 		privateTrades: {
 			label: 'Private trades',

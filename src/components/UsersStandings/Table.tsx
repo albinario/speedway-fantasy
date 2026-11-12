@@ -45,9 +45,9 @@ function makeColumns(labels: TLabels, viewerId?: number): TColumnDef<TRow>[] {
 			meta: { className: 'pl-0' },
 			cell: ({ row }) => (
 				<div className="flex items-center gap-2">
-					<div>
+					<div className="flex min-h-10 flex-col items-start justify-center sm:min-h-0">
 						<UserName
-							className="text-base sm:text-lg"
+							className="text-base leading-5 sm:text-lg sm:leading-7"
 							firstName={row.original.first_name}
 							lastName={row.original.last_name}
 							stars={row.original.stars}
@@ -59,6 +59,7 @@ function makeColumns(labels: TLabels, viewerId?: number): TColumnDef<TRow>[] {
 								medal_1={Number(row.original.medal_1)}
 								medal_2={Number(row.original.medal_2)}
 								medal_3={Number(row.original.medal_3)}
+								size="sm"
 							/>
 						</div>
 					</div>

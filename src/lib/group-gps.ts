@@ -1,5 +1,6 @@
 import { EMacroStage } from '@/enums'
-import { getMacroStage } from '@/lib/dates'
+
+import { getMacroStage } from './dates'
 
 type Gp = {
 	id: number

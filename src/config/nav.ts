@@ -5,6 +5,7 @@ import {
 	House,
 	ListCheck,
 	ListOrdered,
+	Mail,
 	MessagesSquare,
 	SquarePlus,
 	Trophy,
@@ -65,6 +66,11 @@ export const navItems: TNavItem[] = [
 		labelKey: 'install',
 		href: '/install',
 		icon: SquarePlus
+	},
+	{
+		labelKey: 'contact',
+		href: '/contact',
+		icon: Mail
 	},
 	{
 		labelKey: 'beer',

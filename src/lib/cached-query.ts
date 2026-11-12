@@ -1,6 +1,6 @@
 import { unstable_cache } from 'next/cache'
 
-import { dataFetch } from '@/lib/data-fetch'
+import { dataFetch } from './data-fetch'
 
 type TCacheOptions = NonNullable<Parameters<typeof unstable_cache>[2]>
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- same constraint as unstable_cache

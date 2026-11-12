@@ -25,6 +25,7 @@ export const localeCookieOptions = {
 export const clientNamespaces = [
 	'Comments',
 	'Common',
+	'Contact',
 	'Countdown',
 	'Errors',
 	'GpCard',
