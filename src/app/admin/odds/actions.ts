@@ -171,7 +171,7 @@ export async function saveOddsAction({
 		updateTag(cacheTags.standings)
 	}
 
-	// A replacement: email every owner of a rider taken out (and the admin),
+	// A replacement: email every owner of a rider taken out,
 	// only after the field is committed
 	if (!saved.isFirstSave) {
 		await notifyReplacedRiderOwners({

@@ -1,5 +1,3 @@
-import { adminEmail } from '@/config/brand'
-
 import { db } from './db'
 import { appUrl, escapeHtml, fromAddress, resend } from './email'
 import { ctaStyle, emailHtml, getEmailTranslator } from './email-templates'
@@ -14,7 +12,7 @@ type TReplacementNotice = {
 
 /**
  * Emails every player who owns a rider who was taken out of a GP's field,
- * plus a copy to the admin. Owners are looked up in the background: no
+ * and nobody else. Owners are looked up in the background: no
  * count or recipient list is returned, logged or stored, so nobody can tell
  * how many players own a rider. Never throws — the field is already saved.
  */
@@ -100,13 +98,10 @@ export async function notifyReplacedRiderOwners({
 			}
 		}
 
-		const emails = [
-			...owners.map((o) =>
-				buildEmail(o.email, o.rider_id, o.locale, o.first_name)
-			),
-			// Admin copy: the same notice per rider, never who or how many got it
-			...removedRiderIds.map((riderId) => buildEmail(adminEmail, riderId, 'en'))
-		]
+		const emails = owners.map((o) =>
+			buildEmail(o.email, o.rider_id, o.locale, o.first_name)
+		)
+		if (!emails.length) return
 
 		// Resend batch API: up to 100 emails per request
 		for (let i = 0; i < emails.length; i += 100) {
