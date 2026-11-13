@@ -187,7 +187,8 @@ const en = {
 		sending: 'Sending…',
 		sentTitle: 'Message sent',
 		sentDescription: 'Thanks! A reply will be sent to your email.',
-		messageTooShort: 'Your message is a bit short — please write at least 10 characters.',
+		messageTooShort:
+			'Your message is a bit short — please write at least 10 characters.',
 		tooLong: 'Your message is too long.',
 		sendFailed: "Couldn't send your message. Please try again."
 	},
@@ -223,11 +224,17 @@ const en = {
 		ctaPicked: 'View / update picks →',
 		ctaNotPicked: 'Pick your riders →',
 		footer:
-			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>"
+			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>",
+		replacementSubject: '{rider} is out of round {round} in {city}',
+		replacementBody:
+			'<strong>{rider}</strong> has been replaced in the field for round {round} in {city}. If you keep him, he scores 0 points in that GP. You can trade him until the GP starts.',
+		replacementNewRider: '{replacement} takes his place.',
+		replacementCta: 'Trade riders →',
+		replacementFooter:
+			'You receive this email because {rider} is in your team on <link>Speedway Fantasy</link>.'
 	},
 	VenueHistory: {
-		noPreviousResults: 'No previous results at this venue.',
-		lastTimeIn: 'Last time in {city}'
+		noPreviousResults: 'No previous results at this venue.'
 	},
 	ResultSummary: {
 		bestRider: 'Best rider',
@@ -278,17 +285,25 @@ const en = {
 		topPlayers: 'Top <accent>{limit}</accent> players',
 		topRiders: 'Top <accent>{limit}</accent> riders',
 		pickedRiders: 'Picked riders',
-		myPickedRiders: 'My picked riders',
-		editPicks: 'Edit',
-		pickRiders: 'Pick riders',
 		pickedBy: 'Picked by'
 	},
+	MyTeam: {
+		title: 'My <accent>team</accent>',
+		spent: 'Spent <accent>{spent}</accent> of {budget} coins',
+		trade: 'Trade riders',
+		buyTeam: 'Pick your team',
+		windowClosed: 'Trading opens when new prices are out.'
+	},
 	PickRiders: {
+		budget: 'Spent <accent>{spent}</accent> of {budget} coins',
 		title: 'Pick your <accent>3</accent> riders',
 		save: 'Save picks',
 		saving: 'Saving…',
 		saved: 'Picks saved!',
-		closed: 'Picks are closed for this event.'
+		closed: 'Picks are closed for this event.',
+		overBudget: 'Your team must cost {budget} coins or less.',
+		pricesChanged:
+			'Prices have just changed. Check the new prices and try again.'
 	},
 	Activity: {
 		picked: 'Picked',

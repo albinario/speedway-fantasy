@@ -31,7 +31,8 @@ export async function HomeLeaderPodium({
 		getTranslations('Home'),
 		getTranslations('Common')
 	])
-	if (!standings.length) return null
+	// Saving picks creates a 0-point standings row, so wait until someone has scored
+	if (!standings.length || Number(standings[0].points) === 0) return null
 
 	const showViewerRow =
 		!!viewerRow && !standings.some((s) => s.user_id === viewerId)

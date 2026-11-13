@@ -30,6 +30,7 @@ export const clientNamespaces = [
 	'Errors',
 	'GpCard',
 	'LocaleSelector',
+	'MyTeam',
 	'Nav',
 	'Onboarding',
 	'PickRiders',

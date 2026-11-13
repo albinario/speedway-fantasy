@@ -1,15 +1,14 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useRef, useState, useTransition } from 'react'
 
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 
 import { Save } from 'lucide-react'
 import { toast } from 'sonner'
 
-import { Flag } from '@/components/Flag'
 import { RiderTile } from '@/components/RiderTile'
-import type { TRider } from '@/components/RiderTile'
 import { Button } from '@/components/ui/button'
 import {
 	Sheet,
@@ -21,16 +20,14 @@ import {
 } from '@/components/ui/sheet'
 import { Spinner } from '@/components/ui/spinner'
 import { accent } from '@/i18n/rich'
+import { BUDGET_COINS, canAfford, FIELD_SIZE } from '@/lib/budget'
 
 import { savePicksAction } from './actions'
+import type { TFieldRider } from './data'
 
 type TPickRidersSheet = {
 	gpId: number
-	gpName: string
-	gpRound: number
-	gpCountryCode: string
-	viewerId: number
-	riders: TRider[]
+	riders: TFieldRider[]
 	initialPicks: [number, number, number] | null
 	open: boolean
 	onOpenChange: (open: boolean) => void
@@ -39,10 +36,6 @@ type TPickRidersSheet = {
 
 export function PickRidersSheet({
 	gpId,
-	gpName,
-	gpRound,
-	gpCountryCode,
-	viewerId,
 	riders,
 	initialPicks,
 	open,
@@ -50,21 +43,27 @@ export function PickRidersSheet({
 	onSaved
 }: TPickRidersSheet) {
 	const activeIds = new Set(riders.map((r) => r.id))
-	const [selected, setSelected] = useState<number[]>(
+	const [selectedState, setSelected] = useState<number[]>(
 		initialPicks
 			? [initialPicks[0], initialPicks[1], initialPicks[2]].filter((id) =>
 					activeIds.has(id)
 				)
 			: []
 	)
+	// Riders that left the field after a price refresh drop out of the selection
+	const selected = selectedState.filter((id) => activeIds.has(id))
 	const [isPending, startTransition] = useTransition()
 	const t = useTranslations('PickRiders')
 	const tCommon = useTranslations('Common')
 
 	const isComplete = selected.length === 3
+	const selectedRiders = riders.filter((r) => selected.includes(r.id))
+	const router = useRouter()
+	const spent = selectedRiders.reduce((sum, r) => sum + (r.coins ?? 0), 0)
 
 	function handleTileClick(riderId: number) {
-		setSelected((prev) => {
+		setSelected((all) => {
+			const prev = all.filter((id) => activeIds.has(id))
 			const idx = prev.indexOf(riderId)
 			if (idx !== -1) return prev.filter((id) => id !== riderId)
 			if (prev.length >= 3) return prev
@@ -72,24 +71,34 @@ export function PickRidersSheet({
 		})
 	}
 
+	// Blocks a second click before isPending has re-rendered the button
+	const isSaving = useRef(false)
+
 	function handleSave() {
-		if (!isComplete) return
+		if (!isComplete || isSaving.current) return
+		isSaving.current = true
 
 		startTransition(async () => {
-			const result = await savePicksAction(
-				gpId,
-				viewerId,
-				selected as [number, number, number]
-			)
+			try {
+				const result = await savePicksAction(
+					gpId,
+					selected as [number, number, number],
+					Object.fromEntries(selectedRiders.map((r) => [r.id, r.coins]))
+				)
 
-			if (result.error) {
-				toast.error(result.error)
-				return
+				if (result.error) {
+					toast.error(result.error)
+					// Stay open with the selection; the new prices stream in
+					if (result.pricesChanged) router.refresh()
+					return
+				}
+
+				toast.success(t('saved'))
+				onSaved(selected as [number, number, number])
+				onOpenChange(false)
+			} finally {
+				isSaving.current = false
 			}
-
-			toast.success(t('saved'))
-			onSaved(selected as [number, number, number])
-			onOpenChange(false)
 		})
 	}
 
@@ -114,30 +123,35 @@ export function PickRidersSheet({
 						{t.rich('title', { accent })}
 					</SheetTitle>
 
-					<SheetDescription className="flex items-center gap-2">
-						<Flag countryCode={gpCountryCode} />
-						{gpName}
-						<span className="text-muted-foreground">
-							{' · '}
-							{tCommon('round', { round: gpRound })}
-						</span>
+					<SheetDescription>
+						{t.rich('budget', { spent, budget: BUDGET_COINS, accent })}
 					</SheetDescription>
 				</SheetHeader>
 
 				<div className="flex-1 overflow-y-auto p-4">
 					<div className="grid grid-cols-4 gap-2">
-						{riders.map((rider) => (
-							<RiderTile
-								key={rider.id}
-								rider={rider}
-								hideFirstName
-								isSelected={selected.includes(rider.id)}
-								isDimmed={isComplete && !selected.includes(rider.id)}
-								onClick={() => handleTileClick(rider.id)}
-							/>
-						))}
+						{riders.map((rider) => {
+							const isSelected = selected.includes(rider.id)
+							const isPickable =
+								isSelected || canAfford(rider, selectedRiders, riders)
 
-						{riders.length < 16 && (
+							return (
+								<RiderTile
+									key={rider.id}
+									rider={rider}
+									hideFirstName
+									coins={rider.coins}
+									className={rider.isOut ? 'ring-1 ring-red-400/60' : undefined}
+									isSelected={isSelected}
+									isDimmed={!isPickable}
+									onClick={
+										isPickable ? () => handleTileClick(rider.id) : undefined
+									}
+								/>
+							)
+						})}
+
+						{riders.filter((r) => !r.isOut).length < FIELD_SIZE && (
 							<div className="relative flex cursor-not-allowed flex-col items-center gap-1 rounded-lg p-2 opacity-40">
 								<div className="bg-muted flex size-14 items-center justify-center rounded-full">
 									<span className="text-muted-foreground text-lg">?</span>

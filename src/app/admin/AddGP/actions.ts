@@ -2,9 +2,13 @@
 
 import { fromZonedTime } from 'date-fns-tz'
 
+import { adminOnly } from '@/lib/auth/admin-only'
 import { db } from '@/lib/db'
 
 export async function addGP(formData: FormData): Promise<{ error?: string }> {
+	const denied = await adminOnly()
+	if (denied) return denied
+
 	const round = Number(formData.get('round'))
 	const localDatetime = formData.get('start_date') as string
 	const cityId = Number(formData.get('city_id'))
