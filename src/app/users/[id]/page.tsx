@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 
-import { getGps } from '@/app/gps/data'
+import { getGps, getNextGp } from '@/app/gps/data'
 import { UserGpCard } from '@/components/GpCard'
+import { MyTeamCard } from '@/components/MyTeamCard'
 import { PageHeader } from '@/components/PageHeader'
 import { SectionTitle } from '@/components/SectionHeader'
 import { UserAvatar } from '@/components/UserAvatar'
@@ -42,11 +43,12 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 	const userId = Number(id)
 
 	const currentYear = new Date().getFullYear()
-	const [user, yearValues, viewer, resultGpIds, t] = await Promise.all([
+	const [user, yearValues, viewer, resultGpIds, nextGp, t] = await Promise.all([
 		getUser(userId),
 		getYearValues(searchParams, currentYear),
 		getViewer(),
 		getUserResultGpIds(userId),
+		getNextGp(),
 		getTranslations('Common')
 	])
 
@@ -83,6 +85,16 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				year={yearValues.activeYear}
 				createdAt={user.created_at}
 			/>
+
+			{nextGp &&
+				viewer.db?.id === userId &&
+				yearValues.activeYear === new Date(nextGp.start_date).getFullYear() && (
+					<MyTeamCard
+						gpId={nextGp.id}
+						gpStartDate={nextGp.start_date}
+						viewerId={userId}
+					/>
+				)}
 
 			{[
 				{ title: t('upcoming'), items: upcoming },

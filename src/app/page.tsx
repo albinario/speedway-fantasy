@@ -9,6 +9,7 @@ import { GpCard } from '@/components/GpCard'
 import { GpSeasonProgress } from '@/components/GpSeasonProgress'
 import { HomeIntro } from '@/components/HomeIntro'
 import { HomeLeaderPodium } from '@/components/HomeLeaderPodium'
+import { MyTeamCard } from '@/components/MyTeamCard'
 import { Season2027AnnouncementCard } from '@/components/Season2027AnnouncementCard'
 import { SectionTitle } from '@/components/SectionHeader'
 import { Card } from '@/components/ui/card'
@@ -44,6 +45,22 @@ export default async function Home() {
 	const nextGpIsCloser =
 		msFromNow(nextGp?.start_date) <= msFromNow(latestGp?.start_date)
 
+	// The season of the most recently started GP: last year's podium stays up
+	// until the new season's first GP starts
+	const podiumYear = latestGp?.start_date
+		? new Date(latestGp.start_date).getFullYear()
+		: yearValues.activeYear
+
+	// The 2027 announcement goes away once the first 2027 GP has started
+	const showSeason2027Announcement = !(
+		latestGp?.start_date && new Date(latestGp.start_date).getFullYear() >= 2027
+	)
+
+	// Same rule as My page: only show the team for the current year's season
+	const isTeamSeason =
+		!!nextGp?.start_date &&
+		new Date(nextGp.start_date).getFullYear() === new Date().getFullYear()
+
 	const isSeasonFinished =
 		latestGp?.finished === true && (!nextGp || nextGp.round === 1)
 
@@ -51,11 +68,23 @@ export default async function Home() {
 		<div className="flex flex-col gap-4">
 			<HomeIntro isAuthenticated={viewer.isAuthenticated} />
 
+			{showSeason2027Announcement && <Season2027AnnouncementCard />}
+
+			{nextGp && viewerId && isTeamSeason && (
+				<Suspense fallback={null}>
+					<MyTeamCard
+						gpId={nextGp.id}
+						gpStartDate={nextGp.start_date}
+						viewerId={viewerId}
+					/>
+				</Suspense>
+			)}
+
 			<Suspense fallback={<SectionFallback />}>
 				<HomeLeaderPodium
 					isFinal={isSeasonFinished}
 					viewerId={viewerId}
-					year={yearValues.activeYear}
+					year={podiumYear}
 				/>
 			</Suspense>
 
@@ -88,8 +117,6 @@ export default async function Home() {
 					</div>
 				)}
 			</div>
-
-			<Season2027AnnouncementCard />
 
 			{!isSeasonFinished && nextGp?.round !== 1 && latestHofYear && (
 				<div>

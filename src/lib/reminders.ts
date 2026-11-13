@@ -1,45 +1,12 @@
 'use server'
 
-import { createTranslator } from 'next-intl'
-
 import { sql } from 'kysely'
-import { Resend } from 'resend'
 
-import { adminEmail, colors } from '@/config/brand'
-import { defaultLocale, isLocale, type TLocale } from '@/i18n/config'
-import en from '@/i18n/messages/en'
-import sv from '@/i18n/messages/sv'
+import { adminEmail } from '@/config/brand'
 
 import { db } from './db'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
-const from = 'Speedway Fantasy <reminders@speedwayfantasy.com>'
-const appUrl = process.env.APP_BASE_URL ?? ''
-
-const messages = { en, sv }
-
-function escapeHtml(value: string) {
-	return value
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-}
-
-function getEmailTranslator(locale: string | null) {
-	const resolved: TLocale = isLocale(locale) ? locale : defaultLocale
-	return createTranslator({
-		locale: resolved,
-		messages: messages[resolved],
-		namespace: 'Email'
-	})
-}
-
-function emailHtml(body: string, footer: string) {
-	return `<!DOCTYPE html><html><body style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#111;">${body}<p style="margin-top:32px;font-size:12px;color:#999;">${footer}</p></body></html>`
-}
-
-const ctaStyle = `display:inline-block;background:${colors.brandRed};color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;`
+import { appUrl, escapeHtml, fromAddress as from, resend } from './email'
+import { ctaStyle, emailHtml, getEmailTranslator } from './email-templates'
 
 export async function sendGpReminders(): Promise<{
 	sent: number

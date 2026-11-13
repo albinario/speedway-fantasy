@@ -1,6 +1,7 @@
 export const cacheTags = {
 	gps: 'gps',
 	gpResults: 'gp-results',
+	gpField: 'gp-field',
 	picks: 'picks',
 	standings: 'standings',
 	ridersStandings: 'riders-standings',

@@ -15,6 +15,7 @@ const en = {
 		rules: 'Rules',
 		install: 'Install app',
 		beer: 'Beer',
+		contact: 'Contact',
 		myPage: 'My page',
 		logIn: 'Log in',
 		signIn: 'Sign in',
@@ -73,6 +74,10 @@ const en = {
 		activity: {
 			title: 'Activity',
 			description: 'Latest picks from all players'
+		},
+		contact: {
+			title: 'Contact',
+			description: 'Send a message to the Speedway Fantasy admin'
 		}
 	},
 	// Tab title + description for pages about one GP / rider / player
@@ -92,7 +97,7 @@ const en = {
 	},
 	Errors: {
 		title: 'Something went wrong',
-		description: "We couldn't load this page. Please try again in a moment.",
+		description: "This page couldn't be loaded. Please try again in a moment.",
 		tryAgain: 'Try again'
 	},
 	// Short labels reused across features
@@ -144,7 +149,7 @@ const en = {
 		lockedPrice:
 			"As long as you don't sell a rider, you keep them at the price you bought them for, even if their market price has changed. Sell them and you get back exactly what you paid.",
 		injuries:
-			"If one of your riders is replaced because of an injury or for any other reason, we'll send you an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team, you still score points for your other riders, of course.",
+			"If one of your riders is replaced because of an injury or for any other reason, you'll get an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team during a GP, you still score points for your other riders.",
 		privateTrades:
 			'Your trades are private. Other players see your team when the Grand Prix starts.',
 		priceTiers: 'Price tiers',
@@ -170,6 +175,22 @@ const en = {
 		sortSecond: '2nd places',
 		sortThird: '3rd places',
 		sortHeats: 'Finished heats'
+	},
+	Contact: {
+		title: 'Contact',
+		replyInfo: 'Replies are sent to: <strong>{email}</strong>',
+		logInInfo: 'Log in to send a message.',
+		logIn: 'Log in',
+		message: 'Message',
+		messagePlaceholder: 'Write your message…',
+		submit: 'Send message',
+		sending: 'Sending…',
+		sentTitle: 'Message sent',
+		sentDescription: 'Thanks! A reply will be sent to your email.',
+		messageTooShort:
+			'Your message is a bit short — please write at least 10 characters.',
+		tooLong: 'Your message is too long.',
+		sendFailed: "Couldn't send your message. Please try again."
 	},
 	Onboarding: {
 		title: 'Welcome to Speedway Fantasy',
@@ -203,11 +224,17 @@ const en = {
 		ctaPicked: 'View / update picks →',
 		ctaNotPicked: 'Pick your riders →',
 		footer:
-			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>"
+			"You're receiving this because you have race day reminders enabled on Speedway Fantasy. <link>Manage settings</link>",
+		replacementSubject: '{rider} is out of round {round} in {city}',
+		replacementBody:
+			'<strong>{rider}</strong> has been replaced in the field for round {round} in {city}. If you keep him, he scores 0 points in that GP. You can trade him until the GP starts.',
+		replacementNewRider: '{replacement} takes his place.',
+		replacementCta: 'Trade riders →',
+		replacementFooter:
+			'You receive this email because {rider} is in your team on <link>Speedway Fantasy</link>.'
 	},
 	VenueHistory: {
-		noPreviousResults: 'No previous results at this venue.',
-		lastTimeIn: 'Last time in {city}'
+		noPreviousResults: 'No previous results at this venue.'
 	},
 	ResultSummary: {
 		bestRider: 'Best rider',
@@ -258,17 +285,25 @@ const en = {
 		topPlayers: 'Top <accent>{limit}</accent> players',
 		topRiders: 'Top <accent>{limit}</accent> riders',
 		pickedRiders: 'Picked riders',
-		myPickedRiders: 'My picked riders',
-		editPicks: 'Edit',
-		pickRiders: 'Pick riders',
 		pickedBy: 'Picked by'
 	},
+	MyTeam: {
+		title: 'My <accent>team</accent>',
+		spent: 'Spent <accent>{spent}</accent> of {budget} coins',
+		trade: 'Trade riders',
+		buyTeam: 'Pick your team',
+		windowClosed: 'Trading opens when new prices are out.'
+	},
 	PickRiders: {
+		budget: 'Spent <accent>{spent}</accent> of {budget} coins',
 		title: 'Pick your <accent>3</accent> riders',
 		save: 'Save picks',
 		saving: 'Saving…',
 		saved: 'Picks saved!',
-		closed: 'Picks are closed for this event.'
+		closed: 'Picks are closed for this event.',
+		overBudget: 'Your team must cost {budget} coins or less.',
+		pricesChanged:
+			'Prices have just changed. Check the new prices and try again.'
 	},
 	Activity: {
 		picked: 'Picked',
@@ -335,7 +370,7 @@ const en = {
 		},
 		injuries: {
 			label: 'Injuries',
-			text: "If one of your riders is replaced because of an injury or for any other reason, we'll send you an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team, you still score points for your other riders, of course."
+			text: "If one of your riders is replaced because of an injury or for any other reason, you'll get an email. It's up to you to sell the rider and buy another. If you have an injured rider in your team during a GP, you still score points for your other riders."
 		},
 		privateTrades: {
 			label: 'Private trades',

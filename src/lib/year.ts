@@ -1,5 +1,6 @@
 import { getYears } from '@/data/year'
-import { getParamValue, paramKeys, paramValues } from '@/lib/params'
+
+import { getParamValue, paramKeys, paramValues } from './params'
 
 export async function getYearValues(
 	searchParams: Promise<{ year?: string }>,

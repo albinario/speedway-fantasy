@@ -56,6 +56,13 @@ export interface Comments {
   user_id: number;
 }
 
+export interface ContactMessages {
+  created_at: Generated<Timestamp>;
+  id: Generated<number>;
+  message: string;
+  user_id: number;
+}
+
 export interface Countries {
   code: string;
   id: Generated<number>;
@@ -75,6 +82,16 @@ export interface Gps {
   round: number;
   start_date: Timestamp;
   wild_card_id: number | null;
+}
+
+export interface GpsRiders {
+  coins: number | null;
+  created_at: Generated<Timestamp>;
+  gp_id: number;
+  id: Generated<number>;
+  odds: Numeric | null;
+  rider_id: number;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface PicksRecord {
@@ -172,6 +189,26 @@ export interface UsersStars {
   year: number;
 }
 
+export interface UsersTeam {
+  bought_at: Generated<Timestamp>;
+  coins_paid: number;
+  id: Generated<number>;
+  rider_id: number;
+  user_id: number;
+  year: number;
+}
+
+export interface UsersTrades {
+  coins_in: number;
+  coins_out: number | null;
+  created_at: Generated<Timestamp>;
+  gp_id: number;
+  id: Generated<number>;
+  rider_in_id: number;
+  rider_out_id: number | null;
+  user_id: number;
+}
+
 export interface UsersWithStars {
   first_name: string | null;
   id: number | null;
@@ -185,9 +222,11 @@ export interface DB {
   cities_with_country: CitiesWithCountry;
   comment_reactions: CommentReactions;
   comments: Comments;
+  contact_messages: ContactMessages;
   countries: Countries;
   gp_rounds_per_year: GpRoundsPerYear;
   gps: Gps;
+  gps_riders: GpsRiders;
   picks_record: PicksRecord;
   riders: Riders;
   riders_results: RidersResults;
@@ -198,5 +237,7 @@ export interface DB {
   users_results: UsersResults;
   users_standings: UsersStandings;
   users_stars: UsersStars;
+  users_team: UsersTeam;
+  users_trades: UsersTrades;
   users_with_stars: UsersWithStars;
 }

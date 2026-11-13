@@ -1,9 +1,12 @@
+import { Suspense } from 'react'
+
 import { getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { Beer, DatabaseZap, FlagIcon, LogIn, UserIcon } from 'lucide-react'
 
+import { HeaderTradeButton } from '@/components/MyTeamCard/HeaderTradeButton'
 import { Button } from '@/components/ui/button'
 import { logo } from '@/config/brand'
 import { getViewer } from '@/lib/auth/get-viewer'
@@ -41,12 +44,6 @@ export async function Header() {
 		<HeaderShell>
 			{viewer.isAuthenticated ? (
 				<>
-					<Button asChild size="lg" variant="outline">
-						<Link href={`/users/${viewer.db?.id}`}>
-							{t('myPage')} <UserIcon />
-						</Link>
-					</Button>
-
 					{viewer.isAdmin && (
 						<>
 							<Button asChild size="icon-lg" variant="outline">
@@ -62,6 +59,18 @@ export async function Header() {
 							</Button>
 						</>
 					)}
+
+					<Button
+						asChild
+						size="lg"
+						variant="outline"
+						className="max-sm:w-9 max-sm:px-0"
+					>
+						<Link href={`/users/${viewer.db?.id}`} aria-label={t('myPage')}>
+							<span className="max-sm:sr-only">{t('myPage')}</span>
+							<UserIcon />
+						</Link>
+					</Button>
 				</>
 			) : (
 				<Button asChild size="lg" variant="outline">
@@ -69,6 +78,12 @@ export async function Header() {
 						{t('signIn')} <LogIn />
 					</a>
 				</Button>
+			)}
+
+			{viewer.db?.id && (
+				<Suspense fallback={null}>
+					<HeaderTradeButton viewerId={viewer.db.id} />
+				</Suspense>
 			)}
 
 			{!viewer.isAdmin && (

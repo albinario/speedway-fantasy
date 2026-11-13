@@ -15,6 +15,8 @@ import {
 	useTable
 } from '@tanstack/react-table'
 
+import { cn } from '@/lib/utils'
+
 import {
 	Table,
 	TableBody,
@@ -22,8 +24,7 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow
-} from '@/components/ui/table'
-import { cn } from '@/lib/utils'
+} from './table'
 
 const features = tableFeatures({
 	rowSortingFeature,

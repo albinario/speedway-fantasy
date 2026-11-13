@@ -54,13 +54,7 @@ export async function GpCard({
 			)}
 
 			{macroStage === EMacroStage.Before && viewerId && (
-				<UserPicks
-					gpId={gp.id}
-					gpName={gp.city_name}
-					gpRound={gp.round}
-					gpCountryCode={gp.country_code}
-					userId={viewerId}
-				/>
+				<UserPicks gpId={gp.id} gpStartDate={gp.start_date} userId={viewerId} />
 			)}
 
 			{macroStage === EMacroStage.Before && <ActivityFeed gpId={gp.id} />}

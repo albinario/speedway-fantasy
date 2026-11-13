@@ -4,7 +4,7 @@ type TMedalCounts = {
 	medal_1?: number | null
 	medal_2?: number | null
 	medal_3?: number | null
-	size?: 'default' | 'lg'
+	size?: 'sm' | 'default' | 'lg'
 }
 
 export function MedalCounts({
@@ -14,7 +14,8 @@ export function MedalCounts({
 	size = 'default'
 }: TMedalCounts) {
 	const counts = { 1: medal_1, 2: medal_2, 3: medal_3 } as const
-	const countClass = size === 'lg' ? 'text-2xl' : 'text-sm '
+	const countClass =
+		size === 'lg' ? 'text-2xl' : size === 'sm' ? 'text-xs' : 'text-sm'
 
 	return (
 		<div className={`flex w-fit items-center gap-${size === 'lg' ? '4' : '3'}`}>

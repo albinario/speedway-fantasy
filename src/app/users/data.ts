@@ -40,6 +40,7 @@ export function getViewerDb(auth0Id: string) {
 		.selectFrom('users')
 		.select([
 			'id',
+			'email',
 			'first_name',
 			'last_name',
 			'reminder',

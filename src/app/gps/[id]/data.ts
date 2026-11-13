@@ -440,6 +440,9 @@ export const getGpRidersPreview = cachedQuery(
 			])
 			.where('riders.id', 'in', riderIds)
 			.orderBy(sql`COALESCE(ss.points, 0)`, 'desc')
+			// no season results yet (e.g. before the first GP) → fall back to the
+			// active order; wild card (active null) sorts last
+			.orderBy('riders.active', (ob) => ob.asc().nullsLast())
 			.orderBy('riders.number', 'asc')
 			.execute()
 	},

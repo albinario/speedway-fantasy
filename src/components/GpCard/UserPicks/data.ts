@@ -1,101 +1,8 @@
 import { sql } from 'kysely'
 
-import type { TRider } from '@/components/RiderTile'
 import { cacheTags } from '@/lib/cache-tags'
 import { cachedQuery } from '@/lib/cached-query'
 import { db } from '@/lib/db'
-
-export const getGpRiders = cachedQuery(
-	(gpId: number) => _getGpRiders(gpId),
-	['gp-riders'],
-	{ tags: [cacheTags.gpResults], fallback: [] }
-)
-
-/**
- * Returns the riders for a GP.
- * If riders_results exist for the GP, returns those riders (covers historical/finished GPs).
- * Otherwise falls back to the 15 active seeded riders + wild card.
- */
-async function _getGpRiders(gpId: number): Promise<TRider[]> {
-	const gp = await db
-		.selectFrom('gps')
-		.select('wild_card_id')
-		.where('id', '=', gpId)
-		.executeTakeFirst()
-	const wildCardId = gp?.wild_card_id
-	// Check if riders_results exist for this GP
-	const fromResults = await db
-		.selectFrom('riders_results')
-		.innerJoin(
-			'riders_with_country',
-			'riders_with_country.id',
-			'riders_results.rider_id'
-		)
-		.select([
-			'riders_with_country.id',
-			'riders_with_country.name',
-			'riders_with_country.number',
-			'riders_with_country.country_code'
-		])
-		.where('riders_results.gp_id', '=', gpId)
-		.execute()
-
-	if (fromResults.length > 0) {
-		return fromResults.filter(
-			(r): r is TRider => r.id != null && r.name != null && r.number != null
-		)
-	}
-
-	// Fall back to active seeded riders + wild card
-	const activeRaw = await db
-		.selectFrom('riders_with_country')
-		.innerJoin('riders', 'riders.id', 'riders_with_country.id')
-		.select([
-			'riders_with_country.id',
-			'riders_with_country.name',
-			'riders_with_country.number',
-			'riders_with_country.country_code'
-		])
-		.where('riders.active', 'is not', null)
-		.orderBy('riders.active')
-		.execute()
-
-	const active: TRider[] = activeRaw.filter(
-		(r): r is TRider => r.id != null && r.name != null && r.number != null
-	)
-
-	if (!wildCardId) return active
-
-	const wildCardRaw = await db
-		.selectFrom('riders_with_country')
-		.select([
-			'riders_with_country.id',
-			'riders_with_country.name',
-			'riders_with_country.number',
-			'riders_with_country.country_code'
-		])
-		.where('riders_with_country.id', '=', wildCardId)
-		.executeTakeFirst()
-
-	if (
-		!wildCardRaw ||
-		wildCardRaw.id == null ||
-		wildCardRaw.name == null ||
-		wildCardRaw.number == null
-	) {
-		return active
-	}
-
-	return [
-		...active,
-		{
-			id: wildCardRaw.id,
-			name: wildCardRaw.name,
-			number: wildCardRaw.number,
-			country_code: wildCardRaw.country_code
-		}
-	]
-}
 
 export type TUserPick = {
 	id: number
@@ -193,24 +100,4 @@ async function _getUserPicksWithResults(
 	].filter(
 		(r): r is TUserPick => r.id != null && r.name != null && r.number != null
 	)
-}
-
-export const getUserPicks = cachedQuery(
-	(gpId: number, userId: number) => _getUserPicks(gpId, userId),
-	['user-picks'],
-	{ tags: [cacheTags.picks], fallback: null }
-)
-
-/** Returns the existing picks for a user/GP pair as a tuple, or null if none. */
-async function _getUserPicks(
-	gpId: number,
-	userId: number
-): Promise<[number, number, number] | null> {
-	const row = await db
-		.selectFrom('users_picks')
-		.select(['rider_1_id', 'rider_2_id', 'rider_3_id'])
-		.where('gp_id', '=', gpId)
-		.where('user_id', '=', userId)
-		.executeTakeFirst()
-	return row ? [row.rider_1_id, row.rider_2_id, row.rider_3_id] : null
 }
