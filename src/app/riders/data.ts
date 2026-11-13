@@ -27,6 +27,22 @@ export function getRidersActive() {
 }
 
 export async function getActiveRidersForGp(gpId: number): Promise<TRider[]> {
+	// 2027+: the GP's own field (gps_riders) is the truth, replacements included
+	const field = await db
+		.selectFrom('gps_riders')
+		.innerJoin('riders_with_country as r', 'r.id', 'gps_riders.rider_id')
+		.innerJoin('riders', 'riders.id', 'gps_riders.rider_id')
+		.select(['r.id', 'r.name', 'r.number', 'r.country_code'])
+		.where('gps_riders.gp_id', '=', gpId)
+		.orderBy('riders.active', (ob) => ob.asc().nullsLast())
+		.execute()
+
+	if (field.length > 0) {
+		return field.filter(
+			(r): r is TRider => r.id != null && r.name != null && r.number != null
+		)
+	}
+
 	const [gp, activeRaw] = await Promise.all([
 		db
 			.selectFrom('gps')

@@ -2,11 +2,11 @@
 
 import { updateTag } from 'next/cache'
 
-import { cacheTags } from '@/lib/cache-tags'
-
 import { sql } from 'kysely'
 
 import { getActiveRidersForGp } from '@/app/riders/data'
+import { adminOnly } from '@/lib/auth/admin-only'
+import { cacheTags } from '@/lib/cache-tags'
 import { db } from '@/lib/db'
 
 type HeatRiderResult = {
@@ -29,6 +29,9 @@ export async function reportHeatAction(
 	isFinal: boolean,
 	noHeat: boolean
 ): Promise<{ error?: string }> {
+	const denied = await adminOnly()
+	if (denied) return denied
+
 	const pointsByRiderId = new Map(results.map((r) => [r.riderId, r.points]))
 
 	const gp = await db
@@ -118,9 +121,9 @@ export async function reportHeatAction(
 		}
 
 		const medalUpdates = isFinal
-			? Object.fromEntries(
+			? (Object.fromEntries(
 					Object.entries(medalCounts).filter(([, v]) => v > 0)
-				) as Partial<Record<'medal_1' | 'medal_2' | 'medal_3', number>>
+				) as Partial<Record<'medal_1' | 'medal_2' | 'medal_3', number>>)
 			: {}
 
 		const medalStandingsUpdates = isFinal
@@ -217,7 +220,11 @@ export async function reportHeatAction(
 		for (const { user_id, pos } of standings) {
 			await db
 				.insertInto('users_progress')
-				.values({ user_id, year, positions: sql`ARRAY[${sql.val(pos)}]::int[]` })
+				.values({
+					user_id,
+					year,
+					positions: sql`ARRAY[${sql.val(pos)}]::int[]`
+				})
 				.onConflict((oc) =>
 					oc.columns(['user_id', 'year']).doUpdateSet({
 						positions: sql`array_append(users_progress.positions, ${sql.val(pos)})`

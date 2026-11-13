@@ -2,10 +2,10 @@
 
 import { updateTag } from 'next/cache'
 
-import { cacheTags } from '@/lib/cache-tags'
-
 import { sql } from 'kysely'
 
+import { adminOnly } from '@/lib/auth/admin-only'
+import { cacheTags } from '@/lib/cache-tags'
 import { db } from '@/lib/db'
 
 const RANK_ORDER = sql`ORDER BY points DESC, medal_1 DESC, medal_2 DESC, medal_3 DESC, heats DESC`
@@ -19,6 +19,9 @@ export async function correctResultAction(
 	heatsDelta: number,
 	medals: { gold: TMedalAction; silver: TMedalAction; bronze: TMedalAction }
 ): Promise<{ error?: string }> {
+	const denied = await adminOnly()
+	if (denied) return denied
+
 	const gp = await db
 		.selectFrom('gps')
 		.select('start_date')

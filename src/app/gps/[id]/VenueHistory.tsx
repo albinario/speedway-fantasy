@@ -47,8 +47,8 @@ async function VenueHistoryBody({
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="flex items-baseline justify-between gap-2">
-				<span className="text-xs font-bold tracking-wide uppercase">
-					{t('lastTimeIn', { city: cityName })}{' '}
+				<span className="text-sm font-bold tracking-wide uppercase">
+					{cityName}{' '}
 					<span className="text-muted-foreground">{history.year}</span>
 				</span>
 

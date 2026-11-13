@@ -25,9 +25,7 @@ export async function UserResultRow({
 	const medals = buildMedals(row)
 
 	return (
-		<div
-			className="flex items-center gap-2"
-		>
+		<div className="flex items-center gap-2">
 			<PosBadge pos={pos} size="lg" />
 
 			<div className="min-w-0 flex-1">

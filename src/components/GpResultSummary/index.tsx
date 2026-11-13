@@ -19,7 +19,7 @@ function Label({ children }: { children: React.ReactNode }) {
 
 type TPoints = {
 	points: number | null
-	// Bigger and gold for the best results
+	// Bigger for the best results
 	highlight?: boolean
 }
 
@@ -31,7 +31,7 @@ function Points({ points, highlight = false }: TPoints) {
 			<span
 				className={cn(
 					'font-bold tabular-nums',
-					highlight && 'text-gold text-lg font-black'
+					highlight && 'text-lg font-black'
 				)}
 			>
 				{points ?? 0}
@@ -78,6 +78,7 @@ export async function GpResultSummaryBody({
 							<FlagNumber
 								countryCode={rider.country_code}
 								number={rider.number}
+								size="xs"
 							/>
 						</div>
 						<Points points={rider.points} highlight />

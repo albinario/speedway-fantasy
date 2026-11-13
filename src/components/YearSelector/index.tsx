@@ -1,4 +1,6 @@
 'use client'
+import { useTransition } from 'react'
+
 import { useTranslations } from 'next-intl'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
@@ -14,6 +16,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Spinner } from '@/components/ui/spinner'
 import type { TYears } from '@/data/year'
 import { paramKeys, paramValues, type TParamValues } from '@/lib/params'
 
@@ -27,6 +30,9 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
 	const t = useTranslations('YearSelector')
+	const [isPending, startTransition] = useTransition()
+
+	const navigate = (url: string) => startTransition(() => router.push(url))
 
 	const latestYear = defaultYear ?? years[0]?.value
 	const yearParam = searchParams.get(paramKeys.year)
@@ -43,7 +49,7 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 		const params = new URLSearchParams(searchParams.toString())
 		params.delete(paramKeys.year)
 		const queryString = params.toString()
-		router.push(queryString ? `${pathname}?${queryString}` : pathname)
+		navigate(queryString ? `${pathname}?${queryString}` : pathname)
 	}
 
 	const updateYear = (year: number | TParamValues) => {
@@ -55,14 +61,27 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 			params.set(paramKeys.year, String(year))
 		}
 
-		router.push(`${pathname}?${params.toString()}`)
+		navigate(`${pathname}?${params.toString()}`)
 	}
 
 	return (
 		<DropdownMenu>
+			{/* Reset sits left of the selector so the selector never moves */}
 			<div className="flex items-center gap-2">
+				{showClearButton && (
+					<Button
+						disabled={isPending}
+						onClick={clearYear}
+						size="lg"
+						variant="outline"
+					>
+						<X aria-hidden className="size-4 text-white" /> {t('reset')}
+					</Button>
+				)}
+
 				<DropdownMenuTrigger asChild>
 					<Button
+						aria-busy={isPending}
 						className="group flex items-center gap-2"
 						size="lg"
 						variant="outline"
@@ -71,18 +90,16 @@ export function YearSelector({ defaultYear, years }: TYearSelectorProps) {
 							{activeYear === paramValues.all ? t('allTime') : activeYear}
 						</span>
 
-						<ChevronDown
-							aria-hidden
-							className="size-4 opacity-70 transition-transform duration-200 group-data-[state=open]:rotate-180"
-						/>
+						{isPending ? (
+							<Spinner className="size-4" />
+						) : (
+							<ChevronDown
+								aria-hidden
+								className="size-4 opacity-70 transition-transform duration-200 group-data-[state=open]:rotate-180"
+							/>
+						)}
 					</Button>
 				</DropdownMenuTrigger>
-
-				{showClearButton && (
-					<Button onClick={clearYear} size="lg" variant="outline">
-						<X aria-hidden className="size-4 text-white" /> {t('reset')}
-					</Button>
-				)}
 			</div>
 
 			<DropdownMenuContent align="end" className="w-fit min-w-0 px-2">

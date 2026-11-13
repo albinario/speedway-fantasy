@@ -1,5 +1,7 @@
 'use client'
 
+import { Coins } from 'lucide-react'
+
 import { FlagNumber } from '@/components/FlagNumber'
 import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
@@ -21,6 +23,7 @@ type TRiderTile = {
 	compact?: boolean
 	isSelected?: boolean
 	isDimmed?: boolean
+	coins?: number | null
 	onClick?: () => void
 }
 
@@ -33,6 +36,7 @@ export function RiderTile({
 	compact = false,
 	isSelected = false,
 	isDimmed = false,
+	coins,
 	onClick
 }: TRiderTile) {
 	const Comp = onClick ? 'button' : 'div'
@@ -52,6 +56,13 @@ export function RiderTile({
 				className
 			)}
 		>
+			{coins != null && (
+				<span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-yellow-400/15 px-1.5 py-0.5 text-xs leading-none font-black text-yellow-400">
+					<Coins className="size-3" />
+					{coins}
+				</span>
+			)}
+
 			<RiderImage
 				className={cn(
 					compact ? 'size-10' : 'size-14',

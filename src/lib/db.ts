@@ -5,7 +5,7 @@ import { NeonDialect } from 'kysely-neon'
 import type { DB } from '@/types/db'
 
 const isTest = process.env.DB_ENV === 'test'
-const databaseUrl = isTest
+export const databaseUrl = isTest
 	? process.env.DATABASE_URL_TEST
 	: process.env.DATABASE_URL
 

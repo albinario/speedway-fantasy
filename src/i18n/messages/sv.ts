@@ -133,14 +133,14 @@ const sv: TMessages = {
 	Rules: {
 		howItWorks: 'Så fungerar det',
 		budget:
-			'Du har 10 coins för att sätta ihop ett lag med tre (3) förare. Ditt lag får aldrig kosta mer än 10 coins.',
+			'Du har 10 mynt för att sätta ihop ett lag med tre (3) förare. Ditt lag får aldrig kosta mer än 10 mynt.',
 		buy: 'Inför säsongen köper du tre (3) förare. Du behöver ett fullt lag för att ta poäng.',
 		collect: 'Samla de poäng som dina tre (3) förare tar i varje Grand Prix.',
 		keepTeam:
 			'Gör du inga ändringar följer ditt lag automatiskt med till nästa Grand Prix.',
 		transferWindow:
 			'Nya priser publiceras oftast morgonen efter varje Grand Prix, och då öppnar transferfönstret. Köp/sälj förare så ofta du vill fram tills nästa Grand Prix startar.',
-		swap: 'Varje byte innebär att du säljer en förare och köper en annan. Ditt lag måste rymmas inom 10 coins efter varje byte.',
+		swap: 'Varje byte innebär att du säljer en förare och köper en annan. Ditt lag måste rymmas inom 10 mynt efter varje byte.',
 		lockedPrice:
 			'Så länge du inte säljer din förare så behåller du föraren till priset du köpte honom för, även om marknadspriset för föraren har ändrats. Säljer du föraren får du tillbaka exakt det du köpte föraren för.',
 		injuries:
@@ -149,7 +149,7 @@ const sv: TMessages = {
 			"Dina byten är hemliga. Andra spelare ser ditt lag när Grand Prix't startar.",
 		priceTiers: 'Prisnivåer',
 		tierRiders: 'Förare rankade {from}-{to}',
-		tierCoins: '{coins} coins',
+		tierCoins: '{coins} mynt',
 		tierFieldSize: 'Varje Grand Prix har 16 förare.',
 		tierOdds:
 			'Priserna bygger på oddsen inför varje Grand Prix. De största favoriterna kostar mest.',
@@ -217,11 +217,17 @@ const sv: TMessages = {
 		ctaPicked: 'Visa / ändra val →',
 		ctaNotPicked: 'Välj dina förare →',
 		footer:
-			'Du får det här mejlet eftersom du har påminnelser på tävlingsdagar aktiverade i Speedway Fantasy. <link>Hantera inställningar</link>'
+			'Du får det här mejlet eftersom du har påminnelser på tävlingsdagar aktiverade i Speedway Fantasy. <link>Hantera inställningar</link>',
+		replacementSubject: '{rider} är ute ur omgång {round} i {city}',
+		replacementBody:
+			'<strong>{rider}</strong> har ersatts i startfältet för omgång {round} i {city}. Behåller du honom får han 0 poäng i det GP:t. Du kan byta honom fram till att GP:t startar.',
+		replacementNewRider: '{replacement} tar hans plats.',
+		replacementCta: 'Byt förare →',
+		replacementFooter:
+			'Du får det här mejlet eftersom {rider} finns i ditt lag i <link>Speedway Fantasy</link>.'
 	},
 	VenueHistory: {
-		noPreviousResults: 'Inga tidigare resultat på den här banan.',
-		lastTimeIn: 'Senast i {city}'
+		noPreviousResults: 'Inga tidigare resultat på den här banan.'
 	},
 	ResultSummary: {
 		bestRider: 'Bästa förare',
@@ -272,17 +278,25 @@ const sv: TMessages = {
 		topPlayers: 'Topp <accent>{limit}</accent> spelare',
 		topRiders: 'Topp <accent>{limit}</accent> förare',
 		pickedRiders: 'Valda förare',
-		myPickedRiders: 'Mina valda förare',
-		editPicks: 'Ändra',
-		pickRiders: 'Välj förare',
 		pickedBy: 'Vald av'
 	},
+	MyTeam: {
+		title: 'Mitt <accent>lag</accent>',
+		spent: 'Använt <accent>{spent}</accent> av {budget} mynt',
+		trade: 'Byt förare',
+		buyTeam: 'Välj ditt lag',
+		windowClosed: 'Byten öppnar när nya priser är ute.'
+	},
 	PickRiders: {
+		budget: 'Använt <accent>{spent}</accent> av {budget} mynt',
 		title: 'Välj dina <accent>3</accent> förare',
 		save: 'Spara val',
 		saving: 'Sparar…',
 		saved: 'Dina val är sparade!',
-		closed: "Valen är låsta för det här GP't."
+		closed: "Valen är låsta för det här GP't.",
+		overBudget: 'Ditt lag får kosta högst {budget} mynt.',
+		pricesChanged:
+			'Priserna har precis ändrats. Kolla de nya priserna och försök igen.'
 	},
 	Activity: {
 		picked: 'Valde',
@@ -327,7 +341,7 @@ const sv: TMessages = {
 			'Nu tar Speedway Fantasy nästa steg — ett budgetsystem introduceras för att sätta ditt lag.',
 		budget: {
 			label: 'Budget',
-			text: 'Ditt lag med tre förare får kosta högst 10 coins totalt.'
+			text: 'Ditt lag med tre förare får kosta högst 10 mynt totalt.'
 		},
 		riderPicks: {
 			label: 'Val av förare',
@@ -335,7 +349,7 @@ const sv: TMessages = {
 		},
 		priceTiers: {
 			label: 'Prisnivåer',
-			text: 'Varje GP har 16 förare i fem prisnivåer. De tre största favoriterna kostar 5 coins, nästa tre kostar 4, och så vidare ner till 1 coin för de fyra sista. Priserna bygger på oddsen inför varje GP.'
+			text: 'Varje GP har 16 förare i fem prisnivåer. De tre största favoriterna kostar 5 mynt, nästa tre kostar 4, och så vidare ner till 1 mynt för de fyra sista. Priserna bygger på oddsen inför varje GP.'
 		},
 		keepTeam: {
 			label: 'Behåll ditt lag',
