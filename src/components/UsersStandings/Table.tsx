@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl'
 import { MedalCounts } from '@/components/MedalCounts'
 import { MedalIcon } from '@/components/MedalIcon'
 import { PosBadge } from '@/components/PosBadge'
+import type { TPositionProgress } from '@/components/PositionProgress/geometry'
+import { PositionSparkline } from '@/components/PositionProgress/Sparkline'
 import { Card } from '@/components/ui/card'
 import { DataTable, type TColumnDef } from '@/components/ui/data-table'
 import { UserName } from '@/components/UserName'
@@ -15,7 +17,31 @@ type TRow = Awaited<ReturnType<typeof getUsersStandings>>[number]
 
 type TLabels = { points: string; heats: string; gps: string }
 
-function makeColumns(labels: TLabels, viewerId?: number): TColumnDef<TRow>[] {
+function makeColumns(
+	labels: TLabels,
+	viewerId?: number,
+	progress?: TPositionProgress
+): TColumnDef<TRow>[] {
+	const trendColumn: TColumnDef<TRow>[] = progress
+		? [
+				{
+					id: 'trend',
+					header: '',
+					enableSorting: false,
+					meta: { className: 'hidden px-1 sm:table-cell' },
+					cell: ({ row }) => {
+						const positions = progress.byUser[row.original.user_id]
+						return positions ? (
+							<PositionSparkline
+								positions={positions}
+								rounds={progress.rounds}
+							/>
+						) : null
+					}
+				}
+			]
+		: []
+
 	return [
 		{
 			id: 'pos',
@@ -54,18 +80,26 @@ function makeColumns(labels: TLabels, viewerId?: number): TColumnDef<TRow>[] {
 							userId={row.original.user_id}
 							isViewer={row.original.user_id === viewerId}
 						/>
-						<div className="mt-1 sm:hidden">
+						<div className="mt-1 flex items-center gap-3 sm:hidden">
 							<MedalCounts
 								medal_1={Number(row.original.medal_1)}
 								medal_2={Number(row.original.medal_2)}
 								medal_3={Number(row.original.medal_3)}
 								size="sm"
 							/>
+							{progress?.byUser[row.original.user_id] && (
+								<PositionSparkline
+									positions={progress.byUser[row.original.user_id]}
+									rounds={progress.rounds}
+									className="h-4 w-12"
+								/>
+							)}
 						</div>
 					</div>
 				</div>
 			)
 		},
+		...trendColumn,
 		{
 			accessorKey: 'points',
 			header: labels.points,
@@ -105,16 +139,21 @@ function makeColumns(labels: TLabels, viewerId?: number): TColumnDef<TRow>[] {
 type TUsersStandingsTable = {
 	data: TRow[]
 	viewerId?: number
+	progress?: TPositionProgress
 }
 
-export function UsersStandingsTable({ data, viewerId }: TUsersStandingsTable) {
+export function UsersStandingsTable({
+	data,
+	viewerId,
+	progress
+}: TUsersStandingsTable) {
 	const t = useTranslations('Common')
 	const labels = { points: t('points'), heats: t('heats'), gps: t('gps') }
 
 	return (
 		<Card className="overflow-clip">
 			<DataTable
-				columns={makeColumns(labels, viewerId)}
+				columns={makeColumns(labels, viewerId, progress)}
 				data={data}
 				getRowSticky={(row) => row.user_id === viewerId}
 			/>

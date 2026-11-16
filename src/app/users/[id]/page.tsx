@@ -5,6 +5,7 @@ import { getGps, getNextGp } from '@/app/gps/data'
 import { UserGpCard } from '@/components/GpCard'
 import { MyTeamCard } from '@/components/MyTeamCard'
 import { PageHeader } from '@/components/PageHeader'
+import { UserPositionProgress } from '@/components/PositionProgress'
 import { SectionTitle } from '@/components/SectionHeader'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserHero } from '@/components/UserHero'
@@ -85,6 +86,8 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				year={yearValues.activeYear}
 				createdAt={user.created_at}
 			/>
+
+			<UserPositionProgress userId={userId} year={yearValues.activeYear} />
 
 			{nextGp &&
 				viewer.db?.id === userId &&

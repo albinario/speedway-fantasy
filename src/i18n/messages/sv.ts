@@ -130,6 +130,14 @@ const sv: TMessages = {
 		second: 'Tvåa',
 		third: 'Trea'
 	},
+	PositionProgress: {
+		title: 'Säsongsutveckling',
+		best: 'Bäst',
+		worst: 'Sämst',
+		latest: 'Nu',
+		dotLabel: 'GP {round}: #{pos}',
+		chartLabel: 'Placering i tabellen efter varje GP: {positions}'
+	},
 	Rules: {
 		howItWorks: 'Så fungerar det',
 		budget:
