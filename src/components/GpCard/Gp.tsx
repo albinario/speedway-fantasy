@@ -2,7 +2,6 @@ import { VenueHistoryContent } from '@/app/gps/[id]/VenueHistory'
 import type { getGps } from '@/app/gps/data'
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { HeatsCounter } from '@/components/HeatsCounter'
-import { WildCard } from '@/components/WildCard'
 import { EMacroStage } from '@/enums'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { getMacroStage } from '@/lib/dates'
@@ -17,7 +16,8 @@ type TGpCard = {
 	isUpNext?: boolean
 	linked?: boolean
 	macroStage?: EMacroStage
-	showVenueHistory?: boolean
+	// The GP page shows venue history in its own card beside this one
+	hideVenueHistory?: boolean
 	viewerId?: number
 	imageLoading?: 'eager' | 'lazy'
 }
@@ -27,7 +27,7 @@ export async function GpCard({
 	isUpNext = false,
 	linked = false,
 	macroStage: macroStageProp,
-	showVenueHistory = false,
+	hideVenueHistory = false,
 	viewerId: viewerIdProp,
 	imageLoading
 }: TGpCard) {
@@ -59,15 +59,7 @@ export async function GpCard({
 
 			{macroStage === EMacroStage.Before && <ActivityFeed gpId={gp.id} />}
 
-			{macroStage === EMacroStage.Before && gp.wild_card_id && (
-				<WildCard
-					countryCode={gp.wild_card_country_code}
-					name={gp.wild_card_name}
-					riderId={gp.wild_card_id}
-				/>
-			)}
-
-			{showVenueHistory && macroStage === EMacroStage.Before && (
+			{!hideVenueHistory && macroStage === EMacroStage.Before && (
 				<VenueHistoryContent
 					gpId={gp.id}
 					cityName={gp.city_name}

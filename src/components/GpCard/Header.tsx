@@ -23,6 +23,8 @@ type TGpCardHeader = {
 	startDate: Date | string | null
 	timeZone: string
 	macroStage: EMacroStage
+	wildCardName?: string | null
+	wildCardCountryCode?: string | null
 	showCountdown?: boolean
 	imageLoading?: 'eager' | 'lazy'
 }
@@ -37,6 +39,8 @@ export function GpCardHeader({
 	startDate,
 	timeZone,
 	macroStage,
+	wildCardName,
+	wildCardCountryCode,
 	showCountdown = false,
 	imageLoading
 }: TGpCardHeader) {
@@ -81,6 +85,15 @@ export function GpCardHeader({
 						<StartTimeNote date={startDate} eventTimeZone={timeZone} />
 					)}
 				</div>
+
+				{wildCardName && (
+					<div className="flex items-center gap-1.5 text-sm font-black uppercase opacity-80">
+						<span>
+							{t('wildCard')}: {wildCardName}
+						</span>
+						<Flag countryCode={wildCardCountryCode} widthClass="w-4" />
+					</div>
+				)}
 
 				<RegisteredPlayers gpId={gpId} />
 			</div>

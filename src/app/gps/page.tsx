@@ -51,7 +51,6 @@ export default async function GpsPage({ searchParams }: TGpsPage) {
 										isUpNext={gp.id === upNextId}
 										linked
 										macroStage={stage}
-										showVenueHistory
 										imageLoading={
 											items === firstSection && i < 2 ? 'eager' : undefined
 										}
