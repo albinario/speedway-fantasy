@@ -23,6 +23,9 @@ export const getLatestStandingsYear = cachedQuery(
 		const row = await db
 			.selectFrom('users_standings')
 			.select((eb) => eb.fn.max('year').as('year'))
+			// Saving a team creates a 0-point row for the new year; only count
+			// a year once a GP report has ranked it (pos is set by the report)
+			.where('pos', 'is not', null)
 			.executeTakeFirst()
 		return row?.year ?? null
 	},

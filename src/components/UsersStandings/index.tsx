@@ -1,3 +1,4 @@
+import { getUsersProgress } from '@/components/PositionProgress/data'
 import { getViewer } from '@/lib/auth/get-viewer'
 import type { TParamValues } from '@/lib/params'
 
@@ -18,13 +19,17 @@ export async function UsersStandings({
 	limit,
 	form = 'total'
 }: TUsersStandings) {
-	const [standings, viewer] = await Promise.all([
+	// Season trend only makes sense for full-season standings of a single year
+	const showProgress = !limit && form === 'total' && typeof year === 'number'
+
+	const [standings, viewer, progress] = await Promise.all([
 		form === 'last2'
 			? getUsersFormStandings(2, limit)
 			: form === 'last4'
 				? getUsersFormStandings(4, limit)
 				: getUsersStandings(year, limit),
-		getViewer()
+		getViewer(),
+		showProgress ? getUsersProgress(year) : null
 	])
 
 	if (!standings.length) return null
@@ -33,5 +38,11 @@ export async function UsersStandings({
 		return <UsersLimitedTable data={standings} limit={limit} />
 	}
 
-	return <UsersStandingsTable data={standings} viewerId={viewer?.db?.id} />
+	return (
+		<UsersStandingsTable
+			data={standings}
+			viewerId={viewer?.db?.id}
+			progress={progress && progress.rounds >= 2 ? progress : undefined}
+		/>
+	)
 }

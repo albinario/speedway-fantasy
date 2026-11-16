@@ -134,6 +134,14 @@ const en = {
 		second: 'Second',
 		third: 'Third'
 	},
+	PositionProgress: {
+		title: 'Season progress',
+		best: 'Best',
+		worst: 'Worst',
+		latest: 'Now',
+		dotLabel: 'GP {round}: #{pos}',
+		chartLabel: 'Standings position after each GP: {positions}'
+	},
 	Rules: {
 		howItWorks: 'How it works',
 		budget:

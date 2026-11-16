@@ -37,6 +37,8 @@ export function GpCardBase({
 				startDate={gp.start_date}
 				timeZone={gp.time_zone}
 				macroStage={macroStage}
+				wildCardName={gp.wild_card_name}
+				wildCardCountryCode={gp.wild_card_country_code}
 				showCountdown={isUpNext}
 				imageLoading={imageLoading}
 			/>

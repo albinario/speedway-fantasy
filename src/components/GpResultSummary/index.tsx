@@ -5,6 +5,7 @@ import type { TGpSummary } from '@/app/gps/[id]/data'
 import { FlagNumber } from '@/components/FlagNumber'
 import { getUserGpRow } from '@/components/GpCard/UserResultRow/data'
 import { PosBadge } from '@/components/PosBadge'
+import { RiderImage } from '@/components/RiderImage'
 import { RiderName } from '@/components/RiderName'
 import { UserName } from '@/components/UserName'
 import { cn } from '@/lib/utils'
@@ -73,13 +74,19 @@ export async function GpResultSummaryBody({
 				<div className="flex flex-col gap-1">
 					<Label>{t('bestRider')}</Label>
 					<div className="flex items-center justify-between gap-2">
-						<div className="flex min-w-0 items-center gap-2">
-							<RiderName name={rider.name} riderId={rider.rider_id} />
-							<FlagNumber
-								countryCode={rider.country_code}
-								number={rider.number}
-								size="xs"
+						<div className="flex min-w-0 items-center gap-4">
+							<RiderImage
+								className="size-12"
+								name={rider.name}
+								riderId={rider.rider_id}
 							/>
+							<div className="flex min-w-0 flex-col gap-0.5">
+								<RiderName name={rider.name} riderId={rider.rider_id} />
+								<FlagNumber
+									countryCode={rider.country_code}
+									number={rider.number}
+								/>
+							</div>
 						</div>
 						<Points points={rider.points} highlight />
 					</div>

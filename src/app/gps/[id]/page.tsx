@@ -102,7 +102,12 @@ export default async function GpPage({ params, searchParams }: TGpPage) {
 			{macroStage === EMacroStage.During && <AutoRefresh />}
 			{/* Card at mobile width on desktop too; season context beside it */}
 			<div className="grid items-start gap-4 md:grid-cols-2">
-				<GpCard gp={gp} macroStage={macroStage} imageLoading="eager" />
+				<GpCard
+					gp={gp}
+					macroStage={macroStage}
+					imageLoading="eager"
+					hideVenueHistory
+				/>
 
 				<div className="flex flex-col gap-4">
 					<GpSeasonProgress year={year} currentGpId={gp.id} />
