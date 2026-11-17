@@ -71,7 +71,7 @@ function makeColumns(
 			meta: { className: 'pl-0' },
 			cell: ({ row }) => (
 				<div className="flex items-center gap-2">
-					<div className="flex min-h-10 flex-col items-start justify-center sm:min-h-0">
+					<div className="flex min-h-10 flex-1 flex-col items-start justify-center sm:min-h-0">
 						<UserName
 							className="text-base leading-5 sm:text-lg sm:leading-7"
 							firstName={row.original.first_name}
@@ -80,7 +80,7 @@ function makeColumns(
 							userId={row.original.user_id}
 							isViewer={row.original.user_id === viewerId}
 						/>
-						<div className="mt-1 flex items-center gap-3 sm:hidden">
+						<div className="mt-1 flex w-full items-center gap-3 sm:hidden">
 							<MedalCounts
 								medal_1={Number(row.original.medal_1)}
 								medal_2={Number(row.original.medal_2)}
@@ -91,7 +91,7 @@ function makeColumns(
 								<PositionSparkline
 									positions={progress.byUser[row.original.user_id]}
 									rounds={progress.rounds}
-									className="h-4 w-12"
+									className="ml-auto h-4 w-12"
 								/>
 							)}
 						</div>
