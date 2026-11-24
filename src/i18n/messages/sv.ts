@@ -118,24 +118,25 @@ const sv: TMessages = {
 		nextPage: 'Nästa sida'
 	},
 	UserHero: {
+		behind: 'Efter',
+		behindLeader: 'Efter ledaren',
+		seasonYear: 'Säsong {year}',
+		allTime: 'Alla år'
+	},
+	UserMeta: {
 		pickedInAllGps: 'Har valt förare i alla {count} GP',
 		everyGp: 'Varje GP',
 		gpStreak: 'GP i rad',
-		positions: '{count} plac.',
-		ptsBehind: '{gap} p',
-		behindLeader: 'efter ledaren',
 		memberSince: 'Medlem sedan',
-		trophyCollection: 'Troféer',
+		emptyTrophies: 'Tom trofésamling',
 		winner: 'Vinnare',
 		second: 'Tvåa',
 		third: 'Trea'
 	},
 	PositionProgress: {
-		title: 'Säsongsutveckling',
 		best: 'Bäst',
 		worst: 'Sämst',
-		latest: 'Nu',
-		dotLabel: 'GP {round}: #{pos}',
+		dotLabel: 'GP {round}: placering {pos}',
 		chartLabel: 'Placering i tabellen efter varje GP: {positions}'
 	},
 	Rules: {

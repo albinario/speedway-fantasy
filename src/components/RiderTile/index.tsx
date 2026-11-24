@@ -57,7 +57,7 @@ export function RiderTile({
 			)}
 		>
 			{coins != null && (
-				<span className="absolute top-1.5 right-1.5 flex items-center gap-0.5 rounded-full bg-yellow-400/15 px-1.5 py-0.5 text-xs leading-none font-black text-yellow-400">
+				<span className="absolute top-2 right-2 flex items-center gap-0.5 text-xs leading-none font-black text-yellow-400">
 					<Coins className="size-3" />
 					{coins}
 				</span>
@@ -83,7 +83,11 @@ export function RiderTile({
 				)}
 
 				{!hideFlagNumber && (
-					<FlagNumber countryCode={rider.country_code} number={rider.number} />
+					<FlagNumber
+						countryCode={rider.country_code}
+						number={rider.number}
+						size="xs"
+					/>
 				)}
 			</div>
 		</Comp>

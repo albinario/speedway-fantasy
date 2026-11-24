@@ -73,7 +73,10 @@ export function GpCardHeader({
 
 			{/* Dark glow behind the text so it stays readable on bright photos */}
 			<div className="absolute inset-0 z-40 flex flex-col justify-end gap-1 p-4 text-shadow-black/70 text-shadow-lg">
-				<Flag countryCode={countryCode} widthClass="w-8" />
+				<Flag
+					className="w-8 drop-shadow-xl drop-shadow-black/90"
+					countryCode={countryCode}
+				/>
 				<h2 className="text-3xl font-black uppercase">{cityName}</h2>
 
 				<div className="text-sm font-black uppercase opacity-80">
@@ -91,7 +94,10 @@ export function GpCardHeader({
 						<span>
 							{t('wildCard')}: {wildCardName}
 						</span>
-						<Flag countryCode={wildCardCountryCode} widthClass="w-4" />
+						<Flag
+							countryCode={wildCardCountryCode}
+							className="w-4 drop-shadow-lg drop-shadow-black/90"
+						/>
 					</div>
 				)}
 

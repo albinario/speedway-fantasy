@@ -1,52 +1,43 @@
-import { getLocale, getTranslations } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 
-import {
-	ArrowDown,
-	ArrowUp,
-	ChevronRight,
-	Flame,
-	ShieldOff,
-	Star,
-	UserRoundCheck
-} from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronRight } from 'lucide-react'
 
-import { getUserStars } from '@/app/users/[id]/data'
 import { MedalCounts } from '@/components/MedalCounts'
+import { UserPositionProgress } from '@/components/PositionProgress'
+import { getUsersProgress } from '@/components/PositionProgress/data'
+import { SectionTitle } from '@/components/SectionHeader'
 import { CardGlow } from '@/components/ui/card'
 import { getUserStandingRow } from '@/components/UsersStandings/data'
-import { intlLocales } from '@/i18n/config'
-import { getMedalColorHex } from '@/lib/medals'
 import { type TParamValues } from '@/lib/params'
 
-import { getLeader, getUserStreak } from './data'
+import { getLeader } from './data'
 
 type TUserHero = {
 	userId: number
 	year: number | TParamValues
-	createdAt: Date
 }
 
-export async function UserHero({ userId, year, createdAt }: TUserHero) {
-	const [
-		standings,
-		leaderRecord,
-		{ streak, total: totalGps },
-		starRecords,
-		t,
-		tCommon,
-		locale
-	] = await Promise.all([
-		getUserStandingRow(year, userId),
-		getLeader(year),
-		getUserStreak(userId),
-		getUserStars(userId),
-		getTranslations('UserHero'),
-		getTranslations('Common'),
-		getLocale()
-	])
+// Small section header above a stat value
+function StatLabel({ children }: { children: React.ReactNode }) {
+	return (
+		<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
+			{children}
+		</span>
+	)
+}
 
-	const everyGp = totalGps > 0 && streak === totalGps
+export async function UserHero({ userId, year }: TUserHero) {
+	const [standings, leaderRecord, progress, t, tCommon, tProgress] =
+		await Promise.all([
+			getUserStandingRow(year, userId),
+			getLeader(year),
+			typeof year === 'number' ? getUsersProgress(year) : null,
+			getTranslations('UserHero'),
+			getTranslations('Common'),
+			getTranslations('PositionProgress')
+		])
+
 	const pos = standings?.pos ?? null
 	const prevPos = standings?.prev_pos ?? null
 	const points = Number(standings?.points ?? 0)
@@ -58,166 +49,136 @@ export async function UserHero({ userId, year, createdAt }: TUserHero) {
 		bronze: Number(standings?.medal_3 ?? 0)
 	}
 
-	const moved = pos != null && prevPos != null ? prevPos - pos : null
 	const gap = leader - points
-	const progressPct =
-		leader > 0 ? Math.min(100, Math.round((points / leader) * 100)) : 100
-
-	const memberSince = new Date(createdAt).toLocaleDateString(
-		intlLocales[locale],
-		{
-			day: 'numeric',
-			month: 'long',
-			year: 'numeric'
-		}
+	const linksToLeader = leaderUserId != null && leaderUserId !== userId
+	// "Behind" on mobile, "Behind leader" from sm up
+	const behindLabel = (
+		<>
+			<span className="sm:hidden">{t('behind')}</span>
+			<span className="hidden sm:inline">{t('behindLeader')}</span>
+		</>
 	)
+	// Positive = climbed (lower position number is better)
+	const moved = pos != null && prevPos != null ? prevPos - pos : 0
+
+	// Same condition as the chart, so best/worst only show alongside it
+	const positions = progress?.byUser[userId] ?? []
+	const positionStats =
+		positions.length >= 2
+			? [
+					{ label: tProgress('best'), value: Math.min(...positions) },
+					{ label: tProgress('worst'), value: Math.max(...positions) }
+				]
+			: []
 
 	return (
-		<div className="flex flex-col gap-1">
+		<section className="flex flex-col gap-1">
+			<SectionTitle>
+				{typeof year === 'number' ? t('seasonYear', { year }) : t('allTime')}
+			</SectionTitle>
+
 			<div className="bg-card relative isolate flex flex-col divide-y divide-white/5 overflow-hidden rounded-xl">
 				<CardGlow color="orange" position="top" />
 
-				{/* Row 1: Points + medals + streak */}
-				<div className="flex flex-wrap items-center gap-4 p-4">
-					<div className="flex flex-col items-center">
-						<span className="text-5xl leading-none font-black">{points}</span>
-						<span className="text-muted-foreground text-xs font-black tracking-wide uppercase">
-							{tCommon('points')}
+				{/* Row 1: Points + medals | gap to leader. Medals wrap below the
+				    points only when they collide; the gap always stays beside points */}
+				<div className="flex items-start gap-4 p-4">
+					<div className="flex min-w-0 flex-1 flex-wrap items-end gap-4">
+						<div className="flex flex-col gap-1">
+							<StatLabel>{tCommon('points')}</StatLabel>
+							<span className="text-5xl leading-none font-black">{points}</span>
+						</div>
+
+						<MedalCounts
+							medal_1={medals.gold}
+							medal_2={medals.silver}
+							medal_3={medals.bronze}
+							size="lg"
+						/>
+					</div>
+
+					{/* Gap to leader, styled like best/worst below.
+					    pt-5 skips the POINTS label row, then a line box the size of the
+					    points number gives the same baseline. The label + value stack
+					    sits on that baseline by its last line (the value), so the label
+					    stays right above the value */}
+					<div className="shrink-0 pt-5 text-5xl leading-none">
+						<span className="inline-flex flex-col items-center gap-1 align-baseline [baseline-source:last]">
+							<StatLabel>{behindLabel}</StatLabel>
+
+							{linksToLeader ? (
+								<Link
+									className="inline-flex items-center text-xl font-black"
+									href={`/users/${leaderUserId}${year !== 'all' ? `?year=${year}` : ''}`}
+								>
+									{gap}
+									{/* Negative margins trim the icon's built-in whitespace */}
+									<ChevronRight
+										className="text-brand-red -mr-2 -ml-0.5"
+										size={22}
+									/>
+								</Link>
+							) : (
+								<span className="text-xl font-black">{gap}</span>
+							)}
 						</span>
 					</div>
-
-					<MedalCounts
-						medal_1={medals.gold}
-						medal_2={medals.silver}
-						medal_3={medals.bronze}
-						size="lg"
-					/>
-
-					{everyGp ? (
-						<div
-							title={t('pickedInAllGps', { count: totalGps })}
-							className="border-gold/40 bg-gold/10 relative ml-auto flex items-center gap-1 overflow-hidden rounded-full border px-3 py-1"
-						>
-							<span className="text-gold text-xl font-black">{streak}</span>
-							<Flame size={25} className="text-gold" />
-							<span className="text-gold text-xs font-black tracking-wide uppercase">
-								{t('everyGp')}
-							</span>
-							<span
-								aria-hidden
-								className="animate-sheen pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-linear-to-r from-transparent via-white/25 to-transparent motion-reduce:hidden"
-							/>
-						</div>
-					) : (
-						streak > 0 && (
-							<div className="ml-auto flex items-center gap-1">
-								<span className="text-xl font-black">{streak}</span>
-								<Flame size={25} className="text-brand-red" />
-								<span className="text-muted-foreground text-xs tracking-wide uppercase">
-									{t('gpStreak')}
-								</span>
-							</div>
-						)
-					)}
 				</div>
 
-				{/* Row 2: Position + progress bar */}
+				{/* Row 2: Position + movement + position after each GP */}
 				{pos != null && (
-					<div className="flex flex-col gap-2 p-4">
-						<div className="flex items-baseline justify-between">
-							<div className="flex items-baseline gap-2">
-								<span className="text-2xl font-black">
-									#<span className="text-4xl">{pos}</span>
-								</span>
+					<div className="flex flex-col gap-4 p-4">
+						<div className="flex items-end justify-between gap-4">
+							<div className="flex flex-col gap-1">
+								<StatLabel>{tCommon('position')}</StatLabel>
 
-								{moved != null && moved > 0 && (
-									<span className="flex items-center gap-0.5 rounded-full bg-green-400/20 px-2 py-0.5 text-xs font-black text-green-400">
-										<ArrowUp size={12} />
-										{t('positions', { count: moved })}
+								<div className="flex items-baseline gap-2">
+									<span className="text-4xl leading-none font-black">
+										{pos}
 									</span>
-								)}
-								{moved != null && moved < 0 && (
-									<span className="flex items-center gap-0.5 rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-black text-red-500">
-										<ArrowDown size={12} />{' '}
-										{t('positions', { count: Math.abs(moved) })}
-									</span>
-								)}
+
+									{moved !== 0 && (
+										<span
+											className={
+												moved > 0
+													? 'flex items-center gap-0.5 rounded-full bg-green-400/20 px-2.5 py-0.5 text-base font-black text-green-400'
+													: 'flex items-center gap-0.5 rounded-full bg-red-500/20 px-2.5 py-0.5 text-base font-black text-red-500'
+											}
+										>
+											{moved > 0 ? (
+												<ArrowUp size={16} />
+											) : (
+												<ArrowDown size={16} />
+											)}
+											{Math.abs(moved)}
+										</span>
+									)}
+								</div>
 							</div>
 
-							<span className="tracking-wide uppercase">
-								<span className="text-brand-red">
-									{t('ptsBehind', { gap })}
-								</span>{' '}
-								{leaderUserId != null && leaderUserId !== userId ? (
-									<Link
-										className="text-muted-foreground inline-flex items-center text-xs hover:underline"
-										href={`/users/${leaderUserId}${year !== 'all' ? `?year=${year}` : ''}`}
-									>
-										{t('behindLeader')}
-										<ChevronRight className="text-brand-red" size={16} />
-									</Link>
-								) : (
-									<span className="text-muted-foreground text-xs">
-										{t('behindLeader')}
-									</span>
-								)}
-							</span>
+							{positionStats.length > 0 && (
+								<dl className="flex gap-6">
+									{positionStats.map(({ label, value }) => (
+										<div
+											key={label}
+											className="flex flex-col items-center gap-1"
+										>
+											<dt>
+												<StatLabel>{label}</StatLabel>
+											</dt>
+											<dd className="text-xl leading-none font-black">
+												{value}
+											</dd>
+										</div>
+									))}
+								</dl>
+							)}
 						</div>
 
-						{leader > 0 && (
-							<div className="bg-foreground/10 h-4 overflow-hidden rounded-full">
-								<div
-									className="h-full rounded-full bg-gradient-to-r from-orange-400/40 to-orange-400/90"
-									style={{ width: `${progressPct}%` }}
-								/>
-							</div>
-						)}
+						<UserPositionProgress userId={userId} year={year} />
 					</div>
 				)}
-
-				{/* Member since */}
-				<div className="flex items-center gap-1.5 px-4 py-3 text-xs">
-					<UserRoundCheck className="size-3.5 text-green-400" />
-					<span className="text-muted-foreground">{t('memberSince')}</span>
-					<span>{memberSince}</span>
-				</div>
-
-				{/* Trophy collection */}
-				<div className="flex flex-wrap items-start gap-x-6 gap-y-3 p-4">
-					<span className="text-muted-foreground shrink-0 text-xs font-black tracking-wide uppercase">
-						{t('trophyCollection')}
-					</span>
-
-					{starRecords.length > 0 ? (
-						<div className="flex flex-1 justify-end gap-4">
-							{starRecords.map(({ year: starYear, type }) => {
-								const color = getMedalColorHex(type)
-								const label = t(
-									type === 1 ? 'winner' : type === 2 ? 'second' : 'third'
-								)
-
-								return (
-									<div key={starYear} className="flex items-center gap-2">
-										<Star fill={color} size={30} stroke={color} />
-
-										<div className="flex flex-col leading-none">
-											<span className="text-sm font-black">{label}</span>
-											<span className="text-muted-foreground text-xs">
-												{starYear}
-											</span>
-										</div>
-									</div>
-								)
-							})}
-						</div>
-					) : (
-						<ShieldOff
-							size={15}
-							className="text-muted-foreground ml-auto opacity-50"
-						/>
-					)}
-				</div>
 			</div>
-		</div>
+		</section>
 	)
 }

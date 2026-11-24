@@ -15,11 +15,13 @@ type TGpSeasonProgress = {
 	year?: number
 	// On a GP page: highlight that GP and link to its neighbours
 	currentGpId?: number
+	hideTitle?: boolean
 }
 
 export async function GpSeasonProgress({
 	year = new Date().getFullYear(),
-	currentGpId
+	currentGpId,
+	hideTitle = false
 }: TGpSeasonProgress) {
 	const [gps, t] = await Promise.all([getGps(year), getTranslations('Home')])
 	if (!gps.length) return null
@@ -32,9 +34,11 @@ export async function GpSeasonProgress({
 		<Card className="relative isolate">
 			<CardGlow color="green" />
 			<CardContent className="flex flex-col gap-3 pt-4">
-				<span className="text-xs font-bold tracking-wide uppercase">
-					{currentGpId ? t('seasonYear', { year }) : t('seasonProgress')}
-				</span>
+				{!hideTitle && (
+					<span className="text-xs font-bold tracking-wide uppercase">
+						{currentGpId ? t('seasonYear', { year }) : t('seasonProgress')}
+					</span>
+				)}
 
 				<div className="flex items-start">
 					{gps.map((gp, i) => {
@@ -92,7 +96,7 @@ export async function GpSeasonProgress({
 								</div>
 
 								<Link href={`/gps/${gp.id}`}>
-									<Flag countryCode={gp.country_code} widthClass="w-3.5" />
+									<Flag countryCode={gp.country_code} className="w-3.5" />
 								</Link>
 							</div>
 						)

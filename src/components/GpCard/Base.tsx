@@ -1,7 +1,10 @@
+import { Children } from 'react'
+
 import type { getGps } from '@/app/gps/data'
 import { Card, CardContent, CardGlow } from '@/components/ui/card'
 import { EMacroStage } from '@/enums'
 
+import { gpCardAnchor } from './anchor'
 import { GpCardHeader } from './Header'
 
 type TGpCardBase = {
@@ -10,6 +13,8 @@ type TGpCardBase = {
 	linked?: boolean
 	macroStage: EMacroStage
 	imageLoading?: 'eager' | 'lazy'
+	// Gives the card an id (see gpCardAnchor) so the page can scroll to it
+	anchored?: boolean
 	children?: React.ReactNode
 }
 
@@ -19,12 +24,16 @@ export function GpCardBase({
 	linked = false,
 	macroStage,
 	imageLoading,
+	anchored = false,
 	children
 }: TGpCardBase) {
 	const href = linked ? `/gps/${gp.id}` : undefined
 
 	return (
-		<Card className="relative isolate">
+		<Card
+			id={anchored ? gpCardAnchor(gp.id) : undefined}
+			className="relative isolate scroll-mt-[calc(var(--header-h)+1rem)]"
+		>
 			<CardGlow color="silver" position="bottom" />
 
 			<GpCardHeader
@@ -43,7 +52,10 @@ export function GpCardBase({
 				imageLoading={imageLoading}
 			/>
 
-			<CardContent className="flex flex-col gap-6">{children}</CardContent>
+			{/* Skip the padded content area when every child is conditional and off */}
+			{Children.toArray(children).length > 0 && (
+				<CardContent className="flex flex-col gap-6">{children}</CardContent>
+			)}
 		</Card>
 	)
 }

@@ -26,7 +26,13 @@ export async function UserGpCard({
 	const macroStage = macroStageProp ?? getMacroStage(gp.start_date, gp.finished)
 
 	return (
-		<GpCardBase gp={gp} isUpNext={isUpNext} linked macroStage={macroStage}>
+		<GpCardBase
+			gp={gp}
+			isUpNext={isUpNext}
+			linked
+			anchored
+			macroStage={macroStage}
+		>
 			{macroStage === EMacroStage.Before && (
 				<UserPicks gpId={gp.id} gpStartDate={gp.start_date} userId={userId} />
 			)}

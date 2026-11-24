@@ -122,24 +122,25 @@ const en = {
 		nextPage: 'Next page'
 	},
 	UserHero: {
+		behind: 'Behind',
+		behindLeader: 'Behind leader',
+		seasonYear: 'Season {year}',
+		allTime: 'All time'
+	},
+	UserMeta: {
 		pickedInAllGps: 'Picked in all {count} GPs',
 		everyGp: 'Every GP',
 		gpStreak: 'GP Streak',
-		positions: '{count} pos',
-		ptsBehind: '{gap} pts',
-		behindLeader: 'behind leader',
 		memberSince: 'Member since',
-		trophyCollection: 'Trophy collection',
+		emptyTrophies: 'Empty trophy collection',
 		winner: 'Winner',
 		second: 'Second',
 		third: 'Third'
 	},
 	PositionProgress: {
-		title: 'Season progress',
 		best: 'Best',
 		worst: 'Worst',
-		latest: 'Now',
-		dotLabel: 'GP {round}: #{pos}',
+		dotLabel: 'GP {round}: position {pos}',
 		chartLabel: 'Standings position after each GP: {positions}'
 	},
 	Rules: {

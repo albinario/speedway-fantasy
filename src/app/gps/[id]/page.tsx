@@ -22,6 +22,7 @@ import { GpUsersStandingsTable } from './GpUsersStandingsTable'
 import { GpRidersPreviewTable, GpRidersResultsTable } from './RidersTables'
 import { GpUsersResultsTable } from './UsersResultsTable'
 import { VenueHistory } from './VenueHistory'
+import { ViewerPicksCard } from './ViewerPicksCard'
 
 type TGpPage = {
 	params: Promise<{ id: string }>
@@ -101,7 +102,7 @@ export default async function GpPage({ params, searchParams }: TGpPage) {
 		<div className="flex flex-col gap-4">
 			{macroStage === EMacroStage.During && <AutoRefresh />}
 			{/* Card at mobile width on desktop too; season context beside it */}
-			<div className="grid items-start gap-4 md:grid-cols-2">
+			<div className="grid items-start gap-4 sm:grid-cols-2">
 				<GpCard
 					gp={gp}
 					macroStage={macroStage}
@@ -110,7 +111,10 @@ export default async function GpPage({ params, searchParams }: TGpPage) {
 				/>
 
 				<div className="flex flex-col gap-4">
-					<GpSeasonProgress year={year} currentGpId={gp.id} />
+					<GpSeasonProgress year={year} currentGpId={gp.id} hideTitle />
+					{!isBefore && viewerId && (
+						<ViewerPicksCard gpId={gp.id} viewerId={viewerId} />
+					)}
 					{isBefore && (
 						<VenueHistory
 							gpId={gp.id}
@@ -139,7 +143,7 @@ export default async function GpPage({ params, searchParams }: TGpPage) {
 				</div>
 			) : null}
 
-			{viewer.isAdmin && (
+			{viewer.isAdmin && isBefore && (
 				<GpMissingStandingsCard
 					gpId={gp.id}
 					year={new Date(gp.start_date).getFullYear()}
