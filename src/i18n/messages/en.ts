@@ -122,8 +122,7 @@ const en = {
 		nextPage: 'Next page'
 	},
 	UserHero: {
-		behind: 'Behind',
-		behindLeader: 'Behind leader',
+		leader: 'Leader',
 		seasonYear: 'Season {year}',
 		allTime: 'All time'
 	},

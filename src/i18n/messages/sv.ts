@@ -118,8 +118,7 @@ const sv: TMessages = {
 		nextPage: 'Nästa sida'
 	},
 	UserHero: {
-		behind: 'Efter',
-		behindLeader: 'Efter ledaren',
+		leader: 'Ledare',
 		seasonYear: 'Säsong {year}',
 		allTime: 'Alla år'
 	},

@@ -10,6 +10,7 @@ import { SectionTitle } from '@/components/SectionHeader'
 import { CardGlow } from '@/components/ui/card'
 import { getUserStandingRow } from '@/components/UsersStandings/data'
 import { type TParamValues } from '@/lib/params'
+import { cn } from '@/lib/utils'
 
 import { getLeader } from './data'
 
@@ -49,15 +50,7 @@ export async function UserHero({ userId, year }: TUserHero) {
 		bronze: Number(standings?.medal_3 ?? 0)
 	}
 
-	const gap = leader - points
 	const linksToLeader = leaderUserId != null && leaderUserId !== userId
-	// "Behind" on mobile, "Behind leader" from sm up
-	const behindLabel = (
-		<>
-			<span className="sm:hidden">{t('behind')}</span>
-			<span className="hidden sm:inline">{t('behindLeader')}</span>
-		</>
-	)
 	// Positive = climbed (lower position number is better)
 	const moved = pos != null && prevPos != null ? prevPos - pos : 0
 
@@ -97,29 +90,30 @@ export async function UserHero({ userId, year }: TUserHero) {
 						/>
 					</div>
 
-					{/* Gap to leader, styled like best/worst below.
+					{/* Leader points, styled like best/worst below.
 					    pt-5 skips the POINTS label row, then a line box the size of the
-					    points number gives the same baseline. The label + value stack
-					    sits on that baseline by its last line (the value), so the label
-					    stays right above the value */}
+					    points number gives the same baseline. An inline-block's baseline
+					    is its last line (the value), so the stack sits on that baseline
+					    with the label right above. (Not inline-flex + baseline-source:
+					    Safari ignores baseline-source.) text-xl leading-none resets the
+					    inherited 5xl line height inside the stack */}
 					<div className="shrink-0 pt-5 text-5xl leading-none">
-						<span className="inline-flex flex-col items-center gap-1 align-baseline [baseline-source:last]">
-							<StatLabel>{behindLabel}</StatLabel>
+						<span className="inline-block text-right text-xl leading-none">
+							<span className="block text-xs">
+								<StatLabel>{t('leader')}</StatLabel>
+							</span>
 
 							{linksToLeader ? (
 								<Link
-									className="inline-flex items-center text-xl font-black"
+									className="inline-flex items-center gap-1 font-black"
 									href={`/users/${leaderUserId}${year !== 'all' ? `?year=${year}` : ''}`}
 								>
-									{gap}
-									{/* Negative margins trim the icon's built-in whitespace */}
-									<ChevronRight
-										className="text-brand-red -mr-2 -ml-0.5"
-										size={22}
-									/>
+									{leader}
+									{/* Negative margin trims the icon's built-in whitespace */}
+									<ChevronRight className="text-brand-red -mr-1.5" size={18} />
 								</Link>
 							) : (
-								<span className="text-xl font-black">{gap}</span>
+								<span className="font-black">{leader}</span>
 							)}
 						</span>
 					</div>
@@ -141,8 +135,8 @@ export async function UserHero({ userId, year }: TUserHero) {
 										<span
 											className={
 												moved > 0
-													? 'flex items-center gap-0.5 rounded-full bg-green-400/20 px-2.5 py-0.5 text-base font-black text-green-400'
-													: 'flex items-center gap-0.5 rounded-full bg-red-500/20 px-2.5 py-0.5 text-base font-black text-red-500'
+													? 'flex items-center gap-0.5 text-base font-black text-green-400'
+													: 'flex items-center gap-0.5 text-base font-black text-red-500'
 											}
 										>
 											{moved > 0 ? (
@@ -158,10 +152,13 @@ export async function UserHero({ userId, year }: TUserHero) {
 
 							{positionStats.length > 0 && (
 								<dl className="flex gap-6">
-									{positionStats.map(({ label, value }) => (
+									{positionStats.map(({ label, value }, i) => (
 										<div
 											key={label}
-											className="flex flex-col items-center gap-1"
+											className={cn(
+												'flex flex-col',
+												i === 0 ? 'items-center' : 'items-end'
+											)}
 										>
 											<dt>
 												<StatLabel>{label}</StatLabel>

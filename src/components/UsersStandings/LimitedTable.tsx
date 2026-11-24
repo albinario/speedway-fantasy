@@ -49,6 +49,7 @@ function StandingRow({
 							medal_1={Number(row.medal_1)}
 							medal_2={Number(row.medal_2)}
 							medal_3={Number(row.medal_3)}
+							size="sm"
 						/>
 					</div>
 				</div>
