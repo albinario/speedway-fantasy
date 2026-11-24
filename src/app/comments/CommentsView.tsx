@@ -110,7 +110,7 @@ function GPBadge({ cityName, countryCode, startDate }: GPBadgeProps) {
 	const currentYear = new Date().getFullYear()
 	return (
 		<span className="border-border bg-muted inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs font-bold tracking-wide uppercase">
-			<Flag countryCode={countryCode} widthClass="w-3.5" /> {cityName}
+			<Flag countryCode={countryCode} className="w-3.5" /> {cityName}
 			{year !== currentYear ? ` ${year}` : ''}
 		</span>
 	)

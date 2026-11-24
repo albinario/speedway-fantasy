@@ -16,8 +16,6 @@ export function FlagNumber({
 	reverse = false,
 	size = 'sm'
 }: TFlagNumber) {
-	const flagWidthClass = size === 'sm' ? 'w-6' : 'w-4'
-
 	return (
 		<div
 			className={cn(
@@ -25,7 +23,12 @@ export function FlagNumber({
 				highlight && 'rounded px-1 ring-1 ring-white/30'
 			)}
 		>
-			{countryCode && <Flag widthClass={flagWidthClass} countryCode={countryCode} />}
+			{countryCode && (
+				<Flag
+					className={size === 'sm' ? 'w-6' : 'w-4'}
+					countryCode={countryCode}
+				/>
+			)}
 
 			{number && (
 				<span

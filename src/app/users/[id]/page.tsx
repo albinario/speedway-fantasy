@@ -5,10 +5,10 @@ import { getGps, getNextGp } from '@/app/gps/data'
 import { UserGpCard } from '@/components/GpCard'
 import { MyTeamCard } from '@/components/MyTeamCard'
 import { PageHeader } from '@/components/PageHeader'
-import { UserPositionProgress } from '@/components/PositionProgress'
 import { SectionTitle } from '@/components/SectionHeader'
 import { UserAvatar } from '@/components/UserAvatar'
 import { UserHero } from '@/components/UserHero'
+import { UserMeta } from '@/components/UserMeta'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { groupGps } from '@/lib/group-gps'
@@ -64,30 +64,28 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<PageHeader defaultYear={currentYear}>
-				<div className="flex items-center gap-2">
-					<UserAvatar
-						firstName={user.first_name}
-						lastName={user.last_name}
-						className="size-12 shrink-0"
-					/>
-					<UserName
-						className="text-xl font-black uppercase"
-						firstName={user.first_name}
-						lastName={user.last_name}
-						stars={user.stars}
-						userId={userId}
-					/>
-				</div>
-			</PageHeader>
+			<div className="flex flex-col gap-3">
+				<PageHeader defaultYear={currentYear}>
+					<div className="flex items-center gap-2">
+						<UserAvatar
+							firstName={user.first_name}
+							lastName={user.last_name}
+							className="size-12 shrink-0"
+						/>
+						<UserName
+							className="text-xl font-black uppercase"
+							firstName={user.first_name}
+							lastName={user.last_name}
+							stars={user.stars}
+							userId={userId}
+						/>
+					</div>
+				</PageHeader>
 
-			<UserHero
-				userId={userId}
-				year={yearValues.activeYear}
-				createdAt={user.created_at}
-			/>
+				<UserMeta userId={userId} createdAt={user.created_at} />
+			</div>
 
-			<UserPositionProgress userId={userId} year={yearValues.activeYear} />
+			<UserHero userId={userId} year={yearValues.activeYear} />
 
 			{nextGp &&
 				viewer.db?.id === userId &&

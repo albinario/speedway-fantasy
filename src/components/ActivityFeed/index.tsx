@@ -82,7 +82,7 @@ export async function ActivityFeed({
 							/>
 							<div className="text-muted-foreground mt-0.5 flex items-center gap-1.5">
 								{!gpId && (
-									<Flag widthClass="w-3.5" countryCode={entry.country_code} />
+									<Flag className="w-3.5" countryCode={entry.country_code} />
 								)}
 
 								<span className="truncate text-xs">
