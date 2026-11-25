@@ -122,7 +122,8 @@ const en = {
 		nextPage: 'Next page'
 	},
 	UserHero: {
-		leader: 'Leader',
+		behind: 'Behind',
+		behindLeader: 'Behind leader',
 		seasonYear: 'Season {year}',
 		allTime: 'All time'
 	},
@@ -131,7 +132,7 @@ const en = {
 		everyGp: 'Every GP',
 		gpStreak: 'GP Streak',
 		memberSince: 'Member since',
-		emptyTrophies: 'Empty trophy collection',
+		emptyTrophies: 'No trophies',
 		winner: 'Winner',
 		second: 'Second',
 		third: 'Third'

@@ -118,7 +118,8 @@ const sv: TMessages = {
 		nextPage: 'Nästa sida'
 	},
 	UserHero: {
-		leader: 'Ledare',
+		behind: 'Bakom',
+		behindLeader: 'Bakom ledaren',
 		seasonYear: 'Säsong {year}',
 		allTime: 'Alla år'
 	},
@@ -127,7 +128,7 @@ const sv: TMessages = {
 		everyGp: 'Varje GP',
 		gpStreak: 'GP i rad',
 		memberSince: 'Medlem sedan',
-		emptyTrophies: 'Tom trofésamling',
+		emptyTrophies: 'Inga troféer',
 		winner: 'Vinnare',
 		second: 'Tvåa',
 		third: 'Trea'

@@ -57,7 +57,7 @@ export function RiderTile({
 			)}
 		>
 			{coins != null && (
-				<span className="absolute top-2 right-2 flex items-center gap-0.5 text-xs leading-none font-black text-yellow-400">
+				<span className="absolute top-2 right-2 flex items-center gap-0.5 text-sm leading-none font-black text-yellow-400">
 					<Coins className="size-3" />
 					{coins}
 				</span>
