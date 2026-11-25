@@ -12,7 +12,7 @@ import { UserMeta } from '@/components/UserMeta'
 import { UserName } from '@/components/UserName'
 import { getViewer } from '@/lib/auth/get-viewer'
 import { groupGps } from '@/lib/group-gps'
-import type { TParamValues } from '@/lib/params'
+import { paramValues, type TParamValues } from '@/lib/params'
 import { getYearValues } from '@/lib/year'
 
 import { getUser, getUserResultGpIds } from './data'
@@ -57,6 +57,8 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 
 	const gps = await getGps(yearValues.activeYear)
 
+	const isAllYears = yearValues.activeYear === paramValues.all
+
 	const { upcoming, finished, upNextId } = groupGps(
 		gps,
 		new Set(resultGpIds.map((r) => r.gp_id))
@@ -98,7 +100,7 @@ export default async function UserPage({ params, searchParams }: TUserPage) {
 				)}
 
 			{[
-				{ title: t('upcoming'), items: upcoming },
+				{ title: t('upcoming'), items: isAllYears ? [] : upcoming },
 				{ title: t('results'), items: finished }
 			].map(
 				({ title, items }) =>

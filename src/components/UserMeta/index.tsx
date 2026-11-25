@@ -34,7 +34,7 @@ export async function UserMeta({ userId, createdAt }: TUserMeta) {
 		<div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 px-3 sm:px-0">
 			<div className="flex flex-col gap-2">
 				<div className="flex items-center gap-1.5 text-xs">
-					<UserRoundCheck className="size-3.5 text-green-400" />
+					<UserRoundCheck className="size-4 text-green-400" />
 					<span className="text-muted-foreground">{t('memberSince')}</span>
 					<span>{memberSince}</span>
 				</div>
@@ -47,7 +47,7 @@ export async function UserMeta({ userId, createdAt }: TUserMeta) {
 
 							return (
 								<li key={year} className="flex items-center gap-1.5">
-									<Star className="size-5" fill={color} stroke={color} />
+									<Star className="size-4" fill={color} stroke={color} />
 									<span className="flex flex-col leading-none">
 										{label && (
 											<span className="text-sm font-black">{t(label)}</span>
